@@ -43,7 +43,7 @@ class Cubo:
             ):
         validarCaras(U, D, F, B, L, R)
         self.dimension = len(U)
-        self.caras = {
+        self.estado = {
             'U': U,
             'D': D,
             'F': F,
@@ -56,7 +56,7 @@ class Cubo:
 
     def __str__(self):
         resultado = ""
-        for cara in self.caras.values():
+        for cara in self.estado.values():
             for i in range(self.dimension):
                 resultado += str(cara[i]) + '\n'
             resultado += '\n'
@@ -68,12 +68,12 @@ class Cubo:
     def copiar(self):
         'Genera una copia del cubo'
         return Cubo(
-            U = self.caras['U'].copy(),
-            D = self.caras['D'].copy(),
-            F = self.caras['F'].copy(),
-            B = self.caras['B'].copy(),
-            R = self.caras['R'].copy(),
-            L = self.caras['L'].copy(),
+            U = self.estado['U'].copy(),
+            D = self.estado['D'].copy(),
+            F = self.estado['F'].copy(),
+            B = self.estado['B'].copy(),
+            R = self.estado['R'].copy(),
+            L = self.estado['L'].copy(),
         )
     
     def generar(dimension: int):
