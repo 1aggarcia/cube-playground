@@ -1,15 +1,15 @@
 from tkinter import *
 
 from modelos.cubo import Cubo
-from constantes.colores import COLORES_DE_CUBO, Cara
+from constantes.colores import *
 
 TAMANO_DE_CARA = 100 # width y height de una cara
 
 def crearLabelCubo(raiz: Misc, cubo: Cubo):
-    return Label(raiz, text = str(cubo), bg='#189a64', fg='#ffffff')
+    return Label(raiz, text = str(cubo), bg=VERDE_2, fg='#ffffff')
 
 def crearFrameCubo(raiz: Misc, cubo: Cubo):
-    frame = Frame(raiz, bg='#189a64')
+    frame = Frame(raiz, bg=VERDE_2)
 
     # crear widgets
     caraU = dibujarCara(frame, cubo, Cara.U)
@@ -30,7 +30,8 @@ def crearFrameCubo(raiz: Misc, cubo: Cubo):
     return frame
 
 def dibujarCara(raiz: Misc, cubo: Cubo, cara: Cara):
-    frame = Frame(raiz, width=TAMANO_DE_CARA, height=TAMANO_DE_CARA)
+    frame = Frame(raiz, bg='black',
+                   width=TAMANO_DE_CARA, height=TAMANO_DE_CARA, padx=2, pady=2)
 
     cuadro = cubo.estado[cara.value] # nxn matriz de la cara
     # calcular tamano de cubitos para poder encajar todos en el frame

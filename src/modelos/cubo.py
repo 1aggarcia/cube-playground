@@ -1,12 +1,6 @@
+from .partes_de_cubo import Etiqueta, MapaDeCara
+from constantes.enums import Cara
 from modelos.validador_de_cubo import validarCaras
-
-class MapaDeCara:
-    'Representa qué caras están a todos lados de otra'
-    def __init__(self, superior: str, inferior: str, izquierda: str, derecha: str):
-        self.superior = superior
-        self.inferior = inferior
-        self.izquierda = izquierda
-        self.derecha = derecha
 
 class Cubo:
     '''

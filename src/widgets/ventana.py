@@ -1,7 +1,8 @@
 from tkinter import *
 
+from constantes.colores import *
 from modelos.cubo import Cubo
-from .de_cubo import crearLabelCubo, crearFrameCubo
+from .widgets_de_cubo import crearLabelCubo, crearFrameCubo
 
 CUBO_RESUELTO = Cubo.generar(3)
 MI_CUBO = Cubo (
@@ -28,8 +29,8 @@ MI_CUBO = Cubo (
 def crearVentana():
     # configurar ventana
     ventana = Tk()
-    ventana.config(bg='#4fe3a5')
-    ventana.geometry('550x350')
+    ventana.config(bg=VERDE_1)
+    ventana.geometry('700x500')
 
     # crear y posicionar widget
     frameCentral = _crearFrameCentral(ventana)
@@ -38,9 +39,9 @@ def crearVentana():
     return ventana
 
 def _crearFrameCentral(raiz: Misc):
-    frame = Frame(raiz, padx=10, pady=10, bg='#189a64')
+    frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
 
-    cubo = MI_CUBO
+    cubo = CUBO_RESUELTO
     # crear widgets
     frameCubo = crearFrameCubo(frame, cubo)
     labelCubo = crearLabelCubo(frame, cubo)
