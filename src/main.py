@@ -13,5 +13,4 @@ main()
 # $ python -m unittest
 # desde /src/
 
-# TODO: modelos/cubo.py - reparar Cubo.str()
-# TODO: widgets/ventana.py - descomentar labelCubo
+# TODO: modelos/cubo.py - escribir pruebas

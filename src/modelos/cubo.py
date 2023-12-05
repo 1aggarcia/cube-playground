@@ -45,14 +45,17 @@ class Cubo:
             'L': L,
             'R': R
         }
-    
+
     # métodos sobrescritos
 
     def __str__(self):
         resultado = ""
         for cara in self.estado.values():
-            for i in range(self.dimension):
-                resultado += str(cara[i]) + '\n'
+            # vuelta nxn
+            for fila in cara:
+                for columna in fila:
+                    resultado += f'[{columna}]'
+                resultado += '\n'
             resultado += '\n'
 
         return resultado
@@ -112,24 +115,24 @@ class Cubo:
     
     def generar(dimension: int):
         'Genera cubo nxnxn resuelto de la dimension dado'
-        caras = {'U':[], 'D':[], 'F':[], 'B':[], 'L':[], 'R':[],}
+        caras = {}
 
-        for key in caras:
-            x = 1
+        for c in Cara:
+            posicion = 1
             cara = []
             for i in range(dimension):
                 fila = []
                 for j in range(dimension):
-                    fila.append(f'{key}{x}')
-                    x += 1
+                    fila.append(Etiqueta(c, posicion))
+                    posicion += 1
                 cara.append(fila)
-            caras[key] = cara
+            caras[c] = cara
 
         return Cubo(
-            U=caras['U'],
-            D=caras['D'],
-            F=caras['F'],
-            B=caras['B'],
-            L=caras['L'],
-            R=caras['R'],
+            U=caras[Cara.U],
+            D=caras[Cara.D],
+            F=caras[Cara.F],
+            B=caras[Cara.B],
+            L=caras[Cara.L],
+            R=caras[Cara.R],
         )

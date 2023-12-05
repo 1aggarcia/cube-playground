@@ -41,13 +41,13 @@ def crearVentana():
 def _crearFrameCentral(raiz: Misc):
     frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
 
-    cubo = MI_CUBO
+    cubo = CUBO_RESUELTO
     # crear widgets
     frameCubo = crearFrameCubo(frame, cubo)
-    #labelCubo = crearLabelCubo(frame, cubo)
+    labelCubo = crearLabelCubo(frame, cubo)
 
     # posicionar widgets
     frameCubo.grid(row=0, column=0)
-    #labelCubo.grid(row=0, column=1)
+    labelCubo.grid(row=0, column=1)
 
     return frame
