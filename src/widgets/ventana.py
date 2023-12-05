@@ -5,7 +5,7 @@ from modelos.cubo import Cubo
 from .widgets_de_cubo import crearLabelCubo, crearFrameCubo
 
 CUBO_RESUELTO = Cubo.generar(3)
-MI_CUBO = Cubo (
+MI_CUBO = Cubo.crearDeTexto(
     U=
         [['U1', 'D2'],
         ['U3', 'U3']],
@@ -41,13 +41,13 @@ def crearVentana():
 def _crearFrameCentral(raiz: Misc):
     frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
 
-    cubo = CUBO_RESUELTO
+    cubo = MI_CUBO
     # crear widgets
     frameCubo = crearFrameCubo(frame, cubo)
-    labelCubo = crearLabelCubo(frame, cubo)
+    #labelCubo = crearLabelCubo(frame, cubo)
 
     # posicionar widgets
     frameCubo.grid(row=0, column=0)
-    labelCubo.grid(row=0, column=1)
+    #labelCubo.grid(row=0, column=1)
 
     return frame

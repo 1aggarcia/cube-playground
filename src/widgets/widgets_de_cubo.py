@@ -3,7 +3,7 @@ from tkinter import *
 from modelos.cubo import Cubo
 from constantes.colores import *
 
-TAMANO_DE_CARA = 100 # width y height de una cara
+TAMANO_DE_CARA = 100 # ancho y altura de una cara
 
 def crearLabelCubo(raiz: Misc, cubo: Cubo):
     return Label(raiz, text = str(cubo), bg=VERDE_2, fg='#ffffff')
@@ -11,7 +11,7 @@ def crearLabelCubo(raiz: Misc, cubo: Cubo):
 def crearFrameCubo(raiz: Misc, cubo: Cubo):
     frame = Frame(raiz, bg=VERDE_2)
 
-    # crear widgets
+    # crear widgets para cada cara
     caraU = dibujarCara(frame, cubo, Cara.U)
     caraL = dibujarCara(frame, cubo, Cara.L)
     caraF = dibujarCara(frame, cubo, Cara.F)
@@ -19,7 +19,7 @@ def crearFrameCubo(raiz: Misc, cubo: Cubo):
     caraB = dibujarCara(frame, cubo, Cara.B)
     caraD = dibujarCara(frame, cubo, Cara.D)
 
-    #posicionar widgets
+    # posicionarlas para que se vean como un cubo plano
     caraU.grid(row=0, column=1)
     caraL.grid(row=1, column=0)
     caraF.grid(row=1, column=1)
@@ -34,17 +34,19 @@ def dibujarCara(raiz: Misc, cubo: Cubo, cara: Cara):
                    width=TAMANO_DE_CARA, height=TAMANO_DE_CARA, padx=2, pady=2)
 
     cuadro = cubo.estado[cara.value] # nxn matriz de la cara
-    # calcular tamano de cubitos para poder encajar todos en el frame
+
+    # calcular tamaño de cubitos para poder encajar todos en el frame
     dimension = len(cuadro)
     tamanoDeCubito = int(TAMANO_DE_CARA / dimension)
 
+    # llenar frame con los cubitos
     for i in range(dimension):
         for j in range(dimension):
             # averiguar color
-            texto = cuadro[i][j][0] # tomar primer carácter del texto
-            color = COLORES_DE_CUBO[Cara[texto]] # convertir texto a Enum
+            cubito = cuadro[i][j]
+            color = COLORES_DE_CUBO[cubito.cara]
             # dibujar cubito
-            cubito = Frame(
+            frameCubito = Frame(
                 frame, 
                 width=tamanoDeCubito, 
                 height=tamanoDeCubito, 
@@ -53,6 +55,6 @@ def dibujarCara(raiz: Misc, cubo: Cubo, cara: Cara):
                 bg=color,
             )
             # meterlo a su posición determinada por la matriz de la que viene
-            cubito.grid(row=i, column=j)
+            frameCubito.grid(row=i, column=j)
 
     return frame
