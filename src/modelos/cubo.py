@@ -1,3 +1,5 @@
+import numpy as np
+
 from .partes_de_cubo import Etiqueta, MapaDeCara
 from constantes.enums import Cara
 from modelos.validador_de_cubo import validarCaras
@@ -61,6 +63,14 @@ class Cubo:
         return resultado
 
     # métodos
+
+    def girarMatrizHorario(self, cara: Cara):
+        matriz = np.array(self.estado[cara.value])
+        self.estado[cara] = np.fliplr(matriz.transpose())
+
+    def girarMatrizAntihorario(self, cara: Cara):
+        matriz = np.array(self.estado[cara.value])
+        self.estado[cara.value] = np.flipud(matriz.transpose())
 
     def copiar(self):
         'Genera una copia del cubo'

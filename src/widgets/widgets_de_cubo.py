@@ -6,18 +6,21 @@ from constantes.colores import *
 TAMANO_DE_CARA = 100 # ancho y altura de una cara
 
 def crearLabelCubo(raiz: Misc, cubo: Cubo):
-    return Label(raiz, text = str(cubo), bg=VERDE_2, fg='#ffffff')
+    return Label(raiz, text=str(cubo), bg=VERDE_2, fg='#ffffff')
+
+def crearButtonCubo(raiz: Misc, callback):
+    return Button(raiz, text='un botón', command=callback)
 
 def crearFrameCubo(raiz: Misc, cubo: Cubo):
     frame = Frame(raiz, bg=VERDE_2)
 
     # crear widgets para cada cara
-    caraU = dibujarCara(frame, cubo, Cara.U)
-    caraL = dibujarCara(frame, cubo, Cara.L)
-    caraF = dibujarCara(frame, cubo, Cara.F)
-    caraR = dibujarCara(frame, cubo, Cara.R)
-    caraB = dibujarCara(frame, cubo, Cara.B)
-    caraD = dibujarCara(frame, cubo, Cara.D)
+    caraU = _dibujarCara(frame, cubo, Cara.U)
+    caraL = _dibujarCara(frame, cubo, Cara.L)
+    caraF = _dibujarCara(frame, cubo, Cara.F)
+    caraR = _dibujarCara(frame, cubo, Cara.R)
+    caraB = _dibujarCara(frame, cubo, Cara.B)
+    caraD = _dibujarCara(frame, cubo, Cara.D)
 
     # posicionarlas para que se vean como un cubo plano
     caraU.grid(row=0, column=1)
@@ -29,7 +32,7 @@ def crearFrameCubo(raiz: Misc, cubo: Cubo):
 
     return frame
 
-def dibujarCara(raiz: Misc, cubo: Cubo, cara: Cara):
+def _dibujarCara(raiz: Misc, cubo: Cubo, cara: Cara):
     frame = Frame(raiz, bg='black',
                    width=TAMANO_DE_CARA, height=TAMANO_DE_CARA, padx=2, pady=2)
 
