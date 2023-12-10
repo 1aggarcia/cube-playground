@@ -39,18 +39,19 @@ def crearVentana():
     return ventana
 
 def _crearFrameCentral(raiz: Misc):
-    global frame
     frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
 
-    global cubo
     global frameCubo
-    global labelCubo
-    cubo = CUBO_RESUELTO
+    global cubo
+    cubo = MI_CUBO
 
     def callback():
         ninos = frameCubo.winfo_children()
-        for cara in ninos:
-            dibujarCara(cara, cubo, Cara.R)
+        if len(ninos) != 6: # cantidad de cars = 6
+            raise ValueError('REQUISITO ROTO')
+        cubo.girarMatrizAntihorario(Cara.U)
+        for i in range(6):
+            dibujarCara(ninos[i], cubo, list(Cara)[i])
         
     # crear widgets
     frameCubo = crearFrameCubo(frame, cubo)

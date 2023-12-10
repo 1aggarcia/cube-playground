@@ -71,8 +71,18 @@ def dibujarCara(frame: Frame, cubo: Cubo, cara: Cara) -> Frame:
     if len(ninos) != dimension**2:
         raise ValueError('REQUISITO ROTO: frame dado no tiene nxn ninos')
     
-    for cubito in ninos:
-        cubito.configure(bg=COLORES_DE_CUBO[cara])
+    cuadro = cubo.estado[cara.value]
+    
+    for i in range(dimension):
+        for j in range(dimension):
+            # ninos es 1D, las caras son 2D.
+            # El cubito [i][j] en 2D en una cara es lo mismo que
+            # el cubito [i*dimension + j] in 1D
+            cubito = ninos[i*dimension + j]
+            color = COLORES_DE_CUBO[cuadro[i][j].cara]
+            cubito.configure(bg=color)
+    # for cubito in ninos:
+    #     cubito.configure(bg=COLORES_DE_CUBO[cara])
 
     return frame
 
