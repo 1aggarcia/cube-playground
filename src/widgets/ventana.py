@@ -1,30 +1,8 @@
 from tkinter import *
 
 from constantes.colores import *
-from modelos.cubo import *
+from constantes.cubos import MI_CUBO, CUBO_RESUELTO, SUPERFLIP
 from .widgets_de_cubo import *
-
-CUBO_RESUELTO = generarCubo(3)
-MI_CUBO = crearCuboDeTexto(
-    U=
-        [['U1', 'D2'],
-        ['U3', 'U3']],
-    D=
-        [['R1', 'D2'],
-        ['D3', 'L4']],
-    F=
-        [['F1', 'F2'],
-        ['B3', 'R4']],
-    B=
-        [['F1', 'B2'],
-        ['D3', 'B4']],
-    L=
-        [['L1', 'L2'],
-        ['L3', 'U4']],
-    R=
-        [['R1', 'R2'],
-        ['B3', 'F4']]
-)
 
 def crearVentana():
     # configurar ventana
@@ -43,7 +21,7 @@ def _crearFrameCentral(raiz: Misc):
 
     global frameCubo
     global cubo
-    cubo = MI_CUBO
+    cubo = SUPERFLIP
 
     def callback():
         ninos = frameCubo.winfo_children()
