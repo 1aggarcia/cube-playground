@@ -1,7 +1,6 @@
 from tkinter import *
 
-from constantes.colores import *
-from constantes.cubos import MI_CUBO, CUBO_RESUELTO, SUPERFLIP
+from constantes import cubos
 from .widgets_de_cubo import *
 
 def crearVentana():
@@ -17,21 +16,15 @@ def crearVentana():
     return ventana
 
 def _crearFrameCentral(raiz: Misc):
-    frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
-
-    global frameCubo
-    global cubo
-    cubo = SUPERFLIP
+    cubo = cubos.SUPERFLIP
 
     def callback():
-        ninos = frameCubo.winfo_children()
-        if len(ninos) != 6: # cantidad de cars = 6
-            raise ValueError('REQUISITO ROTO')
         cubo.girarMatrizAntihorario(Cara.U)
-        for i in range(6):
-            dibujarCara(ninos[i], cubo, list(Cara)[i])
+        cubo.girarMatrizAntihorario(Cara.D)
+        colorarCubo(frameCubo, cubo)
         
     # crear widgets
+    frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
     frameCubo = crearFrameCubo(frame, cubo)
     labelCubo = crearLabelCubo(frame, cubo)
     buttonCubo = crearButtonCubo(frame, callback)

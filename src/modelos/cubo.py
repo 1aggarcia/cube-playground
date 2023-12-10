@@ -65,6 +65,9 @@ class Cubo:
 
     # métodos
 
+    def getCara(self, cara: Cara):
+        return self.estado[cara.value]
+
     def girarMatrizHorario(self, cara: Cara):
         matriz = np.array(self.estado[cara.value])
         self.estado[cara] = np.fliplr(matriz.transpose())
@@ -72,24 +75,8 @@ class Cubo:
     def girarMatrizAntihorario(self, cara: Cara):
         matriz = np.array(self.estado[cara.value])
         self.estado[cara.value] = np.flipud(matriz.transpose())
-    
-    def _convertirAEtiquetas(lista: list[list[str]]):
-        '''
-        Dado una matriz de cadenas de str,
-        devolver una matriz de Etiquetas
-        * requiere que cada str sea una Etiqueta válida
-        '''
-        resultado: list[list[Etiqueta]] = []
 
-        # popular resultado con la traducción str -> Etiqueta
-        for f in lista:
-            fila: list[Etiqueta] = []
-            for c in f:
-                columna = Etiqueta.deTexto(c)
-                fila.append(columna)
-            resultado.append(fila)
-
-        return resultado
+# métodos públicos
     
 def copiarCubo(cubo: Cubo):
     'Genera una copia del cubo'
@@ -115,12 +102,12 @@ def crearCuboDeTexto(
     * requiere que cada str sea una Etiqueta válida
     '''
     return Cubo(
-        U = Cubo._convertirAEtiquetas(U),
-        D = Cubo._convertirAEtiquetas(D),
-        F = Cubo._convertirAEtiquetas(F),
-        B = Cubo._convertirAEtiquetas(B),
-        R = Cubo._convertirAEtiquetas(R),
-        L = Cubo._convertirAEtiquetas(L),            
+        U = _convertirAEtiquetas(U),
+        D = _convertirAEtiquetas(D),
+        F = _convertirAEtiquetas(F),
+        B = _convertirAEtiquetas(B),
+        R = _convertirAEtiquetas(R),
+        L = _convertirAEtiquetas(L),            
     )
 
 def generarCubo(dimension: int):
@@ -146,3 +133,23 @@ def generarCubo(dimension: int):
         L=caras[Cara.L],
         R=caras[Cara.R],
     )
+
+# métodos privados
+
+def _convertirAEtiquetas(lista: list[list[str]]):
+    '''
+    Dado una matriz de cadenas de str,
+    devolver una matriz de Etiquetas
+    * requiere que cada str sea una Etiqueta válida
+    '''
+    resultado: list[list[Etiqueta]] = []
+
+    # popular resultado con la traducción str -> Etiqueta
+    for f in lista:
+        fila: list[Etiqueta] = []
+        for c in f:
+            columna = Etiqueta.deTexto(c)
+            fila.append(columna)
+        resultado.append(fila)
+
+    return resultado

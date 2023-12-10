@@ -6,7 +6,8 @@ def main():
     ventana = crearVentana()
     ventana.mainloop()
 
-main()
+if __name__=="__main__": 
+    main()
 
 # PARA EJECUTAR PRUEBAS
 # $ python -m unittest
