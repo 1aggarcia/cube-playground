@@ -7,8 +7,9 @@ from modelos.validador_de_cubo import validarCaras
 class Cubo:
     '''
     Modelo para un cubo de Rubik con 6 caras.
-    Se recomienda crear con Cubo.generar(n) y no el constructor para cubos resueltos,
-    a no ser que quieras crear un cubo con un estado espesífico. Las caras son:
+    No se recomienda crear directamente con el constructor.
+    Use generarCubo() o crearCuboDeTexto().
+    Las caras son:
     * U (up) - de arriba
     * D (down) - de abajo
     * F (front) - el frente
@@ -71,17 +72,6 @@ class Cubo:
     def girarMatrizAntihorario(self, cara: Cara):
         matriz = np.array(self.estado[cara.value])
         self.estado[cara.value] = np.flipud(matriz.transpose())
-
-    def copiar(self):
-        'Genera una copia del cubo'
-        return Cubo(
-            U = self.estado['U'].copy(),
-            D = self.estado['D'].copy(),
-            F = self.estado['F'].copy(),
-            B = self.estado['B'].copy(),
-            R = self.estado['R'].copy(),
-            L = self.estado['L'].copy(),
-        )
     
     def _convertirAEtiquetas(lista: list[list[str]]):
         '''
@@ -100,49 +90,59 @@ class Cubo:
             resultado.append(fila)
 
         return resultado
-
     
-    def crearDeTexto(
-                U: list[list[str]], 
-                D: list[list[str]], 
-                F: list[list[str]], 
-                B: list[list[str]], 
-                L: list[list[str]], 
-                R: list[list[str]]
-            ):
-        '''
-        Crear un cubo dado matrices de tipo str
-        * requiere que cada str sea una Etiqueta válida
-        '''
-        return Cubo(
-            U = Cubo._convertirAEtiquetas(U),
-            D = Cubo._convertirAEtiquetas(D),
-            F = Cubo._convertirAEtiquetas(F),
-            B = Cubo._convertirAEtiquetas(B),
-            R = Cubo._convertirAEtiquetas(R),
-            L = Cubo._convertirAEtiquetas(L),            
-        )
-    
-    def generar(dimension: int):
-        'Genera cubo nxnxn resuelto de la dimension dado'
-        caras = {}
+def copiarCubo(cubo: Cubo):
+    'Genera una copia del cubo'
+    return Cubo(
+        U = cubo.estado['U'].copy(),
+        D = cubo.estado['D'].copy(),
+        F = cubo.estado['F'].copy(),
+        B = cubo.estado['B'].copy(),
+        R = cubo.estado['R'].copy(),
+        L = cubo.estado['L'].copy(),
+    )
 
-        for c in Cara:
-            posicion = 1
-            cara = []
-            for i in range(dimension):
-                fila = []
-                for j in range(dimension):
-                    fila.append(Etiqueta(c, posicion))
-                    posicion += 1
-                cara.append(fila)
-            caras[c] = cara
+def crearCuboDeTexto(
+            U: list[list[str]], 
+            D: list[list[str]], 
+            F: list[list[str]], 
+            B: list[list[str]], 
+            L: list[list[str]], 
+            R: list[list[str]]
+        ):
+    '''
+    Crear un cubo dado matrices de tipo str
+    * requiere que cada str sea una Etiqueta válida
+    '''
+    return Cubo(
+        U = Cubo._convertirAEtiquetas(U),
+        D = Cubo._convertirAEtiquetas(D),
+        F = Cubo._convertirAEtiquetas(F),
+        B = Cubo._convertirAEtiquetas(B),
+        R = Cubo._convertirAEtiquetas(R),
+        L = Cubo._convertirAEtiquetas(L),            
+    )
 
-        return Cubo(
-            U=caras[Cara.U],
-            D=caras[Cara.D],
-            F=caras[Cara.F],
-            B=caras[Cara.B],
-            L=caras[Cara.L],
-            R=caras[Cara.R],
-        )
+def generarCubo(dimension: int):
+    'Genera cubo nxnxn resuelto de la dimension dado'
+    caras = {}
+
+    for c in Cara:
+        posicion = 1
+        cara = []
+        for i in range(dimension):
+            fila = []
+            for j in range(dimension):
+                fila.append(Etiqueta(c, posicion))
+                posicion += 1
+            cara.append(fila)
+        caras[c] = cara
+
+    return Cubo(
+        U=caras[Cara.U],
+        D=caras[Cara.D],
+        F=caras[Cara.F],
+        B=caras[Cara.B],
+        L=caras[Cara.L],
+        R=caras[Cara.R],
+    )

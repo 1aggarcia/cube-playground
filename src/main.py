@@ -13,3 +13,4 @@ main()
 # desde /src/
 
 # TODO: modelos/cubo.py - escribir pruebas
+# TODO: actualizar la ventana más eficientemente

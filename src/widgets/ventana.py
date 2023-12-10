@@ -1,11 +1,11 @@
 from tkinter import *
 
 from constantes.colores import *
-from modelos.cubo import Cubo
+from modelos.cubo import *
 from .widgets_de_cubo import *
 
-CUBO_RESUELTO = Cubo.generar(3)
-MI_CUBO = Cubo.crearDeTexto(
+CUBO_RESUELTO = generarCubo(3)
+MI_CUBO = crearCuboDeTexto(
     U=
         [['U1', 'D2'],
         ['U3', 'U3']],
@@ -45,28 +45,17 @@ def _crearFrameCentral(raiz: Misc):
     global cubo
     global frameCubo
     global labelCubo
-    cubo = MI_CUBO
+    cubo = CUBO_RESUELTO
 
-    def callback(x: int):
-        cubo.girarMatrizAntihorario(Cara.U)
-        cubo.girarMatrizAntihorario(Cara.L)
-        frameCubo.destroy()
-        labelCubo.destroy()
-
-        frameC = crearFrameCubo(frame, cubo)
-        labelC = crearLabelCubo(frame, cubo)
-        frameC.grid(row=0, column=0)
-        labelC.grid(row=0, column=1)
-
-        
-
+    def callback():
+        ninos = frameCubo.winfo_children()
+        for cara in ninos:
+            dibujarCara(cara, cubo, Cara.R)
         
     # crear widgets
     frameCubo = crearFrameCubo(frame, cubo)
     labelCubo = crearLabelCubo(frame, cubo)
-    buttonCubo = crearButtonCubo(frame, lambda : callback(21))
-
-
+    buttonCubo = crearButtonCubo(frame, callback)
 
     # posicionar widgets
     frameCubo.grid(row=0, column=0)
