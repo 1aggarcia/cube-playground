@@ -67,14 +67,13 @@ class Cubo:
 
     def getCara(self, cara: Cara):
         return self.estado[cara.value]
+    
+    def _setCara(self, cara: Cara, matriz: list[list[Etiqueta]]):
+        self.estado[cara.value] = matriz
 
-    def girarMatrizHorario(self, cara: Cara):
-        matriz = np.array(self.estado[cara.value])
-        self.estado[cara] = np.fliplr(matriz.transpose())
-
-    def girarMatrizAntihorario(self, cara: Cara):
-        matriz = np.array(self.estado[cara.value])
-        self.estado[cara.value] = np.flipud(matriz.transpose())
+    def movimientoIlegal(self, cara: Cara):
+        caraGirado = _girarMatrizHorario(self.getCara(cara))
+        self._setCara(cara, caraGirado)
 
 # métodos públicos
     
@@ -153,3 +152,11 @@ def _convertirAEtiquetas(lista: list[list[str]]):
         resultado.append(fila)
 
     return resultado
+
+def _girarMatrizHorario(matriz: list[list]):
+    numpyMatriz = np.array(matriz)
+    return np.fliplr(numpyMatriz.transpose())
+
+def _girarMatrizAntihorario(matriz: list[list]):
+    numpyMatriz = np.array(matriz)
+    return np.flipud(numpyMatriz.transpose())

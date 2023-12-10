@@ -19,8 +19,8 @@ def _crearFrameCentral(raiz: Misc):
     cubo = cubos.SUPERFLIP
 
     def callback():
-        cubo.girarMatrizAntihorario(Cara.U)
-        cubo.girarMatrizAntihorario(Cara.D)
+        cubo.movimientoIlegal(Cara.U)
+        cubo.movimientoIlegal(Cara.F)
         colorarCubo(frameCubo, cubo)
         
     # crear widgets
