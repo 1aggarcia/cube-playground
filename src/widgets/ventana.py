@@ -16,21 +16,25 @@ def crearVentana():
     return ventana
 
 def _crearFrameCentral(raiz: Misc):
-    cubo = cubos.generarCubo(3)
+    cubo = cubos.SUPERFLIP
 
-    def callback():
-        cubo.movimientoIlegal()
+    def callback_u():
+        cubo.movimiento_u()
+        colorarCubo(frameCubo, cubo)
+
+    def callback_u_prima():
+        cubo.movimiento_u_prima()
         colorarCubo(frameCubo, cubo)
         
     # crear widgets
     frame = Frame(raiz, padx=10, pady=10, bg=VERDE_2)
     frameCubo = crearFrameCubo(frame, cubo)
-    labelCubo = crearLabelCubo(frame, cubo)
-    buttonCubo = crearButtonCubo(frame, callback)
+    button_u = crear_button_u(frame, callback_u)
+    button_u_prima = crear_button_u_prima(frame, callback_u_prima)
 
     # posicionar widgets
     frameCubo.grid(row=0, column=0)
-    labelCubo.grid(row=0, column=1)
-    buttonCubo.grid(row=1)
+    button_u_prima.grid(row=0, column=1)
+    button_u.grid(row=0, column=2)
 
     return frame

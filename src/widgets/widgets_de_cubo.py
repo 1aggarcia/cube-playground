@@ -10,8 +10,11 @@ TAMANO_DE_CARA = 100 # ancho y altura de una cara
 def crearLabelCubo(raiz: Misc, cubo: Cubo):
     return Label(raiz, text=str(cubo), bg=VERDE_2, fg='#ffffff')
 
-def crearButtonCubo(raiz: Misc, callback):
-    return Button(raiz, text='un botón', command=callback)
+def crear_button_u(raiz: Misc, callback):
+    return Button(raiz, text='[ U ]', command=callback)
+
+def crear_button_u_prima(raiz: Misc, callback):
+    return Button(raiz, text="[ U' ]", command=callback)
 
 def crearFrameCubo(raiz: Misc, cubo: Cubo):
     frame = Frame(raiz, bg=VERDE_2)
@@ -46,12 +49,11 @@ def colorarCubo(frame: Frame, cubo: Cubo) -> None:
         # chequear requisito 1
         try:
             cuadro = frame.nametowidget(cara.value.lower())
-        except KeyError:
-            raise ValueError(f'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos')
-        finally:
             # esta función chequea requisito 2
             # y modifica el cuadro
             _colorarCara(cuadro, cubo, cara)
+        except KeyError:
+            raise ValueError(f'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos')
 
 # métodos privados
 
