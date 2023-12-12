@@ -1,12 +1,12 @@
-from .partes_de_cubo import Etiqueta
+import numpy as np
 
 def validar_caras(
-                u: list[list[Etiqueta]],
-                d: list[list[Etiqueta]],
-                f: list[list[Etiqueta]],
-                b: list[list[Etiqueta]],
-                l: list[list[Etiqueta]],
-                r: list[list[Etiqueta]]
+                u: np.ndarray,
+                d: np.ndarray,
+                f: np.ndarray,
+                b: np.ndarray,
+                l: np.ndarray,
+                r: np.ndarray
             ):
     '''
     Verifica que las caras dadas representan un cubo de rubik legal
@@ -20,12 +20,12 @@ def validar_caras(
 
 
 def _validar_dimensiones(
-                u: list[list[Etiqueta]],
-                d: list[list[Etiqueta]],
-                f: list[list[Etiqueta]],
-                b: list[list[Etiqueta]],
-                l: list[list[Etiqueta]],
-                r: list[list[Etiqueta]]
+                u: np.ndarray,
+                d: np.ndarray,
+                f: np.ndarray,
+                b: np.ndarray,
+                l: np.ndarray,
+                r: np.ndarray
             ):
     '''
     Verifica que cada cara tiene las mismas dimensiones nxnxn, donde n = len(U)

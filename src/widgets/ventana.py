@@ -16,6 +16,7 @@ def crear_ventana():
 
     return ventana
 
+
 def _crear_frame_central(raiz: tk.Misc):
     cubo = cubos.SUPERFLIP
 

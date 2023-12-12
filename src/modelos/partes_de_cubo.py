@@ -19,15 +19,6 @@ class Etiqueta:
         )
 
 
-class MapaDeCara:
-    'Representa qué caras están a todos lados de otra'
-    def __init__(self, superior: str, inferior: str, izquierda: str, derecha: str):
-        self.superior = superior
-        self.inferior = inferior
-        self.izquierda = izquierda
-        self.derecha = derecha
-
-
 def etiqueta_de_texto(texto: str):
     '''
     Crear una Etiqueta desde una cadena de caracteres, ej 'D3'

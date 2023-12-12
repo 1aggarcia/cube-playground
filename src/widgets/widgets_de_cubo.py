@@ -11,11 +11,14 @@ TAMANO_DE_CARA = 100 # ancho y altura de una cara
 def crear_label_cubo(raiz: tk.Misc, cubo: Cubo):
     return tk.Label(raiz, text=str(cubo), bg=colores.VERDE_2, fg='#ffffff')
 
+
 def crear_button_u(raiz: tk.Misc, callback):
     return tk.Button(raiz, text='[ U ]', command=callback)
 
+
 def crear_button_u_prima(raiz: tk.Misc, callback):
     return tk.Button(raiz, text="[ U' ]", command=callback)
+
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
@@ -38,6 +41,7 @@ def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
 
     return frame
 
+
 def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
     '''
     Colora el frame dado con el cubo dado
@@ -57,6 +61,7 @@ def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
             raise ValueError(
                 'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos'
             ) from exc
+
 
 # métodos privados
 
@@ -91,6 +96,7 @@ def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
     _colorar_cara(frame, cubo, cara)
     return frame
 
+
 def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
     '''
     Colora el frame dado con el cubo y la cara dada
@@ -112,4 +118,4 @@ def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
             cubito = ninos[i*dimension + j]
             color = colores.COLORES_DE_CUBO[cuadro[i][j].cara]
             # la modificación
-            cubito.configure(bg=color)
+            cubito.configure(bg = color)
