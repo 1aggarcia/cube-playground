@@ -1,8 +1,12 @@
+import copy
 import numpy as np
 
 from .partes_de_cubo import Etiqueta, MapaDeCara
 from constantes.enums import Cara
 from modelos.validador_de_cubo import validarCaras
+
+# 
+CARAS_VERTICALES = [Cara.F, Cara.L, Cara.B, Cara.R]
 
 class Cubo:
     '''
@@ -71,9 +75,10 @@ class Cubo:
     def _setCara(self, cara: Cara, matriz: list[list[Etiqueta]]):
         self.estado[cara.value] = matriz
 
-    def movimientoIlegal(self, cara: Cara):
-        caraGirado = _girarMatrizHorario(self.getCara(cara))
-        self._setCara(cara, caraGirado)
+    def movimientoIlegal(self):
+        caraGirado = _girarMatrizHorario(self.getCara(Cara.U))
+        self._setCara(Cara.U, caraGirado)
+        self.estado = _cotar_verticalmente_horario(self, 0)
 
 # métodos públicos
     
@@ -160,3 +165,23 @@ def _girarMatrizHorario(matriz: list[list]):
 def _girarMatrizAntihorario(matriz: list[list]):
     numpyMatriz = np.array(matriz)
     return np.flipud(numpyMatriz.transpose())
+
+def _cotar_verticalmente_horario(cubo: Cubo, fila: int) -> dict[str, list[list]]:
+    """
+    rotar la capa en la fila espesificada verticalmente, en direción horaria
+    * returns nuevo estado de cubo con la fila rotada
+    """
+    estado_nuevo = copy.deepcopy(cubo.estado)
+
+    # la orden en la que copiaremos las caras (la lista al revés)
+    orden: list[Cara] = CARAS_VERTICALES[::-1]
+    primera_fila = copy.deepcopy(cubo.estado[orden[0].value][fila])
+
+    # copiar filas en la orden dado para hacer una rotación
+    for destino, fuente in zip(orden, orden[1:]):
+        fila_fuente = copy.deepcopy(estado_nuevo[fuente.value][fila])
+        estado_nuevo[destino.value][fila] = fila_fuente
+
+    estado_nuevo[orden[-1].value][fila] = primera_fila
+
+    return estado_nuevo
