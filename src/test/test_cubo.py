@@ -1,97 +1,96 @@
-import numpy as np
 import unittest
+import numpy as np
 
 from modelos import cubo
-from modelos.partes_de_cubo import Etiqueta as et
-from constantes import cubos
+from modelos.partes_de_cubo import etiqueta_de_texto
 from constantes.enums import Cara
 
 class ProbarCubo(unittest.TestCase):
     # métodos privados
 
-    def test_convertirAEtiquetas(self):
-        listaA = [['U1', 'L2', 'D21'], ['B14'], ['D12', 'R2']]
-        listaB = [['U1', 'L2', 'D21'], ['32'], ['D12', 'R2']]
-        listaC = [['U1', 'L2', 'D21'], 2]
+    def test_convertir_a_etiquetas(self):
+        lista_a = [['U1', 'L2', 'D21'], ['B14'], ['D12', 'R2']]
+        lista_b = [['U1', 'L2', 'D21'], ['32'], ['D12', 'R2']]
+        lista_c = [['U1', 'L2', 'D21'], 2]
 
-        self.assertEqual(cubo._convertirAEtiquetas(listaA),
+        self.assertEqual(cubo._convertir_a_etiquetas(lista_a),
             [
-                [et.deTexto('U1'), et.deTexto('L2'), et.deTexto('D21')],
-                [et.deTexto('B14')],
-                [et.deTexto('D12'), et.deTexto('R2')]
+                [etiqueta_de_texto('U1'), etiqueta_de_texto('L2'), etiqueta_de_texto('D21')],
+                [etiqueta_de_texto('B14')],
+                [etiqueta_de_texto('D12'), etiqueta_de_texto('R2')]
             ])
         
-        self.assertRaises(KeyError, cubo._convertirAEtiquetas, listaB)
-        self.assertRaises(TypeError, cubo._convertirAEtiquetas, listaC)
+        self.assertRaises(KeyError, cubo._convertir_a_etiquetas, lista_b)
+        self.assertRaises(TypeError, cubo._convertir_a_etiquetas, lista_c)
 
 
-    def test_girarMatrizHorario(self):
-        listaA = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
-        giradaA = np.array([
+    def test_girar_matriz_horario(self):
+        lista_a = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+        girada_a = np.array([
             [7, 4, 1],
             [8, 5, 2],
             [9, 6, 3]
         ])
-        self.assertTrue((giradaA & cubo._girarMatrizHorario(listaA)).all())
+        self.assertTrue((girada_a & cubo._girar_matriz_horario(lista_a)).all())
 
-        listaB = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
-        giradaB = np.array([
+        lista_b = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
+        girada_b = np.array([
             [13, 9, 5, 1],
             [14, 10, 6, 2],
             [15, 11, 7, 3],
             [16, 12, 8, 4]
         ])
-        self.assertTrue((giradaB & cubo._girarMatrizHorario(listaB)).all())
+        self.assertTrue((girada_b & cubo._girar_matriz_horario(lista_b)).all())
 
 
-    def test_girarMatrizAnihorario(self):
-        listaA = [[234, 123], [65, 2], [1, 2]]
-        giradaA = np.array([
+    def test_girar_matriz_antihorario(self):
+        lista_a = [[234, 123], [65, 2], [1, 2]]
+        girada_a = np.array([
             [123, 2, 2],
             [234, 65, 1]
         ])
-        self.assertTrue((giradaA & cubo._girarMatrizAntihorario(listaA)).all())
+        self.assertTrue((girada_a & cubo._girar_matriz_antihorario(lista_a)).all())
 
-        listaB = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
-        giradaB = np.array([
+        lista_b = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
+        girada_b = np.array([
             [4, 8, 12, 16],
             [3, 7, 11, 15],
             [2, 6, 10, 14],
             [1, 5, 9, 13]
         ])
-        self.assertTrue((giradaB & cubo._girarMatrizAntihorario(listaB)).all())
+        self.assertTrue((girada_b & cubo._girar_matriz_antihorario(lista_b)).all())
 
     # métodos de clase
 
     def test_str(self):
-        cuboA = cubo.Cubo(
-            U=[
-                [et.deTexto('U1'), et.deTexto('U2')],
-                [et.deTexto('U3'), et.deTexto('U4')],
+        cubo_a = cubo.Cubo(
+            u=[
+                [etiqueta_de_texto('U1'), etiqueta_de_texto('U2')],
+                [etiqueta_de_texto('U3'), etiqueta_de_texto('U4')],
             ],
-            D=[
-                [et.deTexto('D1'), et.deTexto('D2')],
-                [et.deTexto('D3'), et.deTexto('D4')],
+            d=[
+                [etiqueta_de_texto('D1'), etiqueta_de_texto('D2')],
+                [etiqueta_de_texto('D3'), etiqueta_de_texto('D4')],
             ],
-            L=[
-                [et.deTexto('L1'), et.deTexto('L2')],
-                [et.deTexto('L3'), et.deTexto('L4')],
+            l=[
+                [etiqueta_de_texto('L1'), etiqueta_de_texto('L2')],
+                [etiqueta_de_texto('L3'), etiqueta_de_texto('L4')],
             ],
-            R=[
-                [et.deTexto('R1'), et.deTexto('R2')],
-                [et.deTexto('R3'), et.deTexto('R4')],
+            r=[
+                [etiqueta_de_texto('R1'), etiqueta_de_texto('R2')],
+                [etiqueta_de_texto('R3'), etiqueta_de_texto('R4')],
             ],
-            F=[
-                [et.deTexto('F1'), et.deTexto('F2')],
-                [et.deTexto('F3'), et.deTexto('F4')],
+            f=[
+                [etiqueta_de_texto('F1'), etiqueta_de_texto('F2')],
+                [etiqueta_de_texto('F3'), etiqueta_de_texto('F4')],
             ],
-            B=[
-                [et.deTexto('B1'), et.deTexto('B2')],
-                [et.deTexto('B3'), et.deTexto('B4')],
+            b=[
+                [etiqueta_de_texto('B1'), etiqueta_de_texto('B2')],
+                [etiqueta_de_texto('B3'), etiqueta_de_texto('B4')],
             ],
         )
 
-        self.assertEqual(str(cuboA), 
+        self.assertEqual(str(cubo_a),
             '\n'.join([
                 '[U1][U2]', '[U3][U4]\n', # U
                 '[D1][D2]', '[D3][D4]\n', # D
@@ -102,76 +101,78 @@ class ProbarCubo(unittest.TestCase):
             ])
         )
 
-    def test_getCara(self):
-        cuboA = cubo.crearCuboDeTexto(
-            U=
+    def test_get_cara(self):
+        cubo_a = cubo.crear_cubo_de_texto(
+            u=
                 [['U1', 'D2'],
                 ['U3', 'U3']],
-            D=
+            d=
                 [['R1', 'D2'],
                 ['D3', 'L4']],
-            F=
+            f=
                 [['F1', 'F2'],
                 ['B3', 'R4']],
-            B=
+            b=
                 [['F1', 'B2'],
                 ['D3', 'B4']],
-            L=
+            l=
                 [['L1', 'L2'],
                 ['L3', 'U4']],
-            R=
+            r=
                 [['R1', 'R2'],
                 ['B3', 'F4']]
         )
 
-        self.assertEqual(cuboA.getCara(Cara.U), 
-            [[et.deTexto('U1'), et.deTexto('D2')], [et.deTexto('U3'), et.deTexto('U3')]]
+        self.assertEqual(cubo_a.get_cara(Cara.U),
+            [[etiqueta_de_texto('U1'), etiqueta_de_texto('D2')],
+             [etiqueta_de_texto('U3'), etiqueta_de_texto('U3')]]
         )
 
-        self.assertEqual(cuboA.getCara(Cara.R), 
-            [[et.deTexto('R1'), et.deTexto('R2')], [et.deTexto('B3'), et.deTexto('F4')]]
+        self.assertEqual(cubo_a.get_cara(Cara.R),
+            [[etiqueta_de_texto('R1'), etiqueta_de_texto('R2')],
+             [etiqueta_de_texto('B3'), etiqueta_de_texto('F4')]]
         )
 
-    def test_setCara(self):
-        cuboA = cubo.generarCubo(2)
+    def test_set_cara(self):
+        cubo_a = cubo.generar_cubo(2)
 
-        caraL = [[et.deTexto('F2111'), et.deTexto('F999')]]
-        cuboA._setCara(Cara.L, caraL)
-        self.assertEqual(cuboA.getCara(Cara.L), caraL)
+        cara_l = [[etiqueta_de_texto('F2111'), etiqueta_de_texto('F999')]]
+        cubo_a._set_cara(Cara.L, cara_l)
+        self.assertEqual(cubo_a.get_cara(Cara.L), cara_l)
 
-        caraB = [[et.deTexto('B2111'), et.deTexto('B999')]]
-        cuboA._setCara(Cara.L, caraB)
-        self.assertEqual(cuboA.getCara(Cara.L), caraB)
+        cara_b = [[etiqueta_de_texto('B2111'), etiqueta_de_texto('B999')]]
+        cubo_a._set_cara(Cara.L, cara_b)
+        self.assertEqual(cubo_a.get_cara(Cara.L), cara_b)
 
     # métodos públicos
 
-    def test_copiarCubo(self):
+    def test_copiar_cubo(self):
         pass
 
 
-    def test_crearCuboDeTexto(self):
-        cuboA = cubo.crearCuboDeTexto(
-            U=
+    def test_crear_cubo_de_texto(self):
+        cubo_a = cubo.crear_cubo_de_texto(
+            u=
                 [['U1', 'D2'],
                 ['U3', 'U3']],
-            D=
+            d=
                 [['R1', 'D2'],
                 ['D3', 'L4']],
-            F=
+            f=
                 [['F1', 'F2'],
                 ['B3', 'R4']],
-            B=
+            b=
                 [['F1', 'B2'],
                 ['D3', 'B4']],
-            L=
+            l=
                 [['L1', 'L2'],
                 ['L3', 'U4']],
-            R=
+            r=
                 [['R1', 'R2'],
                 ['B3', 'F4']]
         )
 
-        self.assertEqual(str(cuboA), 
+        self.assertEqual(str(cubo_a),
             '\n'.join([
                 '[U1][D2]', '[U3][U3]\n', # U
                 '[R1][D2]', '[D3][L4]\n', # D
@@ -183,11 +184,11 @@ class ProbarCubo(unittest.TestCase):
         )
 
 
-    def test_generarCubo(self):
-        cuboA = cubo.generarCubo(2)
-        cuboB = cubo.generarCubo(3)
+    def test_generar_cubo(self):
+        cubo_a = cubo.generar_cubo(2)
+        cubo_b = cubo.generar_cubo(3)
 
-        self.assertEqual(str(cuboA), 
+        self.assertEqual(str(cubo_a),
             '\n'.join([
                 '[U1][U2]', '[U3][U4]\n', # U
                 '[D1][D2]', '[D3][D4]\n', # D
@@ -197,7 +198,7 @@ class ProbarCubo(unittest.TestCase):
                 '[R1][R2]', '[R3][R4]\n\n', # R    
             ])
         )
-        self.assertEqual(str(cuboB), 
+        self.assertEqual(str(cubo_b),
             '\n'.join([
                 '[U1][U2][U3]', '[U4][U5][U6]', '[U7][U8][U9]\n', # U
                 '[D1][D2][D3]', '[D4][D5][D6]', '[D7][D8][D9]\n', # D
@@ -207,6 +208,7 @@ class ProbarCubo(unittest.TestCase):
                 '[R1][R2][R3]', '[R4][R5][R6]', '[R7][R8][R9]\n\n', # R
             ])
         )
+
 
 if __name__ == '__main__':
     unittest.main()

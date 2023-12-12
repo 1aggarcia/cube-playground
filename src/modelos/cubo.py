@@ -1,18 +1,18 @@
 import copy
 import numpy as np
 
-from .partes_de_cubo import Etiqueta, MapaDeCara
 from constantes.enums import Cara
-from modelos.validador_de_cubo import validarCaras
+from modelos.validador_de_cubo import validar_caras
 
-# 
+from .partes_de_cubo import Etiqueta, etiqueta_de_texto
+
 CARAS_VERTICALES = [Cara.F, Cara.L, Cara.B, Cara.R]
 
 class Cubo:
-    '''
+    """
     Modelo para un cubo de Rubik con 6 caras.
     No se recomienda crear directamente con el constructor.
-    Use generarCubo() o crearCuboDeTexto().
+    Use generar_cubo() o crear_cubo_de_texto().
     Las caras son:
     * U (up) - de arriba
     * D (down) - de abajo
@@ -20,37 +20,37 @@ class Cubo:
     * B (back) - el reverso
     * L (left) - la izquerda
     * R (right) - la derecha
-    '''
+    """
 
-    # Una referencia para poder saber cuáles caras están al lado de otras
-    MAPA_DE_CARAS = {
-        'U': MapaDeCara(superior='B', inferior='F', izquierda='L', derecha='R'),
-        'D': MapaDeCara(superior='F', inferior='B', izquierda='L', derecha='R'),
-        'F': MapaDeCara(superior='U', inferior='D', izquierda='L', derecha='R'),
-        'B': MapaDeCara(superior='U', inferior='D', izquierda='R', derecha='L'),
-        'L': MapaDeCara(superior='U', inferior='D', izquierda='B', derecha='F'),
-        'R': MapaDeCara(superior='U', inferior='D', izquierda='F', derecha='B'),
-    }
+    # # Una referencia para poder saber cuáles caras están al lado de otras
+    # MAPA_DE_CARAS = {
+    #     'U': MapaDeCara(superior='B', inferior='F', izquierda='L', derecha='R'),
+    #     'D': MapaDeCara(superior='F', inferior='B', izquierda='L', derecha='R'),
+    #     'F': MapaDeCara(superior='U', inferior='D', izquierda='L', derecha='R'),
+    #     'B': MapaDeCara(superior='U', inferior='D', izquierda='R', derecha='L'),
+    #     'L': MapaDeCara(superior='U', inferior='D', izquierda='B', derecha='F'),
+    #     'R': MapaDeCara(superior='U', inferior='D', izquierda='F', derecha='B'),
+    # }
 
     # constructor
 
     def __init__(self,
-                U: list[list[Etiqueta]], 
-                D: list[list[Etiqueta]], 
-                F: list[list[Etiqueta]], 
-                B: list[list[Etiqueta]], 
-                L: list[list[Etiqueta]], 
-                R: list[list[Etiqueta]]
+                u: list[list[Etiqueta]],
+                d: list[list[Etiqueta]],
+                f: list[list[Etiqueta]],
+                b: list[list[Etiqueta]],
+                l: list[list[Etiqueta]],
+                r: list[list[Etiqueta]]
             ):
-        validarCaras(U, D, F, B, L, R)
-        self.dimension = len(U)
+        validar_caras(u, d, f, b, l, r)
+        self.dimension = len(u)
         self.estado = {
-            'U': U,
-            'D': D,
-            'F': F,
-            'B': B,
-            'L': L,
-            'R': R
+            'U': u,
+            'D': d,
+            'F': f,
+            'B': b,
+            'L': l,
+            'R': r
         }
 
     # métodos sobrescritos
@@ -69,109 +69,120 @@ class Cubo:
 
     # métodos
 
-    def getCara(self, cara: Cara):
+    def get_cara(self, cara: Cara):
         return self.estado[cara.value]
-    
-    def _setCara(self, cara: Cara, matriz: list[list[Etiqueta]]):
+
+    def _set_cara(self, cara: Cara, matriz: list[list[Etiqueta]]):
         self.estado[cara.value] = matriz
 
     def movimiento_u(self):
-        cara_girado = _girarMatrizHorario(self.getCara(Cara.U))
-        self._setCara(Cara.U, cara_girado)
+        cara_girado = _girar_matriz_horario(self.get_cara(Cara.U))
+        self._set_cara(Cara.U, cara_girado)
         self.estado = _cotar_verticalmente_horario(self, 0)
 
     def movimiento_u_prima(self):
-        cara_girado = _girarMatrizAntihorario(self.getCara(Cara.U))
-        self._setCara(Cara.U, cara_girado)
+        cara_girado = _girar_matriz_antihorario(self.get_cara(Cara.U))
+        self._set_cara(Cara.U, cara_girado)
         self.estado = _cotar_verticalmente_antihorario(self, 0)
 
+
 # métodos públicos
-    
-def copiarCubo(cubo: Cubo):
-    'Genera una copia del cubo'
+
+def copiar_cubo(cubo: Cubo):
+    """
+    Genera una copia del cubo
+    """
     return Cubo(
-        U = cubo.estado['U'].copy(),
-        D = cubo.estado['D'].copy(),
-        F = cubo.estado['F'].copy(),
-        B = cubo.estado['B'].copy(),
-        R = cubo.estado['R'].copy(),
-        L = cubo.estado['L'].copy(),
+        u = cubo.estado['U'].copy(),
+        d = cubo.estado['D'].copy(),
+        f = cubo.estado['F'].copy(),
+        b = cubo.estado['B'].copy(),
+        r = cubo.estado['R'].copy(),
+        l = cubo.estado['L'].copy(),
     )
 
-def crearCuboDeTexto(
-            U: list[list[str]], 
-            D: list[list[str]], 
-            F: list[list[str]], 
-            B: list[list[str]], 
-            L: list[list[str]], 
-            R: list[list[str]]
+
+def crear_cubo_de_texto(
+            u: list[list[str]],
+            d: list[list[str]],
+            f: list[list[str]],
+            b: list[list[str]],
+            l: list[list[str]],
+            r: list[list[str]]
         ):
-    '''
+    """
     Crear un cubo dado matrices de tipo str
     * requiere que cada str sea una Etiqueta válida
-    '''
+    """
     return Cubo(
-        U = _convertirAEtiquetas(U),
-        D = _convertirAEtiquetas(D),
-        F = _convertirAEtiquetas(F),
-        B = _convertirAEtiquetas(B),
-        R = _convertirAEtiquetas(R),
-        L = _convertirAEtiquetas(L),            
+        u = _convertir_a_etiquetas(u),
+        d = _convertir_a_etiquetas(d),
+        f = _convertir_a_etiquetas(f),
+        b = _convertir_a_etiquetas(b),
+        r = _convertir_a_etiquetas(r),
+        l = _convertir_a_etiquetas(l),
     )
 
-def generarCubo(dimension: int):
-    'Genera cubo nxnxn resuelto de la dimension dado'
+
+def generar_cubo(dimension: int):
+    """
+    Genera cubo nxnxn resuelto de la dimension dado
+    """
     caras = {}
 
     for c in Cara:
         posicion = 1
         cara = []
-        for i in range(dimension):
+        for _ in range(dimension):
             fila = []
-            for j in range(dimension):
+            for _ in range(dimension):
                 fila.append(Etiqueta(c, posicion))
                 posicion += 1
             cara.append(fila)
         caras[c] = cara
 
     return Cubo(
-        U=caras[Cara.U],
-        D=caras[Cara.D],
-        F=caras[Cara.F],
-        B=caras[Cara.B],
-        L=caras[Cara.L],
-        R=caras[Cara.R],
+        u=caras[Cara.U],
+        d=caras[Cara.D],
+        f=caras[Cara.F],
+        b=caras[Cara.B],
+        l=caras[Cara.L],
+        r=caras[Cara.R],
     )
+
 
 # métodos privados
 
-def _convertirAEtiquetas(lista: list[list[str]]):
-    '''
+def _convertir_a_etiquetas(lista: list[list[str]]):
+    """
     Dado una matriz de cadenas de str,
     devolver una matriz de Etiquetas
     * requiere que cada str sea una Etiqueta válida
-    '''
+    """
     resultado: list[list[Etiqueta]] = []
 
     # popular resultado con la traducción str -> Etiqueta
     for f in lista:
         fila: list[Etiqueta] = []
         for c in f:
-            columna = Etiqueta.deTexto(c)
+            columna = etiqueta_de_texto(c)
             fila.append(columna)
         resultado.append(fila)
 
     return resultado
 
+
 # los métodos que giran las matrices
 
-def _girarMatrizHorario(matriz: list[list]):
-    numpyMatriz = np.array(matriz)
-    return np.fliplr(numpyMatriz.transpose())
+def _girar_matriz_horario(matriz: list[list]):
+    numpy_matriz = np.array(matriz)
+    return np.fliplr(numpy_matriz.transpose())
 
-def _girarMatrizAntihorario(matriz: list[list]):
-    numpyMatriz = np.array(matriz)
-    return np.flipud(numpyMatriz.transpose())
+
+def _girar_matriz_antihorario(matriz: list[list]):
+    numpy_matriz = np.array(matriz)
+    return np.flipud(numpy_matriz.transpose())
+
 
 def _cotar_verticalmente_horario(cubo: Cubo, fila: int) -> dict[str, list[list]]:
     """
@@ -180,12 +191,14 @@ def _cotar_verticalmente_horario(cubo: Cubo, fila: int) -> dict[str, list[list]]
     """
     return _cotar_verticalmente(cubo, fila, True)
 
+
 def _cotar_verticalmente_antihorario(cubo: Cubo, fila: int) -> dict[str, list[list]]:
     """
     rotar la capa en la fila espesificada verticalmente, en direción antihoraria
     * returns nuevo estado de cubo con la fila rotada
     """
     return _cotar_verticalmente(cubo, fila, False)
+
 
 def _cotar_verticalmente(cubo: Cubo, fila: int, horario: bool) -> dict[str, list[list]]:
     """
@@ -197,7 +210,7 @@ def _cotar_verticalmente(cubo: Cubo, fila: int, horario: bool) -> dict[str, list
 
     # la orden en la que copiaremos las caras
     orden = CARAS_VERTICALES
-    if (horario):
+    if horario:
         # una copa de la lista al revés
         orden = CARAS_VERTICALES[::-1]
     primera_fila = copy.deepcopy(cubo.estado[orden[0].value][fila])

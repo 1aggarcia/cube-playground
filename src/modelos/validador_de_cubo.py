@@ -1,39 +1,40 @@
 from .partes_de_cubo import Etiqueta
 
-def validarCaras(
-                U: list[list[Etiqueta]], 
-                D: list[list[Etiqueta]], 
-                F: list[list[Etiqueta]], 
-                B: list[list[Etiqueta]], 
-                L: list[list[Etiqueta]], 
-                R: list[list[Etiqueta]]
+def validar_caras(
+                u: list[list[Etiqueta]],
+                d: list[list[Etiqueta]],
+                f: list[list[Etiqueta]],
+                b: list[list[Etiqueta]],
+                l: list[list[Etiqueta]],
+                r: list[list[Etiqueta]]
             ):
     '''
     Verifica que las caras dadas representan un cubo de rubik legal
     '''
 
-    _validarDimensiones(U, D, F, B, L, R)
+    _validar_dimensiones(u, d, f, b, l, r)
     #_validarPegatinas(U, D, F, B, L, R)
     #_validarPedazos(U, D, F, B, L, R)
 
     return True
 
-def _validarDimensiones(
-                U: list[list[Etiqueta]], 
-                D: list[list[Etiqueta]], 
-                F: list[list[Etiqueta]], 
-                B: list[list[Etiqueta]], 
-                L: list[list[Etiqueta]], 
-                R: list[list[Etiqueta]]
+
+def _validar_dimensiones(
+                u: list[list[Etiqueta]],
+                d: list[list[Etiqueta]],
+                f: list[list[Etiqueta]],
+                b: list[list[Etiqueta]],
+                l: list[list[Etiqueta]],
+                r: list[list[Etiqueta]]
             ):
     '''
     Verifica que cada cara tiene las mismas dimensiones nxnxn, donde n = len(U)
     * tira exepción si hay una cara que no tiene dimensiones nxn
     '''
-    dimension = len(U)
+    dimension = len(u)
     if dimension < 2:
         raise ValueError(f'dimension es < 2: {dimension}')
-    for cara in [U, D, F, B, L, R]:
+    for cara in [u, d, f, b, l, r]:
         if len(cara) != dimension:
             raise ValueError(f'dimensiones inexactas: {dimension}, {len(cara)}')
         for i in range(dimension):
@@ -42,8 +43,10 @@ def _validarDimensiones(
 
     return True
 
-def _validarPegatinas(U, D, F, B, L, R):
-    raise Exception('método no implmementado')
 
-def _validarPedazos(U, D, F, B, L, R):
-    raise Exception('método no implmementado')
+def _validar_pegatinas(u, d, f, b, l, r):
+    raise NotImplementedError()
+
+
+def _validar_pedazos(u, d, f, b, l, r):
+    raise NotImplementedError()

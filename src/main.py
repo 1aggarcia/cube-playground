@@ -1,12 +1,10 @@
-from tkinter import *
-
-from widgets.ventana import crearVentana
+from widgets.ventana import crear_ventana
 
 def main():
-    ventana = crearVentana()
+    ventana = crear_ventana()
     ventana.mainloop()
 
-if __name__=="__main__": 
+if __name__=="__main__":
     main()
 
 # PARA EJECUTAR PRUEBAS
@@ -14,4 +12,4 @@ if __name__=="__main__":
 # desde /src/
 
 # TODO: modelos/cubo.py - escribir pruebas
-# TODO: actualizar la ventana más eficientemente
+# TODO: modelos/cubo.py - arregla los tipos a numpy
