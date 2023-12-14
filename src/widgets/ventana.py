@@ -18,7 +18,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.SUPERFLIP
+    cubo = cubos.ESQUINA_MALA
 
     def callback_u():
         cubo.movimiento_u()

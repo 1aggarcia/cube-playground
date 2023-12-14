@@ -146,6 +146,17 @@ def generar_cubo(dimension: int):
     )
 
 
+def generar_matriz_de_cara(cara: Cara, dimension: int):
+    """
+    crea un matriz nxn llenada con la cara dada
+    * param dimension - n
+    * requiere que dimension >= 2
+    """
+    if (dimension < 2):
+        raise ValueError(f'dimension < 2: {dimension}')
+    
+    return np.full((dimension, dimension), cara)
+
 # métodos privados
 
 def _convertir_a_etiquetas(lista: list[list[str]]):
