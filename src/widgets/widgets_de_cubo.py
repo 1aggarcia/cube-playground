@@ -116,6 +116,6 @@ def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
             # El cubito [i][j] en 2D en una cara es lo mismo que
             # el cubito [i*dimension + j] in 1D
             cubito = ninos[i*dimension + j]
-            color = colores.COLORES_DE_CUBO[cuadro[i][j].cara]
+            color = colores.COLORES_DE_CUBO[cuadro[i][j]]
             # la modificación
             cubito.configure(bg = color)

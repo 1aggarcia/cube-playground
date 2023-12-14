@@ -2,9 +2,7 @@ import copy
 import numpy as np
 
 from constantes.enums import Cara
-from modelos.validador_de_cubo import validar_caras
-
-from .partes_de_cubo import Etiqueta, etiqueta_de_texto
+# from modelos.validador_de_cubo import validar_caras
 
 # el ciclo que siguen las caras al hacer el movimiento U
 CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
@@ -37,26 +35,26 @@ class Cubo:
                 l: np.ndarray,
                 r: np.ndarray
             ):
-        validar_caras(u, d, f, b, l, r)
+        # validar_caras(u, d, f, b, l, r)
         self.dimension = len(u)
         self._estado = {
-            'U': u,
-            'D': d,
-            'F': f,
-            'B': b,
-            'L': l,
-            'R': r
+            Cara.U: u,
+            Cara.D: d,
+            Cara.F: f,
+            Cara.B: b,
+            Cara.L: l,
+            Cara.R: r
         }
 
     # métodos sobrescritos
 
     def __str__(self):
         resultado = ""
-        for cara in self._estado.values():
+        for cuadrado in self._estado.values():
             # vuelta nxn
-            for fila in cara:
+            for fila in cuadrado:
                 for columna in fila:
-                    resultado += f'[{columna}]'
+                    resultado += f'[{columna.value}]'
                 resultado += '\n'
             resultado += '\n'
 
@@ -65,10 +63,10 @@ class Cubo:
     # métodos
 
     def get_cara(self, cara: Cara):
-        return self._estado[cara.value]
+        return self._estado[cara]
 
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
-        self._estado[cara.value] = matriz
+        self._estado[cara] = matriz
 
     def movimiento_u(self):
         cara_girado = _girar_matriz_horario(self.get_cara(Cara.U))
@@ -110,12 +108,12 @@ def crear_cubo_de_texto(
     * requiere que cada str sea una Etiqueta válida
     """
     return Cubo(
-        u = _convertir_a_etiquetas(u),
-        d = _convertir_a_etiquetas(d),
-        f = _convertir_a_etiquetas(f),
-        b = _convertir_a_etiquetas(b),
-        r = _convertir_a_etiquetas(r),
-        l = _convertir_a_etiquetas(l),
+        u = _convertir_a_caras(u),
+        d = _convertir_a_caras(d),
+        f = _convertir_a_caras(f),
+        b = _convertir_a_caras(b),
+        r = _convertir_a_caras(r),
+        l = _convertir_a_caras(l),
     )
 
 
@@ -126,15 +124,7 @@ def generar_cubo(dimension: int):
     caras = {}
 
     for c in Cara:
-        posicion = 1
-        cara = []
-        for _ in range(dimension):
-            fila = []
-            for _ in range(dimension):
-                fila.append(Etiqueta(c, posicion))
-                posicion += 1
-            cara.append(fila)
-        caras[c] = np.array(cara)
+        caras[c] = np.full((dimension, dimension), c)
 
     return Cubo(
         u=caras[Cara.U],
@@ -159,23 +149,23 @@ def generar_matriz_de_cara(cara: Cara, dimension: int):
 
 # métodos privados
 
-def _convertir_a_etiquetas(lista: list[list[str]]):
+def _convertir_a_caras(lista: list[list[str]]):
     """
     Dado una matriz de cadenas de str,
-    devolver una matriz de Etiquetas
-    * requiere que cada str sea una Etiqueta válida
+    devolver una matriz de tipo Cara
+    * requiere que cada str sea una Cara válida con dimensión nxn
     """
-    resultado: list[list[Etiqueta]] = []
+    dimension = len(lista)
+    resultado = np.full((dimension, dimension), None)
 
     # popular resultado con la traducción str -> Etiqueta
-    for f in lista:
-        fila: list[Etiqueta] = []
-        for c in f:
-            columna = etiqueta_de_texto(c)
-            fila.append(columna)
-        resultado.append(fila)
+    for x, fila in enumerate(lista):
+        if (len(fila) != dimension):
+            raise ValueError('matriz no tiene dimensiones nxn')
+        for y, texto_cara in enumerate(fila):
+            resultado[x, y] = Cara[texto_cara]
 
-    return np.array(resultado)
+    return resultado
 
 
 # los métodos que giran las matrices
@@ -188,7 +178,7 @@ def _girar_matriz_antihorario(matriz: np.ndarray):
     return np.flipud(matriz.transpose())
 
 
-def _cotar_horizontalmente_horario(cubo: Cubo, fila: int) -> dict[str, np.ndarray]:
+def _cotar_horizontalmente_horario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la fila espesificada verticalmente, en direción horaria
     * returns nuevo estado de cubo con la fila rotada
@@ -196,7 +186,7 @@ def _cotar_horizontalmente_horario(cubo: Cubo, fila: int) -> dict[str, np.ndarra
     return _cotar_horizontalmente(cubo, fila, True)
 
 
-def _cotar_horizontalmente_antihorario(cubo: Cubo, fila: int) -> dict[str, np.ndarray]:
+def _cotar_horizontalmente_antihorario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la fila espesificada verticalmente, en direción antihoraria
     * returns nuevo estado de cubo con la fila rotada
@@ -204,7 +194,7 @@ def _cotar_horizontalmente_antihorario(cubo: Cubo, fila: int) -> dict[str, np.nd
     return _cotar_horizontalmente(cubo, fila, False)
 
 
-def _cotar_horizontalmente(cubo: Cubo, fila: int, horario: bool) -> dict[str, np.ndarray]:
+def _cotar_horizontalmente(cubo: Cubo, fila: int, horario: bool) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la fila espesificada verticalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
@@ -217,13 +207,13 @@ def _cotar_horizontalmente(cubo: Cubo, fila: int, horario: bool) -> dict[str, np
     if horario:
         # una copa de la lista al revés
         orden = CARAS_HORIZONTALES[::-1]
-    primera_fila = copy.deepcopy(cubo._estado[orden[0].value][fila])
+    primera_fila = copy.deepcopy(cubo._estado[orden[0]][fila])
 
     # copiar filas en la orden dado para hacer una rotación
     for destino, fuente in zip(orden, orden[1:]):
-        fila_fuente = copy.deepcopy(estado_nuevo[fuente.value][fila])
-        estado_nuevo[destino.value][fila] = fila_fuente
+        fila_fuente = copy.deepcopy(estado_nuevo[fuente][fila])
+        estado_nuevo[destino][fila] = fila_fuente
 
-    estado_nuevo[orden[-1].value][fila] = primera_fila
+    estado_nuevo[orden[-1]][fila] = primera_fila
 
     return estado_nuevo

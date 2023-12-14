@@ -2,26 +2,23 @@ import unittest
 import numpy as np
 
 from modelos import cubo
-from modelos.partes_de_cubo import etiqueta_de_texto
 from constantes.enums import Cara
 
 class ProbarCubo(unittest.TestCase):
     # métodos privados
 
-    def test_convertir_a_etiquetas(self):
-        lista_a = [['U1', 'L2'], ['B14', 'D21'], ['D12', 'R2']]
-        lista_b = [['U1', 'L2', 'D21'], ['32'], ['D12', 'R2']]
-        lista_c = [['U1', 'L2', 'D21'], 2]
+    def test_convertir_a_caras(self):
+        lista_a = [['U', 'L'], ['B', 'D']]
+        lista_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
+        lista_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
 
-        self.assertTrue(np.array_equal(cubo._convertir_a_etiquetas(lista_a),
-            [
-                [etiqueta_de_texto('U1'), etiqueta_de_texto('L2')],
-                [etiqueta_de_texto('B14'), etiqueta_de_texto('D21')],
-                [etiqueta_de_texto('D12'), etiqueta_de_texto('R2')]
-            ]))
+        self.assertTrue(
+            np.array_equal(cubo._convertir_a_caras(lista_a),
+            [[Cara.U, Cara.L],[Cara.B, Cara.D]])
+        )
         
-        self.assertRaises(KeyError, cubo._convertir_a_etiquetas, lista_b)
-        self.assertRaises(TypeError, cubo._convertir_a_etiquetas, lista_c)
+        self.assertRaises(ValueError, cubo._convertir_a_caras, lista_b)
+        self.assertRaises(KeyError, cubo._convertir_a_caras, lista_c)
 
 
     def test_girar_matriz_horario(self):
@@ -64,83 +61,51 @@ class ProbarCubo(unittest.TestCase):
 
     def test_str(self):
         cubo_a = cubo.Cubo(
-            u=np.array([
-                [etiqueta_de_texto('U1'), etiqueta_de_texto('U2')],
-                [etiqueta_de_texto('U3'), etiqueta_de_texto('U4')],
-            ]),
-            d=np.array([
-                [etiqueta_de_texto('D1'), etiqueta_de_texto('D2')],
-                [etiqueta_de_texto('D3'), etiqueta_de_texto('D4')],
-            ]),
-            l=np.array([
-                [etiqueta_de_texto('L1'), etiqueta_de_texto('L2')],
-                [etiqueta_de_texto('L3'), etiqueta_de_texto('L4')],
-            ]),
-            r=np.array([
-                [etiqueta_de_texto('R1'), etiqueta_de_texto('R2')],
-                [etiqueta_de_texto('R3'), etiqueta_de_texto('R4')],
-            ]),
-            f=np.array([
-                [etiqueta_de_texto('F1'), etiqueta_de_texto('F2')],
-                [etiqueta_de_texto('F3'), etiqueta_de_texto('F4')],
-            ]),
-            b=np.array([
-                [etiqueta_de_texto('B1'), etiqueta_de_texto('B2')],
-                [etiqueta_de_texto('B3'), etiqueta_de_texto('B4')],
-            ]),
+            u = np.array([[Cara.U, Cara.B], [Cara.D, Cara.R]]),
+            d = np.array([[Cara.L, Cara.U], [Cara.R, Cara.D]]),
+            f = np.array([[Cara.L, Cara.B], [Cara.U, Cara.F]]),
+            b = np.array([[Cara.L, Cara.F], [Cara.B, Cara.D]]),
+            l = np.array([[Cara.U, Cara.D], [Cara.L, Cara.R]]),
+            r = np.array([[Cara.R, Cara.F], [Cara.F, Cara.B]]),
         )
 
         self.assertEqual(str(cubo_a),
             '\n'.join([
-                '[U1][U2]', '[U3][U4]\n', # U
-                '[D1][D2]', '[D3][D4]\n', # D
-                '[F1][F2]', '[F3][F4]\n', # F
-                '[B1][B2]', '[B3][B4]\n', # B
-                '[L1][L2]', '[L3][L4]\n', # L
-                '[R1][R2]', '[R3][R4]\n\n', # R    
+                '[U][B]', '[D][R]\n', # U
+                '[L][U]', '[R][D]\n', # D
+                '[L][B]', '[U][F]\n', # F
+                '[L][F]', '[B][D]\n', # B
+                '[U][D]', '[L][R]\n', # L
+                '[R][F]', '[F][B]\n\n', # R    
             ])
         )
 
     def test_get_cara(self):
         cubo_a = cubo.crear_cubo_de_texto(
-            u=
-                [['U1', 'D2'],
-                ['U3', 'U3']],
-            d=
-                [['R1', 'D2'],
-                ['D3', 'L4']],
-            f=
-                [['F1', 'F2'],
-                ['B3', 'R4']],
-            b=
-                [['F1', 'B2'],
-                ['D3', 'B4']],
-            l=
-                [['L1', 'L2'],
-                ['L3', 'U4']],
-            r=
-                [['R1', 'R2'],
-                ['B3', 'F4']]
+            u = [['U', 'D'], ['U', 'U']],
+            d = [['R', 'D'], ['D', 'L']],
+            f = [['F', 'F'], ['B', 'R']],
+            b = [['F', 'B'], ['D', 'B']],
+            l = [['L', 'L'], ['L', 'U']],
+            r = [['R', 'R'], ['B', 'F']]
         )
 
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.U),
-            [[etiqueta_de_texto('U1'), etiqueta_de_texto('D2')],
-             [etiqueta_de_texto('U3'), etiqueta_de_texto('U3')]]
+            [[Cara.U, Cara.D], [Cara.U, Cara.U]]
         ))
 
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.R),
-            [[etiqueta_de_texto('R1'), etiqueta_de_texto('R2')],
-             [etiqueta_de_texto('B3'), etiqueta_de_texto('F4')]]
+            [[Cara.R, Cara.R], [Cara.B, Cara.F]]
         ))
 
     def test_set_cara(self):
         cubo_a = cubo.generar_cubo(2)
 
-        cara_l = np.array([[etiqueta_de_texto('F2111'), etiqueta_de_texto('F999')]])
+        cara_l = np.array([[Cara.F, Cara.D], [Cara.U, Cara.U]])
         cubo_a._set_cara(Cara.L, cara_l)
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.L), cara_l))
 
-        cara_b = np.array([[etiqueta_de_texto('B2111'), etiqueta_de_texto('B999')]])
+        cara_b = np.array([[Cara.U, Cara.U], [Cara.D, Cara.B]])
         cubo_a._set_cara(Cara.L, cara_b)
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.L), cara_b))
 
@@ -152,34 +117,22 @@ class ProbarCubo(unittest.TestCase):
 
     def test_crear_cubo_de_texto(self):
         cubo_a = cubo.crear_cubo_de_texto(
-            u=
-                [['U1', 'D2'],
-                ['U3', 'U3']],
-            d=
-                [['R1', 'D2'],
-                ['D3', 'L4']],
-            f=
-                [['F1', 'F2'],
-                ['B3', 'R4']],
-            b=
-                [['F1', 'B2'],
-                ['D3', 'B4']],
-            l=
-                [['L1', 'L2'],
-                ['L3', 'U4']],
-            r=
-                [['R1', 'R2'],
-                ['B3', 'F4']]
+            u = [['U', 'D'], ['U', 'U']],
+            d = [['R', 'D'], ['D', 'L']],
+            f = [['F', 'F'], ['B', 'R']],
+            b = [['F', 'B'], ['D', 'B']],
+            l = [['L', 'L'], ['L', 'U']],
+            r = [['R', 'R'], ['B', 'F']]
         )
 
         self.assertEqual(str(cubo_a),
             '\n'.join([
-                '[U1][D2]', '[U3][U3]\n', # U
-                '[R1][D2]', '[D3][L4]\n', # D
-                '[F1][F2]', '[B3][R4]\n', # F
-                '[F1][B2]', '[D3][B4]\n', # B
-                '[L1][L2]', '[L3][U4]\n', # L
-                '[R1][R2]', '[B3][F4]\n\n', # R   
+                '[U][D]', '[U][U]\n', # U
+                '[R][D]', '[D][L]\n', # D
+                '[F][F]', '[B][R]\n', # F
+                '[F][B]', '[D][B]\n', # B
+                '[L][L]', '[L][U]\n', # L
+                '[R][R]', '[B][F]\n\n', # R    
             ])
         )
 
@@ -190,22 +143,22 @@ class ProbarCubo(unittest.TestCase):
 
         self.assertEqual(str(cubo_a),
             '\n'.join([
-                '[U1][U2]', '[U3][U4]\n', # U
-                '[D1][D2]', '[D3][D4]\n', # D
-                '[F1][F2]', '[F3][F4]\n', # F
-                '[B1][B2]', '[B3][B4]\n', # B
-                '[L1][L2]', '[L3][L4]\n', # L
-                '[R1][R2]', '[R3][R4]\n\n', # R    
+                '[U][U]', '[U][U]\n', # U
+                '[D][D]', '[D][D]\n', # D
+                '[F][F]', '[F][F]\n', # F
+                '[B][B]', '[B][B]\n', # B
+                '[L][L]', '[L][L]\n', # L
+                '[R][R]', '[R][R]\n\n', # R    
             ])
         )
         self.assertEqual(str(cubo_b),
             '\n'.join([
-                '[U1][U2][U3]', '[U4][U5][U6]', '[U7][U8][U9]\n', # U
-                '[D1][D2][D3]', '[D4][D5][D6]', '[D7][D8][D9]\n', # D
-                '[F1][F2][F3]', '[F4][F5][F6]', '[F7][F8][F9]\n', # F
-                '[B1][B2][B3]', '[B4][B5][B6]', '[B7][B8][B9]\n', # B
-                '[L1][L2][L3]', '[L4][L5][L6]', '[L7][L8][L9]\n', # L
-                '[R1][R2][R3]', '[R4][R5][R6]', '[R7][R8][R9]\n\n', # R
+                '[U][U][U]', '[U][U][U]', '[U][U][U]\n', # U
+                '[D][D][D]', '[D][D][D]', '[D][D][D]\n', # D
+                '[F][F][F]', '[F][F][F]', '[F][F][F]\n', # F
+                '[B][B][B]', '[B][B][B]', '[B][B][B]\n', # B
+                '[L][L][L]', '[L][L][L]', '[L][L][L]\n', # L
+                '[R][R][R]', '[R][R][R]', '[R][R][R]\n\n', # R
             ])
         )
 

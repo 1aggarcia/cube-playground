@@ -12,4 +12,3 @@ if __name__=="__main__":
 # desde /src/
 
 # TODO: modelos/cubo.py - escribir pruebas
-# TODO: modelos/cubo.py - arregla los tipos a numpy
