@@ -19,6 +19,18 @@ def crear_button_u(raiz: tk.Misc, callback, horario: bool):
     return tk.Button(raiz, text=texto, command=lambda: callback(horario))
 
 
+def crear_button_d(raiz: tk.Misc, callback, horario: bool):
+    texto = '[ D ]'
+    if not horario:
+        texto = "[ D' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
+
+def crear_button_r(raiz: tk.Misc, callback, horario: bool):
+    texto = '[ R ]'
+    if not horario:
+        texto = "[ R' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
+
 def crear_button_l(raiz: tk.Misc, callback, horario: bool):
     texto = '[ L ]'
     if not horario:
