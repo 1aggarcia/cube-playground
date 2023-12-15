@@ -4,7 +4,7 @@ from modelos.cubo import Cubo
 from constantes import colores
 from constantes.enums import Cara
 
-TAMANO_DE_CARA = 100 # ancho y altura de una cara
+TAMANO_DE_CARA = 130 # ancho y altura de una cara
 
 # métodos públicos
 
@@ -95,7 +95,8 @@ def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
 
     # crear frame central
     frame = tk.Frame(raiz, bg='black', name=cara.value.lower(),
-                    width=TAMANO_DE_CARA, height=TAMANO_DE_CARA, padx=2, pady=2)
+                    width=TAMANO_DE_CARA, height=TAMANO_DE_CARA,
+                    borderwidth=2)
 
     # llenar frame con los cubitos
     for i in range(dimension):
@@ -105,7 +106,7 @@ def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
                 width=tamano_de_cubito,
                 height=tamano_de_cubito,
                 borderwidth=1,
-                relief=tk.SOLID,
+                relief=tk.RAISED,
             )
             # meterlo a su posición determinada por la matriz de la que viene
             frame_cubito.grid(row=i, column=j)

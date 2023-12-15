@@ -2,6 +2,7 @@ from widgets.ventana import crear_ventana
 
 def main():
     ventana = crear_ventana()
+    ventana.state('zoomed')
     ventana.mainloop()
 
 if __name__=="__main__":

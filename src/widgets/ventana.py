@@ -8,7 +8,7 @@ def crear_ventana():
     # configurar ventana
     ventana = tk.Tk()
     ventana.config(bg=colores.VERDE_1)
-    ventana.geometry('700x500')
+    ventana.geometry('700x550')
 
     # crear y posicionar widget
     frame_central = _crear_frame_central(ventana)
@@ -18,7 +18,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.CUBO_RESUELTO
+    cubo = cubos.SUPERFLIP
 
     def callback_u(horario: bool):
         cubo.movimiento_u(horario)
