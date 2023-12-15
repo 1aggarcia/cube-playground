@@ -59,25 +59,15 @@ class Cubo:
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
 
-    def movimiento_u(self):
-        cara_girado = op.girar_matriz_horario(self.get_cara(Cara.U))
+    def movimiento_u(self, horario: bool):
+        cara_girado = op.girar_matriz(self.get_cara(Cara.U), horario)
         self._set_cara(Cara.U, cara_girado)
-        self._estado = op.cotar_horizontalmente(self._estado, 0, True)
+        self._estado = op.cotar_horizontalmente(self._estado, 0, horario)
 
-    def movimiento_u_prima(self):
-        cara_girado = op.girar_matriz_antihorario(self.get_cara(Cara.U))
-        self._set_cara(Cara.U, cara_girado)
-        self._estado = op.cotar_horizontalmente(self._estado, 0, False)
-
-    def movimiento_l(self):
-        cara_girado = op.girar_matriz_horario(self.get_cara(Cara.L))
+    def movimiento_l(self, horario: bool):
+        cara_girado = op.girar_matriz(self.get_cara(Cara.L), horario)
         self._set_cara(Cara.L, cara_girado)
-        self._estado = op.cotar_verticalmente(self._estado, 0, True)
-
-    def movimiento_l_prima(self):
-        cara_girado = op.girar_matriz_antihorario(self.get_cara(Cara.L))
-        self._set_cara(Cara.L, cara_girado)
-        self._estado = op.cotar_verticalmente(self._estado, 0, False)
+        self._estado = op.cotar_verticalmente(self._estado, 0, horario)
 
 
 # métodos públicos

@@ -12,16 +12,26 @@ CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 # el ciclo que siguen las caras al hacer el movimiento F
 CARAS_FRONTERIZAS = [Cara.U,  Cara.R, Cara.D, Cara.L]
 
+
+def girar_matriz(matriz: np.ndarray, horario: bool):
+    if horario:
+        return np.rot90(matriz, axes=(1, 0))
+    else:
+        return np.rot90(matriz, axes=(0, 1))
+
+
 def girar_matriz_horario(matriz: np.ndarray):
     #return np.fliplr(matriz.transpose())
-    return np.rot90(matriz, axes=(1, 0))
+    return girar_matriz(matriz, True)
 
 
 def girar_matriz_antihorario(matriz: np.ndarray):
     #return np.flipud(matriz.transpose())
-    return np.rot90(matriz, axes=(0, 1))
+    return girar_matriz(matriz, False)
 
-def cotar_horizontalmente(estado_de_cubo: dict[Cara, np.ndarray], fila: int, horario: bool) -> dict[Cara, np.ndarray]:
+def cotar_horizontalmente(
+        estado_de_cubo: dict[Cara, np.ndarray], fila: int, horario: bool
+    ) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la fila espesificada horizontalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
@@ -46,7 +56,9 @@ def cotar_horizontalmente(estado_de_cubo: dict[Cara, np.ndarray], fila: int, hor
     return estado_nuevo
 
 
-def cotar_verticalmente(estado_de_cubo: dict[Cara, np.ndarray], columna: int, horario: bool) -> dict[Cara, np.ndarray]:
+def cotar_verticalmente(
+        estado_de_cubo: dict[Cara, np.ndarray], columna: int, horario: bool
+    ) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la columna espesificada verticalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
