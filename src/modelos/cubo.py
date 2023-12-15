@@ -63,23 +63,27 @@ class Cubo:
         cara_girado = op.girar_matriz(self.get_cara(Cara.U), horario)
         self._set_cara(Cara.U, cara_girado)
         self._estado = op.cotar_horizontalmente(self._estado, 0, horario)
+        print('U') if horario else print("U'")
 
     def movimiento_d(self, horario: bool):
         cara_girado = op.girar_matriz(self.get_cara(Cara.D), horario)
         self._set_cara(Cara.D, cara_girado)
         self._estado = op.cotar_horizontalmente(
             self._estado, self.dimension - 1, not horario)
+        print('D') if horario else print("D'")
 
     def movimiento_r(self, horario: bool):
         cara_girado = op.girar_matriz(self.get_cara(Cara.R), horario)
         self._set_cara(Cara.R, cara_girado)
         self._estado = op.cotar_verticalmente(
             self._estado, self.dimension - 1, not horario)
+        print('R') if horario else print("R'")
 
     def movimiento_l(self, horario: bool):
         cara_girado = op.girar_matriz(self.get_cara(Cara.L), horario)
         self._set_cara(Cara.L, cara_girado)
         self._estado = op.cotar_verticalmente(self._estado, 0, horario)
+        print('L') if horario else print("L'")
 
 
 # métodos públicos
