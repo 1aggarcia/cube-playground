@@ -116,29 +116,29 @@ class ProbarCubo(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-    # def test_cortar_verticalmente(self):
-    #     cubo_a = cubo.crear_cubo_de_texto(
-    #         u = [['B', 'U'], ['U', 'D']],
-    #         d = [['D', 'R'], ['U', 'D']],
-    #         f = [['F', 'R'], ['F', 'B']],
-    #         b = [['R', 'L'], ['L', 'B']],
-    #         l = [['U', 'L'], ['R', 'L']],
-    #         r = [['F', 'F'], ['D', 'B']]
-    #     )
-    #     resultado_a = cubo._cotar_verticalmente(
-    #         cubo_a, 1, cubo.CARAS_VERTICALES)
-    #     esperado_a = {
-    #         Cara.F: np.array([[Cara.F, Cara.D], [Cara.F, Cara.D]]),
-    #         Cara.U: np.array([[Cara.U, Cara.F], [Cara.U, Cara.F]]),
-    #         Cara.B: np.array([[Cara.U, Cara.B], [Cara.U, Cara.B]]),
-    #         Cara.D: np.array([[Cara.D, Cara.B], [Cara.D, Cara.B]]),
-    #         Cara.R: cubo_a.get_cara(Cara.R),
-    #         Cara.L: cubo_a.get_cara(Cara.L),
-    #     }
+    def test_cortar_verticalmente(self):
+        cubo_a = cubo.crear_cubo_de_texto(
+            u = [['B', 'U'], ['U', 'D']],
+            d = [['D', 'R'], ['U', 'D']],
+            f = [['F', 'R'], ['F', 'B']],
+            b = [['R', 'L'], ['L', 'B']],
+            l = [['U', 'L'], ['R', 'L']],
+            r = [['F', 'F'], ['D', 'B']]
+        )
+        resultado_a = cubo._cotar_verticalmente(
+            cubo_a, 0, False)
+        esperado_a = {
+            Cara.F: np.array([[Cara.D, Cara.R], [Cara.U, Cara.B]]),
+            Cara.U: np.array([[Cara.F, Cara.U], [Cara.F, Cara.D]]),
+            Cara.B: np.array([[Cara.R, Cara.U], [Cara.L, Cara.B]]),
+            Cara.D: np.array([[Cara.B, Cara.R], [Cara.L, Cara.D]]),
+            Cara.R: cubo_a.get_cara(Cara.R),
+            Cara.L: cubo_a.get_cara(Cara.L),
+        }
 
-    #     for cara in Cara:
-    #         self.assertTrue(np.array_equal(resultado_a[cara],
-    #                                        esperado_a[cara]))
+        for cara in Cara:
+            self.assertTrue(np.array_equal(resultado_a[cara],
+                                           esperado_a[cara]))
 
     # métodos de clase
 

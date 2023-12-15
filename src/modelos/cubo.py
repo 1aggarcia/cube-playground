@@ -248,8 +248,23 @@ def _cotar_verticalmente(cubo: Cubo, columna: int, horario: bool) -> dict[Cara, 
 
     # copiar filas en la orden dado para hacer una rotación
     for destino, fuente in zip(orden, orden[1:]):
-        copia_de_columna = copy.deepcopy(estado_nuevo[fuente][0:, columna])
-        estado_nuevo[destino][0:, columna] = copia_de_columna
+        # copiar
+        cara_fuente = estado_nuevo[fuente]
+        if fuente == Cara.B:
+            # la cara B es invertida a 180 degrados, necesitamos invertir
+            # esta cara para compensar
+            cara_fuente = np.rot90(cara_fuente, 2)
+        copia_de_columna = copy.deepcopy(cara_fuente[0:, columna])
+
+        # pegar
+        columna_destino = columna
+        if destino == Cara.B:
+            # dado que la cara B es invertida, pegamos la columna al
+            # lado opuesto e invertida
+            columna_destino = cubo.dimension - columna - 1
+            copia_de_columna = np.flipud(copia_de_columna)
+
+        estado_nuevo[destino][0:, columna_destino] = copia_de_columna
 
     estado_nuevo[orden[-1]][0:, columna] = primera_columna
 
