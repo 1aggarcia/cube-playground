@@ -19,6 +19,12 @@ def crear_button_u(raiz: tk.Misc, callback):
 def crear_button_u_prima(raiz: tk.Misc, callback):
     return tk.Button(raiz, text="[ U' ]", command=callback)
 
+def crear_button_l(raiz: tk.Misc, callback):
+    return tk.Button(raiz, text="[ L ]", command=callback)
+
+def crear_button_l_prima(raiz: tk.Misc, callback):
+    return tk.Button(raiz, text="[ L' ]", command=callback)
+
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
     frame = tk.Frame(raiz, bg=colores.VERDE_2)

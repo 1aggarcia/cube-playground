@@ -14,9 +14,9 @@ class ProbarCubo(unittest.TestCase):
 
         self.assertTrue(
             np.array_equal(cubo._convertir_a_caras(lista_a),
-            [[Cara.U, Cara.L],[Cara.B, Cara.D]])
+            np.array([[Cara.U, Cara.L],[Cara.B, Cara.D]]))
         )
-        
+
         self.assertRaises(ValueError, cubo._convertir_a_caras, lista_b)
         self.assertRaises(KeyError, cubo._convertir_a_caras, lista_c)
 
@@ -57,26 +57,109 @@ class ProbarCubo(unittest.TestCase):
         ])
         self.assertTrue(np.array_equal(girada_b, cubo._girar_matriz_antihorario(lista_b)))
 
+    def test_cortar_horizontalmente(self):
+        cubo_a = cubo.crear_cubo_de_texto(
+            u = [['B', 'U'], ['U', 'D']],
+            d = [['D', 'R'], ['U', 'D']],
+            f = [['F', 'R'], ['F', 'B']],
+            b = [['R', 'L'], ['L', 'B']],
+            l = [['U', 'L'], ['R', 'L']],
+            r = [['F', 'F'], ['D', 'B']]
+        )
+        resultado_a = cubo._cotar_horizontalmente(
+            cubo_a, 0, True)
+        esperado_a = {
+            Cara.F: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
+            Cara.L: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
+            Cara.B: np.array([[Cara.U, Cara.L], [Cara.L, Cara.B]]),
+            Cara.R: np.array([[Cara.R, Cara.L], [Cara.D, Cara.B]]),
+            Cara.U: cubo_a.get_cara(Cara.U),
+            Cara.D: cubo_a.get_cara(Cara.D),
+        }
+
+        for cara in Cara:
+            self.assertTrue(np.array_equal(resultado_a[cara],
+                                           esperado_a[cara]))
+
+        resultado_b = cubo._cotar_horizontalmente(
+            cubo_a, 1, False)
+        esperado_b = {
+            Cara.R: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
+            Cara.F: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
+            Cara.L: np.array([[Cara.U, Cara.L], [Cara.L, Cara.B]]),
+            Cara.B: np.array([[Cara.R, Cara.L], [Cara.D, Cara.B]]),
+            Cara.U: cubo_a.get_cara(Cara.U),
+            Cara.D: cubo_a.get_cara(Cara.D),
+        }
+
+        for cara in Cara:
+            self.assertTrue(np.array_equal(resultado_b[cara],
+                                           esperado_b[cara]))
+
+    def test_cortar_horizontalmente_horario(self):
+        cubo_a = cubo.generar_cubo(4)
+        resultado_a = cubo._cotar_horizontalmente_horario(cubo_a, 2)
+        esperado_a = cubo._cotar_horizontalmente(
+            cubo_a, 2, True)
+
+        for cara in Cara:
+            self.assertTrue(np.array_equal(resultado_a[cara],
+                                           esperado_a[cara]))
+
+    def test_cortar_horizontalmente_antihorario(self):
+        cubo_a = cubo.generar_cubo(17)
+        resultado_a = cubo._cotar_horizontalmente_antihorario(cubo_a, 10)
+        esperado_a = cubo._cotar_horizontalmente(
+            cubo_a, 10, False)
+
+        for cara in Cara:
+            self.assertTrue(np.array_equal(resultado_a[cara],
+                                           esperado_a[cara]))
+
+    # def test_cortar_verticalmente(self):
+    #     cubo_a = cubo.crear_cubo_de_texto(
+    #         u = [['B', 'U'], ['U', 'D']],
+    #         d = [['D', 'R'], ['U', 'D']],
+    #         f = [['F', 'R'], ['F', 'B']],
+    #         b = [['R', 'L'], ['L', 'B']],
+    #         l = [['U', 'L'], ['R', 'L']],
+    #         r = [['F', 'F'], ['D', 'B']]
+    #     )
+    #     resultado_a = cubo._cotar_verticalmente(
+    #         cubo_a, 1, cubo.CARAS_VERTICALES)
+    #     esperado_a = {
+    #         Cara.F: np.array([[Cara.F, Cara.D], [Cara.F, Cara.D]]),
+    #         Cara.U: np.array([[Cara.U, Cara.F], [Cara.U, Cara.F]]),
+    #         Cara.B: np.array([[Cara.U, Cara.B], [Cara.U, Cara.B]]),
+    #         Cara.D: np.array([[Cara.D, Cara.B], [Cara.D, Cara.B]]),
+    #         Cara.R: cubo_a.get_cara(Cara.R),
+    #         Cara.L: cubo_a.get_cara(Cara.L),
+    #     }
+
+    #     for cara in Cara:
+    #         self.assertTrue(np.array_equal(resultado_a[cara],
+    #                                        esperado_a[cara]))
+
     # métodos de clase
 
     def test_str(self):
         cubo_a = cubo.Cubo(
-            u = np.array([[Cara.U, Cara.B], [Cara.D, Cara.R]]),
-            d = np.array([[Cara.L, Cara.U], [Cara.R, Cara.D]]),
-            f = np.array([[Cara.L, Cara.B], [Cara.U, Cara.F]]),
-            b = np.array([[Cara.L, Cara.F], [Cara.B, Cara.D]]),
-            l = np.array([[Cara.U, Cara.D], [Cara.L, Cara.R]]),
-            r = np.array([[Cara.R, Cara.F], [Cara.F, Cara.B]]),
+            u = np.array([[Cara.U, Cara.R], [Cara.D, Cara.B]]),
+            d = np.array([[Cara.U, Cara.F], [Cara.U, Cara.U]]),
+            f = np.array([[Cara.B, Cara.R], [Cara.B, Cara.D]]),
+            b = np.array([[Cara.D, Cara.R], [Cara.F, Cara.F]]),
+            l = np.array([[Cara.B, Cara.L], [Cara.L, Cara.L]]),
+            r = np.array([[Cara.D, Cara.F], [Cara.L, Cara.R]]),
         )
 
         self.assertEqual(str(cubo_a),
             '\n'.join([
-                '[U][B]', '[D][R]\n', # U
-                '[L][U]', '[R][D]\n', # D
-                '[L][B]', '[U][F]\n', # F
-                '[L][F]', '[B][D]\n', # B
-                '[U][D]', '[L][R]\n', # L
-                '[R][F]', '[F][B]\n\n', # R    
+                '[U][R]', '[D][B]\n', # U
+                '[U][F]', '[U][U]\n', # D
+                '[B][R]', '[B][D]\n', # F
+                '[D][R]', '[F][F]\n', # B
+                '[B][L]', '[L][L]\n', # L
+                '[D][F]', '[L][R]\n\n', # R    
             ])
         )
 
@@ -91,11 +174,11 @@ class ProbarCubo(unittest.TestCase):
         )
 
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.U),
-            [[Cara.U, Cara.D], [Cara.U, Cara.U]]
+            np.array([[Cara.U, Cara.D], [Cara.U, Cara.U]])
         ))
 
         self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.R),
-            [[Cara.R, Cara.R], [Cara.B, Cara.F]]
+            np.array([[Cara.R, Cara.R], [Cara.B, Cara.F]])
         ))
 
     def test_set_cara(self):

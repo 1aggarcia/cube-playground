@@ -7,8 +7,8 @@ from constantes.enums import Cara
 # el ciclo que siguen las caras al hacer el movimiento U
 CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
 
-# el ciclo que siguen las caras al hacer el movimiento R
-CARAS_VERTICALES = [Cara.F, Cara.U, Cara.B, Cara. D]
+# el ciclo que siguen las caras al hacer el movimiento L
+CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 
 # el ciclo que siguen las caras al hacer el movimiento F
 CARAS_FRONTERIZAS = [Cara.U,  Cara.R, Cara.D, Cara.L]
@@ -71,12 +71,22 @@ class Cubo:
     def movimiento_u(self):
         cara_girado = _girar_matriz_horario(self.get_cara(Cara.U))
         self._set_cara(Cara.U, cara_girado)
-        self._estado = _cotar_horizontalmente_horario(self, 0)
+        self._estado = _cotar_horizontalmente(self, 0, True)
 
     def movimiento_u_prima(self):
         cara_girado = _girar_matriz_antihorario(self.get_cara(Cara.U))
         self._set_cara(Cara.U, cara_girado)
-        self._estado = _cotar_horizontalmente_antihorario(self, 0)
+        self._estado = _cotar_horizontalmente(self, 0, False)
+
+    def movimiento_l(self):
+        cara_girado = _girar_matriz_horario(self.get_cara(Cara.L))
+        self._set_cara(Cara.L, cara_girado)
+        self._estado = _cotar_verticalmente_horario(self, 0)
+
+    def movimiento_l_prima(self):
+        cara_girado = _girar_matriz_antihorario(self.get_cara(Cara.L))
+        self._set_cara(Cara.L, cara_girado)
+        self._estado = _cotar_verticalmente_antihorario(self, 0)
 
 
 # métodos públicos
@@ -142,9 +152,9 @@ def generar_matriz_de_cara(cara: Cara, dimension: int):
     * param dimension - n
     * requiere que dimension >= 2
     """
-    if (dimension < 2):
+    if dimension < 2:
         raise ValueError(f'dimension < 2: {dimension}')
-    
+
     return np.full((dimension, dimension), cara)
 
 # métodos privados
@@ -160,7 +170,7 @@ def _convertir_a_caras(lista: list[list[str]]):
 
     # popular resultado con la traducción str -> Etiqueta
     for x, fila in enumerate(lista):
-        if (len(fila) != dimension):
+        if len(fila) != dimension:
             raise ValueError('matriz no tiene dimensiones nxn')
         for y, texto_cara in enumerate(fila):
             resultado[x, y] = Cara[texto_cara]
@@ -171,49 +181,76 @@ def _convertir_a_caras(lista: list[list[str]]):
 # los métodos que giran las matrices
 
 def _girar_matriz_horario(matriz: np.ndarray):
-    return np.fliplr(matriz.transpose())
+    #return np.fliplr(matriz.transpose())
+    return np.rot90(matriz, axes=(1, 0))
 
 
 def _girar_matriz_antihorario(matriz: np.ndarray):
-    return np.flipud(matriz.transpose())
+    #return np.flipud(matriz.transpose())
+    return np.rot90(matriz, axes=(0, 1))
 
 
 def _cotar_horizontalmente_horario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
-    """
-    rotar la capa en la fila espesificada verticalmente, en direción horaria
-    * returns nuevo estado de cubo con la fila rotada
-    """
     return _cotar_horizontalmente(cubo, fila, True)
 
 
 def _cotar_horizontalmente_antihorario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
-    """
-    rotar la capa en la fila espesificada verticalmente, en direción antihoraria
-    * returns nuevo estado de cubo con la fila rotada
-    """
     return _cotar_horizontalmente(cubo, fila, False)
+
+
+def _cotar_verticalmente_horario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
+    return _cotar_verticalmente(cubo, fila, True)
+
+
+def _cotar_verticalmente_antihorario(cubo: Cubo, fila: int) -> dict[Cara, np.ndarray]:
+    return _cotar_verticalmente(cubo, fila, False)
 
 
 def _cotar_horizontalmente(cubo: Cubo, fila: int, horario: bool) -> dict[Cara, np.ndarray]:
     """
-    rotar la capa en la fila espesificada verticalmente.
+    rotar la capa en la fila espesificada horizontalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
     * returns nuevo estado de cubo con la fila rotada
     """
-    estado_nuevo = copy.deepcopy(cubo._estado)
-
-    # la orden en la que copiaremos las caras
+    # la orden en la cual copiaremnos las caras horariamente
     orden = CARAS_HORIZONTALES
     if horario:
-        # una copa de la lista al revés
+        # ponerla al revés para copiar antihorariamente
         orden = CARAS_HORIZONTALES[::-1]
+
+    estado_nuevo = copy.deepcopy(cubo._estado)
     primera_fila = copy.deepcopy(cubo._estado[orden[0]][fila])
 
     # copiar filas en la orden dado para hacer una rotación
     for destino, fuente in zip(orden, orden[1:]):
-        fila_fuente = copy.deepcopy(estado_nuevo[fuente][fila])
-        estado_nuevo[destino][fila] = fila_fuente
+        copia_de_fila = copy.deepcopy(estado_nuevo[fuente][fila])
+        estado_nuevo[destino][fila] = copia_de_fila
 
     estado_nuevo[orden[-1]][fila] = primera_fila
+
+    return estado_nuevo
+
+
+def _cotar_verticalmente(cubo: Cubo, columna: int, horario: bool) -> dict[Cara, np.ndarray]:
+    """
+    rotar la capa en la columna espesificada verticalmente.
+    * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    * returns nuevo estado de cubo con la fila rotada
+    """
+    # la orden en la cual copiaremnos las caras horariamente
+    orden = CARAS_VERTICALES
+    if horario:
+        # ponerla al revés para copiar antihorariamente
+        orden = CARAS_VERTICALES[::-1]
+
+    estado_nuevo = copy.deepcopy(cubo._estado)
+    primera_columna = copy.deepcopy(cubo._estado[orden[0]][0:, columna])
+
+    # copiar filas en la orden dado para hacer una rotación
+    for destino, fuente in zip(orden, orden[1:]):
+        copia_de_columna = copy.deepcopy(estado_nuevo[fuente][0:, columna])
+        estado_nuevo[destino][0:, columna] = copia_de_columna
+
+    estado_nuevo[orden[-1]][0:, columna] = primera_columna
 
     return estado_nuevo
