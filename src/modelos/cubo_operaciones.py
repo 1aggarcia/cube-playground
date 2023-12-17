@@ -120,4 +120,25 @@ def cortar_frontera(
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
     * returns nuevo estado de cubo con la frontera rotada
     """
+    # PSEUDOCÓDIGO
+    #
+    # orden = CARAS_FRONTERIZAS
+    # if horario:
+        # orden = al revés
+    # orden.append(orden[0])
+    #
+    # estado_nuevo = copy.deepcopy(estado_de_cubo)
+    #
+    # for destino, fuente in orden:
+        # cara_fuente = girar_matriz(estado_de_cubo, fuente.orientacion)
+        # copia_de_linea = copy.deepcopy(cara_fuente[frontera])
+        #
+        # estado_nuevo[destino] = girar_matriz(estado_nuevo[destino], destino.orientacion)
+        # estado_nuevo[destino][frontera] = copia_de_linea
+        # estado_nuevo[destino] = girar_matriz(estado_nuevo[destino], destino.orientacion * -1)
+    #
+    # return estado_nuevo
+
+    # para que el intérprete no se queje
+    print(estado_de_cubo, frontera, horario)
     return {}
