@@ -18,7 +18,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.SUPERFLIP
+    cubo = cubos.CUBO_RESUELTO
 
     def callback_u(horario: bool):
         cubo.movimiento_u(horario)

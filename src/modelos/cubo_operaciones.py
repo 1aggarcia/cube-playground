@@ -13,12 +13,12 @@ CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 CARAS_FRONTERIZAS = [(Cara. L, 3), (Cara.U, 2), (Cara.R, 1), (Cara.D, 0)]
 
 
-def girar_matriz(matriz: np.ndarray, oriencacion: int):
+def girar_matriz(matriz: np.ndarray, orientacion: int):
     """
     Girar la matriz dada en sentido horario el número de veces dado como
-    oriencación
+    orientación
     """
-    match oriencacion % 4:
+    match orientacion % 4:
         case 0:
             # sin rotación
             return copy.deepcopy(matriz)
@@ -48,8 +48,12 @@ def cotar_horizontalmente(
     """
     rotar la capa en la fila espesificada horizontalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    * requiere 0 <= fila < dimensión de cubo
     * returns nuevo estado de cubo con la fila rotada
     """
+    if 0 > fila or fila >= len(estado_de_cubo[Cara.U]):
+        raise ValueError('fila debe ser entre 0 - dimensión de cubo')
+
     # la orden en la cual copiaremnos las caras horariamente
     orden = CARAS_HORIZONTALES
     if horario:
@@ -75,8 +79,12 @@ def cotar_verticalmente(
     """
     rotar la capa en la columna espesificada verticalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    * requiere 0 <= columna < dimensión de cubo
     * returns nuevo estado de cubo con la fila rotada
     """
+    if 0 > columna or columna >= len(estado_de_cubo[Cara.U]):
+        raise ValueError('columna debe ser entre 0 - dimensión de cubo')
+    
     dimension = len(estado_de_cubo[Cara.U])
     # la orden en la cual copiaremnos las caras horariamente
     orden = CARAS_VERTICALES
@@ -118,8 +126,11 @@ def cortar_frontera(
     """
     rotar la capa de la frontera espesificada
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    * requiere 0 <= frontera < dimensión de cubo
     * returns nuevo estado de cubo con la frontera rotada
     """
+    if 0 > frontera or frontera >= len(estado_de_cubo[Cara.U]):
+        raise ValueError('frontera debe ser entre 0 - dimensión de cubo')
     # PSEUDOCÓDIGO
     #
     # orden = CARAS_FRONTERIZAS

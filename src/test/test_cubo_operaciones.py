@@ -103,7 +103,7 @@ class ProbarCubo(unittest.TestCase):
         for cara in Cara:
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
-            
+
         resultado_b = op.cotar_verticalmente(cubo_a._estado, 1, True)
         esperado_b = {
             Cara.U: np.array([[Cara.B, Cara.L], [Cara.U, Cara.R]]),
@@ -118,6 +118,42 @@ class ProbarCubo(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
+    # def test_cortar_frontera(self):
+    #     cubo_a = crear_cubo_de_texto(
+    #         u = [['D', 'L'], ['U', 'U']],
+    #         d = [['D', 'R'], ['U', 'D']],
+    #         f = [['F', 'R'], ['L', 'D']],
+    #         b = [['B', 'B'], ['F', 'R']],
+    #         l = [['R', 'L'], ['F', 'B']],
+    #         r = [['B', 'U'], ['F', 'L']]
+    #     )
+    #     resultado_a = op.cortar_frontera(cubo_a._estado, 0, True)
+    #     esperado_a = {
+    #         Cara.L: np.array([[Cara.R, Cara.D], [Cara.F, Cara.R]]),
+    #         Cara.U: np.array([[Cara.D, Cara.L], [Cara.B, Cara.L]]),
+    #         Cara.R: np.array([[Cara.U, Cara.U], [Cara.U, Cara.L]]),
+    #         Cara.D: np.array([[Cara.F, Cara.B], [Cara.U, Cara.D]]),
+    #         Cara.F: cubo_a.get_cara(Cara.F),
+    #         Cara.B: cubo_a.get_cara(Cara.B),
+    #     }
+
+    #     for cara in Cara:
+    #         self.assertTrue(np.array_equal(resultado_a[cara],
+    #                                        esperado_a[cara]))
+
+    #     resultado_b = op.cortar_frontera(cubo_a._estado, 1, False)
+    #     esperado_b = {
+    #         Cara.D: np.array([[Cara.D, Cara.R], [Cara.R, Cara.F]]),
+    #         Cara.L: np.array([[Cara.L, Cara.L], [Cara.D, Cara.B]]),
+    #         Cara.U: np.array([[Cara.U, Cara.L], [Cara.U, Cara.U]]),
+    #         Cara.R: np.array([[Cara.B, Cara.D], [Cara.F, Cara.U]]),
+    #         Cara.F: cubo_a.get_cara(Cara.F),
+    #         Cara.B: cubo_a.get_cara(Cara.B),
+    #     }
+
+    #     for cara in Cara:
+    #         self.assertTrue(np.array_equal(resultado_b[cara],
+    #                                        esperado_b[cara]))
 
 if __name__ == '__main__':
     unittest.main()
