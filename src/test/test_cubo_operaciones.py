@@ -8,14 +8,15 @@ import modelos.cubo_operaciones as op
 class ProbarCubo(unittest.TestCase):
     # métodos privados
 
-    def test_girar_matriz_horario(self):
+    def test_girar_matriz(self):
+        # 90 degrados (sentido horario)
         lista_a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         girada_a = np.array([
             [7, 4, 1],
             [8, 5, 2],
             [9, 6, 3]
         ])
-        self.assertTrue(np.array_equal(girada_a, op.girar_matriz_horario(lista_a)))
+        self.assertTrue(np.array_equal(girada_a, op.girar_matriz(lista_a, 1)))
 
         lista_b = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
         girada_b = np.array([
@@ -24,25 +25,24 @@ class ProbarCubo(unittest.TestCase):
             [15, 11, 7, 3],
             [16, 12, 8, 4]
         ])
-        self.assertTrue(np.array_equal(girada_b, op.girar_matriz_horario(lista_b)))
+        self.assertTrue(np.array_equal(girada_b, op.girar_matriz(lista_b, 1)))
 
-
-    def test_girar_matriz_antihorario(self):
-        lista_a = np.array([[234, 123], [65, 2], [1, 2]])
-        girada_a = np.array([
+        # 270 degrados (sentido antihorario)
+        lista_c = np.array([[234, 123], [65, 2], [1, 2]])
+        girada_c = np.array([
             [123, 2, 2],
             [234, 65, 1]
         ])
-        self.assertTrue(np.array_equal(girada_a, op.girar_matriz_antihorario(lista_a)))
+        self.assertTrue(np.array_equal(girada_c, op.girar_matriz(lista_c, 3)))
 
-        lista_b = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
-        girada_b = np.array([
+        lista_d = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
+        girada_d = np.array([
             [4, 8, 12, 16],
             [3, 7, 11, 15],
             [2, 6, 10, 14],
             [1, 5, 9, 13]
         ])
-        self.assertTrue(np.array_equal(girada_b, op.girar_matriz_antihorario(lista_b)))
+        self.assertTrue(np.array_equal(girada_d, op.girar_matriz(lista_d, 3)))
 
     def test_cortar_horizontalmente(self):
         cubo_a = crear_cubo_de_texto(

@@ -10,24 +10,37 @@ CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
 CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 
 # el ciclo que siguen las caras al hacer el movimiento F
-CARAS_FRONTERIZAS = [Cara.U,  Cara.R, Cara.D, Cara.L]
+CARAS_FRONTERIZAS = [(Cara. L, 3), (Cara.U, 2), (Cara.R, 1), (Cara.D, 0)]
 
 
-def girar_matriz(matriz: np.ndarray, horario: bool):
-    if horario:
-        return np.rot90(matriz, axes=(1, 0))
-    else:
-        return np.rot90(matriz, axes=(0, 1))
+def girar_matriz(matriz: np.ndarray, oriencacion: int):
+    """
+    Girar la matriz dada en sentido horario el número de veces dado como
+    oriencación
+    """
+    match oriencacion % 4:
+        case 0:
+            # sin rotación
+            return copy.deepcopy(matriz)
+        case 1:
+            # 90 degrados en sentido horario
+            return np.rot90(matriz, axes=(1, 0))
+        case 2:
+            # 180 degrados
+            return np.rot90(matriz, 2)
+        case 3:
+            # 90 degrados en sentio antihorario
+            return np.rot90(matriz, axes=(0, 1))
+        case _:
+            raise RuntimeError('caso imposible')
 
 
 def girar_matriz_horario(matriz: np.ndarray):
-    #return np.fliplr(matriz.transpose())
-    return girar_matriz(matriz, True)
+    return girar_matriz(matriz, 1)
 
 
 def girar_matriz_antihorario(matriz: np.ndarray):
-    #return np.flipud(matriz.transpose())
-    return girar_matriz(matriz, False)
+    return girar_matriz(matriz, 3)
 
 def cotar_horizontalmente(
         estado_de_cubo: dict[Cara, np.ndarray], fila: int, horario: bool
@@ -81,7 +94,7 @@ def cotar_verticalmente(
         if fuente == Cara.B:
             # la cara B es invertida a 180 degrados, necesitamos invertir
             # esta cara para compensar
-            cara_fuente = np.rot90(cara_fuente, 2)
+            cara_fuente = girar_matriz(cara_fuente, 2)
         copia_de_columna = copy.deepcopy(cara_fuente[0:, columna])
 
         # pegar
@@ -97,3 +110,14 @@ def cotar_verticalmente(
     estado_nuevo[orden[-1]][0:, columna] = primera_columna
 
     return estado_nuevo
+
+
+def cortar_frontera(
+        estado_de_cubo: dict[Cara, np.ndarray], frontera: int, horario: bool
+    ) -> dict[Cara, np.ndarray]:
+    """
+    rotar la capa de la frontera espesificada
+    * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    * returns nuevo estado de cubo con la frontera rotada
+    """
+    return {}
