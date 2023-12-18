@@ -90,8 +90,6 @@ class Cubo:
             self._estado = op.cortar_frontera(
                 self._estado, linea, horario)
 
-        print(str(mov))
-
 
 # métodos públicos
 

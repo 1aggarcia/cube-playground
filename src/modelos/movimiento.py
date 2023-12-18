@@ -28,7 +28,7 @@ class Movimiento:
             self.ancho == __value.ancho
         )
 
-    def __str__(self):
+    def __repr__(self):
         resultado = self.cara.value
 
         if self.ancho:

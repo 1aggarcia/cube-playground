@@ -11,15 +11,22 @@ TAMANO_DE_CARA = 160 # ancho y altura de una cara
 def crear_label_cubo(raiz: tk.Misc, cubo: Cubo):
     return tk.Label(raiz, text=str(cubo), bg=colores.VERDE_2, fg='#ffffff')
 
-def crear_button(raiz: tk.Misc, cara: Cara, direccion: int, callback):
-    texto = f'[ {cara.value} ]'
-    if direccion == -1:
-        texto = f"[ {cara.value}' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(cara, direccion))
+
+def crear_frame_control(raiz: tk.Misc, callback):
+    frame = tk.Frame(raiz, bg=colores.VERDE_2, padx=10)
+
+    for i, cara in enumerate(Cara):
+        button = _crear_button_control(frame, cara, 1, callback)
+        button_prima = _crear_button_control(frame, cara, -1, callback)
+
+        button.grid(row=i, column=1)
+        button_prima.grid(row=i, column=0)
+
+    return frame
 
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
-    frame = tk.Frame(raiz, bg=colores.VERDE_2)
+    frame = tk.Frame(raiz, bg=colores.VERDE_2, padx=10)
 
     # crear widgets para cada cara
     cara_u = _crear_frame_de_cara(frame, cubo, Cara.U)
@@ -62,6 +69,13 @@ def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
 
 
 # métodos privados
+
+def _crear_button_control(raiz: tk.Misc, cara: Cara, direccion: int, callback):
+    texto = f'[ {cara.value} ]'
+    if direccion == -1:
+        texto = f"[ {cara.value}' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(cara, direccion))
+
 
 def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
     '''
@@ -117,4 +131,4 @@ def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
             cubito = ninos[i*dimension + j]
             color = colores.COLORES_DE_CUBO[cuadro[i][j]]
             # la modificación
-            cubito.configure(bg = color)
+            cubito.configure(bg = color) # type: ignore
