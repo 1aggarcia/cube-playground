@@ -13,7 +13,7 @@ def crear_label_cubo(raiz: tk.Misc, cubo: Cubo):
     return tk.Label(raiz, text=str(cubo), bg=colores.VERDE_2, fg='#ffffff')
 
 
-def crear_frame_control(raiz: tk.Misc, callback):
+def crear_frame_control(raiz: tk.Misc, callback, callback_algorithmo):
     frame = tk.Frame(raiz, bg=colores.VERDE_2, padx=10)
 
     for i, cara in enumerate(Cara):
@@ -24,6 +24,9 @@ def crear_frame_control(raiz: tk.Misc, callback):
         button_prima.grid(row=i, column=0)
         button.grid(row=i, column=1)
         button_doble.grid(row=i, column=2)
+
+    button_algorithmo = tk.Button(frame, text='Algorithmo', command=callback_algorithmo)
+    button_algorithmo.grid(row=0, column=3)
 
     return frame
 

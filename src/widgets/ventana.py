@@ -7,6 +7,26 @@ from constantes import colores
 from constantes.enums import Cara
 from . import widgets_de_cubo as widgets
 
+ALGORITMO = [
+    Movimiento(Cara.F, 1, 1, False),
+    Movimiento(Cara.R, 1, 1, False),
+    Movimiento(Cara.U, -1, 1, False),
+    Movimiento(Cara.R, -1, 1, False),
+    Movimiento(Cara.U, -1, 1, False),
+    Movimiento(Cara.R, 1, 1, False),
+    Movimiento(Cara.U, 1, 1, False),
+    Movimiento(Cara.R, -1, 1, False),
+    Movimiento(Cara.F, -1, 1, False),
+    Movimiento(Cara.R, 1, 1, False),
+    Movimiento(Cara.U, 1, 1, False),
+    Movimiento(Cara.R, -1, 1, False),
+    Movimiento(Cara.U, -1, 1, False),
+    Movimiento(Cara.R, -1, 1, False),
+    Movimiento(Cara.F, 1, 1, False),
+    Movimiento(Cara.R, 1, 1, False),
+    Movimiento(Cara.F, -1, 1, False),
+]
+
 def crear_ventana():
     # configurar ventana
     ventana = tk.Tk()
@@ -21,7 +41,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.CUBO_RESUELTO
+    cubo = cubos.CUBO_RESUELTO_3
     movimientos = []
 
     def callback(cara: Cara, direccion: Literal[-1, 1, 2]):
@@ -32,10 +52,16 @@ def _crear_frame_central(raiz: tk.Misc):
         movimientos.append(mov)
         print(movimientos)
 
+    def callback_algorithmo():
+        cubo.ejecutar_algoritmo(ALGORITMO)
+        widgets.colorar_cubo(frame_cubo, cubo)
+        movimientos.extend(ALGORITMO)
+        print(movimientos)
+
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = widgets.crear_frame_cubo(frame, cubo)
-    frame_control = widgets.crear_frame_control(frame, callback)
+    frame_control = widgets.crear_frame_control(frame, callback, callback_algorithmo)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)

@@ -70,6 +70,13 @@ class Cubo:
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
 
+    def ejecutar_algoritmo(self, algorithmo: list[Movimiento]):
+        """
+        Dado una lista de movimientos, ejecuta cada movimiento en el cubo
+        """
+        for mov in algorithmo:
+            self.mover(mov)
+
     def mover(self, mov: Movimiento):
         if mov.nivel == 1:
             # solo giramos la cara si nivel = 1
