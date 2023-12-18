@@ -43,20 +43,23 @@ def girar_matriz_antihorario(matriz: np.ndarray):
     return girar_matriz(matriz, -1)
 
 def cotar_horizontalmente(
-        estado_de_cubo: dict[Cara, np.ndarray], fila: int, horario: bool
+        estado_de_cubo: dict[Cara, np.ndarray], fila: int, direccion: int
     ) -> dict[Cara, np.ndarray]:
     """
-    rotar la capa en la fila espesificada horizontalmente.
-    * Si horario = True, la rotación será horaria, Si no, será antihoraria
+    rotar la capa en la fila espesificada horizontalmente, dado la dirección en
+    rotaciones en sentido horario
     * requiere 0 <= fila < dimensión de cubo
+    * requiere que direccion sea -1, 1 o 2
     * returns nuevo estado de cubo con la fila rotada
     """
     if 0 > fila or fila >= len(estado_de_cubo[Cara.U]):
         raise ValueError('fila debe ser entre 0 - dimensión de cubo')
+    if direccion not in [-1, 1, 2]:
+        raise ValueError('direccion no es ni -1, ni 1, ni 2')
 
     # la orden en la cual copiaremnos las caras horariamente
     orden = CARAS_HORIZONTALES.copy()
-    if horario:
+    if direccion == 1:
         # ponerla al revés para copiar antihorariamente
         orden = CARAS_HORIZONTALES[::-1]
 
@@ -70,25 +73,32 @@ def cotar_horizontalmente(
 
     estado_nuevo[orden[-1]][fila] = primera_fila
 
-    return estado_nuevo
+    if direccion == 2:
+        # para un doble movimiento, haz dos movimientos primos
+        return cotar_horizontalmente(estado_nuevo, fila, -1)
+    else:
+        return estado_nuevo
 
 
 def cotar_verticalmente(
-        estado_de_cubo: dict[Cara, np.ndarray], columna: int, horario: bool
+        estado_de_cubo: dict[Cara, np.ndarray], columna: int, direccion: int
     ) -> dict[Cara, np.ndarray]:
     """
     rotar la capa en la columna espesificada verticalmente.
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
     * requiere 0 <= columna < dimensión de cubo
+    * requiere que direccion sea -1, 1 o 2
     * returns nuevo estado de cubo con la fila rotada
     """
     if 0 > columna or columna >= len(estado_de_cubo[Cara.U]):
         raise ValueError('columna debe ser entre 0 - dimensión de cubo')
+    if direccion not in [-1, 1, 2]:
+        raise ValueError('direccion no es ni -1, ni 1, ni 2')
 
     dimension = len(estado_de_cubo[Cara.U])
     # la orden en la cual copiaremnos las caras horariamente
     orden = CARAS_VERTICALES.copy()
-    if horario:
+    if direccion == 1:
         # ponerla al revés para copiar antihorariamente
         orden = CARAS_VERTICALES[::-1]
 
@@ -117,24 +127,31 @@ def cotar_verticalmente(
 
     estado_nuevo[orden[-1]][0:, columna] = primera_columna
 
-    return estado_nuevo
+    if direccion == 2:
+        # para un doble movimiento, haz dos movimientos primos
+        return cotar_verticalmente(estado_nuevo, columna, -1)
+    else:
+        return estado_nuevo
 
 
 def cortar_frontera(
-        cubo_estado: dict[Cara, np.ndarray], linea: int, horario: bool
+        cubo_estado: dict[Cara, np.ndarray], linea: int, direccion: int
     ) -> dict[Cara, np.ndarray]:
     """
     rotar la capa por la frontera a la línea espesificada
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
     * requiere 0 <= linea < dimensión de cubo
+    * requiere que direccion sea -1, 1 o 2
     * returns nuevo estado de cubo con la frontera rotada
     """
     if 0 > linea or linea >= len(cubo_estado[Cara.U]):
         raise ValueError('frontera debe ser entre 0 - dimensión de cubo')
+    if direccion not in [-1, 1, 2]:
+        raise ValueError('direccion no es ni -1, ni 1, ni 2')
 
     # la orden en la cual copiaremnos las caras por la frontera
     orden = CARAS_FRONTERIZAS.copy()
-    if horario:
+    if direccion == 1:
         # ponerla al revés para copiar antihorariamente
         orden = CARAS_FRONTERIZAS[::-1]
 
@@ -158,4 +175,8 @@ def cortar_frontera(
         estado_nuevo[cara_d][linea] = copia_de_linea
         estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d * -1)
 
-    return estado_nuevo
+    if direccion == 2:
+        return cortar_frontera(estado_nuevo, linea, -1)
+    else:
+        # para un doble movimiento, haz dos movimientos primos
+        return estado_nuevo

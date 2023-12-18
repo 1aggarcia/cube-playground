@@ -14,7 +14,7 @@ class Movimiento:
     * ancho - True si quieres girar cada capa entre la cara y el nivel,
         False si solo quieres girar la capa al nivel dado.
     """
-    def __init__(self, cara: Cara, direccion: int, nivel: Literal[-1, 1, 2], ancho: bool):
+    def __init__(self, cara: Cara, direccion: Literal[-1, 1, 2], nivel: int, ancho: bool):
         self.cara = cara
         self.direccion = direccion
         self.nivel = nivel

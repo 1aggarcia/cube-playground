@@ -1,4 +1,5 @@
 import tkinter as tk
+from typing import Literal
 
 from modelos.cubo import Cubo
 from constantes import colores
@@ -18,9 +19,11 @@ def crear_frame_control(raiz: tk.Misc, callback):
     for i, cara in enumerate(Cara):
         button = _crear_button_control(frame, cara, 1, callback)
         button_prima = _crear_button_control(frame, cara, -1, callback)
+        button_doble = _crear_button_control(frame, cara, 2, callback)
 
-        button.grid(row=i, column=1)
         button_prima.grid(row=i, column=0)
+        button.grid(row=i, column=1)
+        button_doble.grid(row=i, column=2)
 
     return frame
 
@@ -70,10 +73,13 @@ def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
 
 # métodos privados
 
-def _crear_button_control(raiz: tk.Misc, cara: Cara, direccion: int, callback):
+def _crear_button_control(raiz: tk.Misc, cara: Cara, direccion: Literal[-1, 1, 2], callback):
+    # direccion = 1
     texto = f'[ {cara.value} ]'
     if direccion == -1:
         texto = f"[ {cara.value}' ]"
+    elif direccion == 2:
+        texto = f"[ {cara.value}2 ]"
     return tk.Button(raiz, text=texto, command=lambda: callback(cara, direccion))
 
 

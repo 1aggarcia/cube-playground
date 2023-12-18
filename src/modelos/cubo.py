@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 
 from constantes.enums import Cara
@@ -55,7 +56,16 @@ class Cubo:
     # métodos
 
     def get_cara(self, cara: Cara):
-        return self._estado[cara]
+        """
+        Retorna una copia de la cara espesificada en el cubo
+        """
+        return copy.deepcopy(self._estado[cara])
+
+    def get_estado(self):
+        """
+        Retorna una copia del estado de cubo
+        """
+        return copy.deepcopy(self._estado)
 
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
@@ -63,32 +73,32 @@ class Cubo:
     def mover(self, mov: Movimiento):
         if mov.nivel == 1:
             # solo giramos la cara si nivel = 1
-            cara_girado = op.girar_matriz(self.get_cara(mov.cara), mov.direccion)
+            cara_girado = op.girar_matriz(self._estado[mov.cara], mov.direccion)
             self._set_cara(mov.cara, cara_girado)
 
-        if mov.direccion == 2:
-            # movimientos dobles
-            raise NotImplementedError()
-
         horario = True if mov.direccion == 1 else False
+        direccion = mov.direccion
         linea = mov.nivel - 1
         if mov.cara in [Cara.D, Cara.B, Cara.R]:
             # estas caras giran con la orden de referencia
             horario = not horario
             linea = self.dimension - mov.nivel
+            if direccion != 2:
+                # para evitar -2 como dirección
+                direccion = mov.direccion * -1
 
         if mov.cara in [Cara.U, Cara.D]:
             # caras horizontales
             self._estado = op.cotar_horizontalmente(
-                self._estado, linea, horario)
+                self._estado, linea, direccion)
         elif mov.cara in [Cara.L, Cara.R]:
             # caras verticales
             self._estado = op.cotar_verticalmente(
-                self._estado, linea, horario)
+                self._estado, linea, direccion)
         else:
             # caras fronterizas
             self._estado = op.cortar_frontera(
-                self._estado, linea, horario)
+                self._estado, linea, direccion)
 
 
 # métodos públicos
@@ -98,12 +108,12 @@ def copiar_cubo(cubo: Cubo):
     Genera una copia del cubo
     """
     return Cubo(
-        u = cubo.get_cara(Cara.U).copy(),
-        d = cubo.get_cara(Cara.D).copy(),
-        f = cubo.get_cara(Cara.F).copy(),
-        b = cubo.get_cara(Cara.B).copy(),
-        l = cubo.get_cara(Cara.L).copy(),
-        r = cubo.get_cara(Cara.R).copy(),
+        u = cubo.get_cara(Cara.U),
+        d = cubo.get_cara(Cara.D),
+        f = cubo.get_cara(Cara.F),
+        b = cubo.get_cara(Cara.B),
+        l = cubo.get_cara(Cara.L),
+        r = cubo.get_cara(Cara.R),
     )
 
 

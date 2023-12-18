@@ -1,6 +1,6 @@
 import tkinter as tk
+from typing import Literal
 
-from modelos.cubo import generar_cubo
 from modelos.movimiento import Movimiento
 from constantes import cubos
 from constantes import colores
@@ -21,10 +21,10 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.SUPERFLIP
+    cubo = cubos.CUBO_RESUELTO
     movimientos = []
 
-    def callback(cara: Cara, direccion: int):
+    def callback(cara: Cara, direccion: Literal[-1, 1, 2]):
         mov = Movimiento(cara, direccion, 1, False)
 
         cubo.mover(mov)
