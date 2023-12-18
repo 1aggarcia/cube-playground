@@ -11,43 +11,11 @@ TAMANO_DE_CARA = 160 # ancho y altura de una cara
 def crear_label_cubo(raiz: tk.Misc, cubo: Cubo):
     return tk.Label(raiz, text=str(cubo), bg=colores.VERDE_2, fg='#ffffff')
 
-
-def crear_button_u(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ U ]'
-    if not horario:
-        texto = "[ U' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
-
-
-def crear_button_d(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ D ]'
-    if not horario:
-        texto = "[ D' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
-
-def crear_button_r(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ R ]'
-    if not horario:
-        texto = "[ R' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
-
-def crear_button_l(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ L ]'
-    if not horario:
-        texto = "[ L' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
-
-def crear_button_f(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ F ]'
-    if not horario:
-        texto = "[ F' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
-
-def crear_button_b(raiz: tk.Misc, callback, horario: bool):
-    texto = '[ B ]'
-    if not horario:
-        texto = "[ B' ]"
-    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
+def crear_button(raiz: tk.Misc, cara: Cara, direccion: int, callback):
+    texto = f'[ {cara.value} ]'
+    if direccion == -1:
+        texto = f"[ {cara.value}' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(cara, direccion))
 
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):

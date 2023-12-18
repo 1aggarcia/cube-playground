@@ -1,3 +1,4 @@
+from typing import Literal
 from constantes.enums import Cara
 
 class Movimiento:
@@ -13,10 +14,7 @@ class Movimiento:
     * ancho - True si quieres girar cada capa entre la cara y el nivel,
         False si solo quieres girar la capa al nivel dado.
     """
-    def __init__(self, cara: Cara, direccion: int, nivel: int, ancho: bool):
-        if (direccion != 1 and direccion != -1 and direccion != 2):
-            raise ValueError('direccion no es ni 1, ni -1, ni 2')
-
+    def __init__(self, cara: Cara, direccion: int, nivel: Literal[-1, 1, 2], ancho: bool):
         self.cara = cara
         self.direccion = direccion
         self.nivel = nivel
@@ -49,3 +47,20 @@ class Movimiento:
             resultado = str(self.nivel) + resultado
 
         return resultado
+
+def movimiento_de_texto(texto: str):
+    """
+    Convertir texto a un movimiento
+    """
+    # Casos posibles:
+    # SIN NIVEL
+    #     len = 1: U
+    #     len = 2: Uw, U', U2
+    #     len = 3: Uw', Uw2
+    # CON NIVEL
+    #     (n = 2, n.valor = 99)
+    #     len = n + 1: 99U
+    #     len = n + 2: 99Uw, 99U', 99U2
+    #     len = n + 3: 99Uw', 99Uw2
+
+    raise NotImplementedError()

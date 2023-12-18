@@ -1,6 +1,7 @@
 import numpy as np
 
 from constantes.enums import Cara
+from modelos.movimiento import Movimiento
 import modelos.cubo_operaciones as op
 # from modelos.validador_de_cubo import validar_caras
 
@@ -59,62 +60,37 @@ class Cubo:
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
 
-    def movimiento_u(self, horario: bool):
-        orientacion = 1 if horario else -1
+    def mover(self, mov: Movimiento):
+        if mov.nivel == 1:
+            # solo giramos la cara si nivel = 1
+            cara_girado = op.girar_matriz(self.get_cara(mov.cara), mov.direccion)
+            self._set_cara(mov.cara, cara_girado)
 
-        cara_girado = op.girar_matriz(self.get_cara(Cara.U), orientacion)
-        self._set_cara(Cara.U, cara_girado)
-        self._estado = op.cotar_horizontalmente(self._estado, 0, horario)
+        if mov.direccion == 2:
+            # movimientos dobles
+            raise NotImplementedError()
 
-        print('U') if horario else print("U'")
+        horario = True if mov.direccion == 1 else False
+        linea = mov.nivel - 1
+        if mov.cara in [Cara.D, Cara.B, Cara.R]:
+            # estas caras giran con la orden de referencia
+            horario = not horario
+            linea = self.dimension - mov.nivel
 
-    def movimiento_d(self, horario: bool):
-        orientacion = 1 if horario else -1
+        if mov.cara in [Cara.U, Cara.D]:
+            # caras horizontales
+            self._estado = op.cotar_horizontalmente(
+                self._estado, linea, horario)
+        elif mov.cara in [Cara.L, Cara.R]:
+            # caras verticales
+            self._estado = op.cotar_verticalmente(
+                self._estado, linea, horario)
+        else:
+            # caras fronterizas
+            self._estado = op.cortar_frontera(
+                self._estado, linea, horario)
 
-        cara_girado = op.girar_matriz(self.get_cara(Cara.D), orientacion)
-        self._set_cara(Cara.D, cara_girado)
-        self._estado = op.cotar_horizontalmente(
-            self._estado, self.dimension - 1, not horario)
-
-        print('D') if horario else print("D'")
-
-    def movimiento_r(self, horario: bool):
-        orientacion = 1 if horario else -1
-
-        cara_girado = op.girar_matriz(self.get_cara(Cara.R), orientacion)
-        self._set_cara(Cara.R, cara_girado)
-        self._estado = op.cotar_verticalmente(
-            self._estado, self.dimension - 1, not horario)
-
-        print('R') if horario else print("R'")
-
-    def movimiento_l(self, horario: bool):
-        orientacion = 1 if horario else -1
-
-        cara_girado = op.girar_matriz(self.get_cara(Cara.L), orientacion)
-        self._set_cara(Cara.L, cara_girado)
-        self._estado = op.cotar_verticalmente(self._estado, 0, horario)
-
-        print('L') if horario else print("L'")
-
-    def movimiento_f(self, horario: bool):
-        orientacion = 1 if horario else -1
-
-        cara_girado = op.girar_matriz(self.get_cara(Cara.F), orientacion)
-        self._set_cara(Cara.F, cara_girado)
-        self._estado = op.cortar_frontera(self._estado, 0, horario)
-
-        print('F') if horario else print("F'")
-
-    def movimiento_b(self, horario: bool):
-        orientacion = 1 if horario else -1
-
-        cara_girado = op.girar_matriz(self.get_cara(Cara.B), orientacion)
-        self._set_cara(Cara.B, cara_girado)
-        self._estado = op.cortar_frontera(
-            self._estado, self.dimension - 1, not horario)
-
-        print('F') if horario else print("F'")
+        print(str(mov))
 
 
 # métodos públicos

@@ -1,8 +1,10 @@
 import tkinter as tk
 
 from modelos.cubo import generar_cubo
+from modelos.movimiento import Movimiento
 from constantes import cubos
 from constantes import colores
+from constantes.enums import Cara
 from . import widgets_de_cubo as widgets
 
 def crear_ventana():
@@ -21,46 +23,26 @@ def crear_ventana():
 def _crear_frame_central(raiz: tk.Misc):
     cubo = cubos.SUPERFLIP
 
-    def callback_u(horario: bool):
-        cubo.movimiento_u(horario)
-        widgets.colorar_cubo(frame_cubo, cubo)
-
-    def callback_d(horario: bool):
-        cubo.movimiento_d(horario)
-        widgets.colorar_cubo(frame_cubo, cubo)
-
-    def callback_r(horario: bool):
-        cubo.movimiento_r(horario)
-        widgets.colorar_cubo(frame_cubo, cubo)
-
-    def callback_l(horario: bool):
-        cubo.movimiento_l(horario)
-        widgets.colorar_cubo(frame_cubo, cubo)
-
-    def callback_f(horario: bool):
-        cubo.movimiento_f(horario)
-        widgets.colorar_cubo(frame_cubo, cubo)
-
-    def callback_b(horario: bool):
-        cubo.movimiento_b(horario)
+    def callback(cara: Cara, direccion: int):
+        cubo.mover(Movimiento(cara, direccion, 1, False))
         widgets.colorar_cubo(frame_cubo, cubo)
 
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = widgets.crear_frame_cubo(frame, cubo)
-    button_u_prima = widgets.crear_button_u(frame, callback_u, False)
-    button_d_prima = widgets.crear_button_d(frame, callback_d, False)
-    button_r_prima = widgets.crear_button_r(frame, callback_r, False)
-    button_l_prima = widgets.crear_button_l(frame, callback_l, False)
-    button_f_prima = widgets.crear_button_f(frame, callback_f, False)
-    button_b_prima = widgets.crear_button_b(frame, callback_b, False)
+    button_u_prima = widgets.crear_button(frame, Cara.U, -1, callback)
+    button_d_prima = widgets.crear_button(frame, Cara.D, -1, callback)
+    button_r_prima = widgets.crear_button(frame, Cara.R, -1, callback)
+    button_l_prima = widgets.crear_button(frame, Cara.L, -1, callback)
+    button_f_prima = widgets.crear_button(frame, Cara.F, -1, callback)
+    button_b_prima = widgets.crear_button(frame, Cara.B, -1, callback)
 
-    button_u = widgets.crear_button_u(frame, callback_u, True)
-    button_d = widgets.crear_button_d(frame, callback_d, True)
-    button_r = widgets.crear_button_r(frame, callback_r, True)
-    button_l = widgets.crear_button_l(frame, callback_l, True)
-    button_f = widgets.crear_button_f(frame, callback_f, True)
-    button_b = widgets.crear_button_b(frame, callback_b, True)
+    button_u = widgets.crear_button(frame, Cara.U, 1, callback)
+    button_d = widgets.crear_button(frame, Cara.D, 1, callback)
+    button_r = widgets.crear_button(frame, Cara.R, 1, callback)
+    button_l = widgets.crear_button(frame, Cara.L, 1, callback)
+    button_f = widgets.crear_button(frame, Cara.F, 1, callback)
+    button_b = widgets.crear_button(frame, Cara.B, 1, callback)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)
