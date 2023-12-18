@@ -10,8 +10,8 @@ CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
 CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 
 # el ciclo que siguen las caras al hacer el movimiento F
-CARAS_FRONTERIZAS = [(Cara. L, 3), (Cara.U, 2), (Cara.R, 1), (Cara.D, 0)]
-
+# cada tuple representa (Cara, rotaciones necesarias antes de copiar)
+CARAS_FRONTERIZAS = [(Cara.D, 0), (Cara. L, -1), (Cara.U, 2), (Cara.R, 1)]
 
 def girar_matriz(matriz: np.ndarray, orientacion: int):
     """
@@ -40,7 +40,7 @@ def girar_matriz_horario(matriz: np.ndarray):
 
 
 def girar_matriz_antihorario(matriz: np.ndarray):
-    return girar_matriz(matriz, 3)
+    return girar_matriz(matriz, -1)
 
 def cotar_horizontalmente(
         estado_de_cubo: dict[Cara, np.ndarray], fila: int, horario: bool
@@ -55,7 +55,7 @@ def cotar_horizontalmente(
         raise ValueError('fila debe ser entre 0 - dimensión de cubo')
 
     # la orden en la cual copiaremnos las caras horariamente
-    orden = CARAS_HORIZONTALES
+    orden = CARAS_HORIZONTALES.copy()
     if horario:
         # ponerla al revés para copiar antihorariamente
         orden = CARAS_HORIZONTALES[::-1]
@@ -84,10 +84,10 @@ def cotar_verticalmente(
     """
     if 0 > columna or columna >= len(estado_de_cubo[Cara.U]):
         raise ValueError('columna debe ser entre 0 - dimensión de cubo')
-    
+
     dimension = len(estado_de_cubo[Cara.U])
     # la orden en la cual copiaremnos las caras horariamente
-    orden = CARAS_VERTICALES
+    orden = CARAS_VERTICALES.copy()
     if horario:
         # ponerla al revés para copiar antihorariamente
         orden = CARAS_VERTICALES[::-1]
@@ -121,35 +121,45 @@ def cotar_verticalmente(
 
 
 def cortar_frontera(
-        estado_de_cubo: dict[Cara, np.ndarray], frontera: int, horario: bool
+        cubo_estado: dict[Cara, np.ndarray], linea: int, horario: bool
     ) -> dict[Cara, np.ndarray]:
     """
-    rotar la capa de la frontera espesificada
+    rotar la capa por la frontera a la línea espesificada
     * Si horario = True, la rotación será horaria, Si no, será antihoraria
-    * requiere 0 <= frontera < dimensión de cubo
+    * requiere 0 <= linea < dimensión de cubo
     * returns nuevo estado de cubo con la frontera rotada
     """
-    if 0 > frontera or frontera >= len(estado_de_cubo[Cara.U]):
+    if 0 > linea or linea >= len(cubo_estado[Cara.U]):
         raise ValueError('frontera debe ser entre 0 - dimensión de cubo')
-    # PSEUDOCÓDIGO
-    #
-    # orden = CARAS_FRONTERIZAS
-    # if horario:
-        # orden = al revés
-    # orden.append(orden[0])
-    #
-    # estado_nuevo = copy.deepcopy(estado_de_cubo)
-    #
-    # for destino, fuente in orden:
-        # cara_fuente = girar_matriz(estado_de_cubo, fuente.orientacion)
-        # copia_de_linea = copy.deepcopy(cara_fuente[frontera])
-        #
-        # estado_nuevo[destino] = girar_matriz(estado_nuevo[destino], destino.orientacion)
-        # estado_nuevo[destino][frontera] = copia_de_linea
-        # estado_nuevo[destino] = girar_matriz(estado_nuevo[destino], destino.orientacion * -1)
-    #
-    # return estado_nuevo
 
-    # para que el intérprete no se queje
-    print(estado_de_cubo, frontera, horario)
-    return {}
+    # la orden en la cual copiaremnos las caras por la frontera
+    orden = CARAS_FRONTERIZAS.copy()
+    if horario:
+        # ponerla al revés para copiar antihorariamente
+        orden = CARAS_FRONTERIZAS[::-1]
+
+    # la primera cara en orden es ignorada, entonces la agregamos al fin
+    orden.append(orden[0])
+
+    estado_nuevo = copy.deepcopy(cubo_estado)
+
+    # copiar filas en la orden dado para hacer una rotación
+    for destino, fuente in zip(orden, orden[1:]):
+        cara_d = destino[0]
+        orientacion_d = destino[1]
+        orientacion_f = fuente[1]
+
+        cara_f = girar_matriz(cubo_estado[fuente[0]], orientacion_f)
+        copia_de_linea = copy.deepcopy(cara_f[linea])
+        print(f'fuente {fuente[0]}, destino {destino[0]}')
+        print(f'copia {copia_de_linea}')
+
+        # girar la cara, pegar la línea, y girarla para atrás para
+        # pegar la línea en la orientación que queremos
+        estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d)
+        estado_nuevo[cara_d][linea] = copia_de_linea
+        estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d * -1)
+        print(estado_nuevo[cara_d])
+        print()
+
+    return estado_nuevo

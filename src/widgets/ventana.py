@@ -36,6 +36,10 @@ def _crear_frame_central(raiz: tk.Misc):
         cubo.movimiento_l(horario)
         widgets.colorar_cubo(frame_cubo, cubo)
 
+    def callback_f(horario: bool):
+        cubo.movimiento_f(horario)
+        widgets.colorar_cubo(frame_cubo, cubo)
+
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = widgets.crear_frame_cubo(frame, cubo)
@@ -43,11 +47,13 @@ def _crear_frame_central(raiz: tk.Misc):
     button_d_prima = widgets.crear_button_d(frame, callback_d, False)
     button_r_prima = widgets.crear_button_r(frame, callback_r, False)
     button_l_prima = widgets.crear_button_l(frame, callback_l, False)
+    button_f_prima = widgets.crear_button_f(frame, callback_f, False)
 
     button_u = widgets.crear_button_u(frame, callback_u, True)
     button_d = widgets.crear_button_d(frame, callback_d, True)
     button_r = widgets.crear_button_r(frame, callback_r, True)
     button_l = widgets.crear_button_l(frame, callback_l, True)
+    button_f = widgets.crear_button_f(frame, callback_f, True)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)
@@ -56,10 +62,12 @@ def _crear_frame_central(raiz: tk.Misc):
     button_d_prima.grid(row=2, column=1)
     button_r_prima.grid(row=3, column=1)
     button_l_prima.grid(row=4, column=1)
+    button_f_prima.grid(row=5, column=1)
 
     button_u.grid(row=1, column=2)
     button_d.grid(row=2, column=2)
     button_r.grid(row=3, column=2)
     button_l.grid(row=4, column=2)
+    button_f.grid(row=5, column=2)
 
     return frame

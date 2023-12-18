@@ -37,6 +37,12 @@ def crear_button_l(raiz: tk.Misc, callback, horario: bool):
         texto = "[ L' ]"
     return tk.Button(raiz, text=texto, command=lambda: callback(horario))
 
+def crear_button_f(raiz: tk.Misc, callback, horario: bool):
+    texto = '[ F ]'
+    if not horario:
+        texto = "[ F' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
+
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
