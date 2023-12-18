@@ -4,7 +4,7 @@ from modelos.cubo import Cubo
 from constantes import colores
 from constantes.enums import Cara
 
-TAMANO_DE_CARA = 130 # ancho y altura de una cara
+TAMANO_DE_CARA = 160 # ancho y altura de una cara
 
 # métodos públicos
 
@@ -41,6 +41,12 @@ def crear_button_f(raiz: tk.Misc, callback, horario: bool):
     texto = '[ F ]'
     if not horario:
         texto = "[ F' ]"
+    return tk.Button(raiz, text=texto, command=lambda: callback(horario))
+
+def crear_button_b(raiz: tk.Misc, callback, horario: bool):
+    texto = '[ B ]'
+    if not horario:
+        texto = "[ B' ]"
     return tk.Button(raiz, text=texto, command=lambda: callback(horario))
 
 

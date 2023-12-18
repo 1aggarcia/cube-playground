@@ -106,6 +106,16 @@ class Cubo:
 
         print('F') if horario else print("F'")
 
+    def movimiento_b(self, horario: bool):
+        orientacion = 1 if horario else -1
+
+        cara_girado = op.girar_matriz(self.get_cara(Cara.B), orientacion)
+        self._set_cara(Cara.B, cara_girado)
+        self._estado = op.cortar_frontera(
+            self._estado, self.dimension - 1, not horario)
+
+        print('F') if horario else print("F'")
+
 
 # métodos públicos
 

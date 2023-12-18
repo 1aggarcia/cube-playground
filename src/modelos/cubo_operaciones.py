@@ -151,15 +151,11 @@ def cortar_frontera(
 
         cara_f = girar_matriz(cubo_estado[fuente[0]], orientacion_f)
         copia_de_linea = copy.deepcopy(cara_f[linea])
-        print(f'fuente {fuente[0]}, destino {destino[0]}')
-        print(f'copia {copia_de_linea}')
 
         # girar la cara, pegar la línea, y girarla para atrás para
         # pegar la línea en la orientación que queremos
         estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d)
         estado_nuevo[cara_d][linea] = copia_de_linea
         estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d * -1)
-        print(estado_nuevo[cara_d])
-        print()
 
     return estado_nuevo
