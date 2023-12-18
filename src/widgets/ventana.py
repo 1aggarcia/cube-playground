@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from modelos.cubo import generar_cubo
-# from constantes import cubos
+from constantes import cubos
 from constantes import colores
 from . import widgets_de_cubo as widgets
 
@@ -19,7 +19,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = generar_cubo(3)
+    cubo = cubos.SUPERFLIP
 
     def callback_u(horario: bool):
         cubo.movimiento_u(horario)
