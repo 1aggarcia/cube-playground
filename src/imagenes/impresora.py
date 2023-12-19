@@ -39,7 +39,7 @@ def imprimir_cubo(cubo: Cubo):
     altura_px = altura * BLOQUE
 
     # crear imagen
-    imagen = Image.new('RGB', (ancho_px, altura_px), colores.VERDE_2)
+    imagen = Image.new('RGB', (ancho_px, altura_px), colores.AMARILLO_1)
 
     # dibujar el cubo en el imagen
     for cara in Cara:

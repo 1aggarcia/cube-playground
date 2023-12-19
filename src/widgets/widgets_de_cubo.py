@@ -4,6 +4,7 @@ from typing import Literal
 from modelos.cubo import Cubo
 from constantes import colores
 from constantes.enums import Cara
+from imagenes.impresora import imprimir_cubo
 
 TAMANO_DE_CARA = 160 # ancho y altura de una cara
 
@@ -13,7 +14,9 @@ def crear_label_cubo(raiz: tk.Misc, cubo: Cubo):
     return tk.Label(raiz, text=str(cubo), bg=colores.VERDE_2, fg='#ffffff')
 
 
-def crear_frame_control(raiz: tk.Misc, callback, callback_algorithmo):
+def crear_frame_control(
+        raiz: tk.Misc, cubo: Cubo, callback, callback_algorithmo
+    ):
     frame = tk.Frame(raiz, bg=colores.VERDE_2, padx=10)
 
     for i, cara in enumerate(Cara):
@@ -26,7 +29,10 @@ def crear_frame_control(raiz: tk.Misc, callback, callback_algorithmo):
         button_doble.grid(row=i, column=2)
 
     button_algorithmo = tk.Button(frame, text='Algorithmo', command=callback_algorithmo)
-    button_algorithmo.grid(row=0, column=3)
+    button_impresora = _crear_button_impresora(frame, cubo)
+
+    button_algorithmo.grid(row=7, column=4)
+    button_impresora.grid(row=8, column=4)
 
     return frame
 
@@ -84,6 +90,13 @@ def _crear_button_control(raiz: tk.Misc, cara: Cara, direccion: Literal[-1, 1, 2
     elif direccion == 2:
         texto = f"[ {cara.value}2 ]"
     return tk.Button(raiz, text=texto, command=lambda: callback(cara, direccion))
+
+
+def _crear_button_impresora(raiz: tk.Misc, cubo: Cubo):
+    def imprimir():
+        imprimir_cubo(cubo)
+
+    return tk.Button(raiz, text='Imprimir', command=imprimir)
 
 
 def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:

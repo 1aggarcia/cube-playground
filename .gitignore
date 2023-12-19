@@ -1,3 +1,6 @@
+# cubes produced by impresora.py
+src/imagenes/cubos/*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

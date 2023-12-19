@@ -7,8 +7,6 @@ from constantes import colores
 from constantes.enums import Cara
 from . import widgets_de_cubo as widgets
 
-from imagenes.impresora import imprimir_cubo
-
 ALGORITMO = [
     Movimiento(Cara.F, 1, 1, False),
     Movimiento(Cara.R, 1, 1, False),
@@ -43,10 +41,8 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.MI_CUBO
+    cubo = cubos.CUBO_RESUELTO_25
     movimientos = []
-
-    imprimir_cubo(cubo)
 
     def callback(cara: Cara, direccion: Literal[-1, 1, 2]):
         mov = Movimiento(cara, direccion, 1, False)
@@ -65,7 +61,7 @@ def _crear_frame_central(raiz: tk.Misc):
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = widgets.crear_frame_cubo(frame, cubo)
-    frame_control = widgets.crear_frame_control(frame, callback, callback_algorithmo)
+    frame_control = widgets.crear_frame_control(frame, cubo, callback, callback_algorithmo)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)
