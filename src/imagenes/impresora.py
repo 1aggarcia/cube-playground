@@ -28,11 +28,12 @@ ALTURA = 3
 def imprimir_cubo(cubo: Cubo):
     """
     Dado un cubo, produce una imagen PNG con el estado del cubo en 2D.
-    El archivo tendrá el nombre "cubo_{AAAAMMDD}_{HHMMSS}.png", por ejemplo
-    "cubo_20231218_213301.png"
+    El archivo tendrá el nombre "cubo_{n}x{x}_{AAAAMMDD}_{HHMMSS}.png",
+    por ejemplo: "cubo_3x3_20231218_213301.png"
     """
-    ancho = PADDING + (cubo.dimension * ANCHO)
-    altura = PADDING + (cubo.dimension * ALTURA)
+    dim = cubo.dimension
+    ancho = PADDING + (dim * ANCHO)
+    altura = PADDING + (dim * ALTURA)
 
     ancho_px = ancho * BLOQUE
     altura_px = altura * BLOQUE
@@ -42,12 +43,12 @@ def imprimir_cubo(cubo: Cubo):
 
     # dibujar el cubo en el imagen
     for cara in Cara:
-        offset_x = OFFSETS_X[cara] * cubo.dimension + 1
-        offset_y = OFFSETS_Y[cara] * cubo.dimension + 1
+        offset_x = OFFSETS_X[cara] * dim + 1
+        offset_y = OFFSETS_Y[cara] * dim + 1
         dibujar_cara(imagen, cubo, cara, (offset_x, offset_y))
 
     # guardar imagen
-    nombre = f'{RUTA}/cubo_{get_fecha()}.png'
+    nombre = f'{RUTA}/cubo_{dim}x{dim}_{get_fecha()}.png'
     imagen.save(nombre)
     imagen.show()
 
