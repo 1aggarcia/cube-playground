@@ -7,6 +7,8 @@ from constantes import colores
 from constantes.enums import Cara
 from . import widgets_de_cubo as widgets
 
+from imagenes.impresora import imprimir_cubo
+
 ALGORITMO = [
     Movimiento(Cara.F, 1, 1, False),
     Movimiento(Cara.R, 1, 1, False),
@@ -41,8 +43,10 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.CUBO_RESUELTO_3
+    cubo = cubos.SUPERFLIP
     movimientos = []
+
+    imprimir_cubo(cubo)
 
     def callback(cara: Cara, direccion: Literal[-1, 1, 2]):
         mov = Movimiento(cara, direccion, 1, False)

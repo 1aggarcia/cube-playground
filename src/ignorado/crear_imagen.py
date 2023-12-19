@@ -32,11 +32,8 @@ def crear_imagen(dimension: int):
     altura_px = altura * BLOQUE
 
     # crear imagen
-    imagen = Image.new('RGB', (ancho_px, altura_px))
+    imagen = Image.new('RGB', (ancho_px, altura_px), RANDOM)
     draw = ImageDraw.Draw(imagen)
-
-    # poner color de fondo
-    draw.rectangle((0, 0, ancho_px, altura_px), RANDOM)
 
     # dibujar lineas para dividir la imagen
     # lineas verticales
