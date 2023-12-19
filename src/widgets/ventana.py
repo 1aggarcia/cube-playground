@@ -43,7 +43,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.SUPERFLIP
+    cubo = cubos.CUBO_RESUELTO_25
     movimientos = []
 
     imprimir_cubo(cubo)
