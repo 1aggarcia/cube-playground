@@ -3,7 +3,8 @@
 
 # from constantes.enums import Cara
 # from modelos import cubo
-# from modelos.partes_de_cubo import Etiqueta, etiqueta_de_texto, Pegatina, crear_matriz_de_pegatinas
+# from modelos.partes_de_cubo import Etiqueta, etiqueta_de_texto, Pegatina,
+# crear_matriz_de_pegatinas
 
 # class ProbarPartesDeCubo(unittest.TestCase):
 

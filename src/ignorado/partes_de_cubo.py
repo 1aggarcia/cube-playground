@@ -70,7 +70,7 @@
 #     Crea un matriz nxn de Pegatinas dado un matriz nxn de Caras.
 #     Cada Pegatina a [x][y] tendrá la misma cara que
 #     está in matriz[x][y].
-    
+
 #     Su profundidad será su distancia diagonal del
 #     borde, y su posición será su distancia de la esquina que
 #     define su profundidad.
@@ -80,7 +80,7 @@
 #     dimension = len(matriz)
 #     if (dimension < 2):
 #         raise ValueError(f'dimension < 2: {dimension}')
-    
+
 #     resultado = np.full((dimension, dimension), None)
 #     profundidad = math.floor(dimension/2)
 
@@ -103,7 +103,7 @@
 #             resultado[n_inv - i, n] = Pegatina(
 #                 matriz[n_inv - i, n], n, i
 #             )
-    
+
 #     # si cubo tiene dimensión impar, necesitamos agregar el centro
 #     if (dimension % 2 == 1):
 #         # profundidad = el centro de la matriz

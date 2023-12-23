@@ -85,7 +85,7 @@ class Cubo:
             cara_girado = op.girar_matriz(self._estado[mov.cara], mov.direccion)
             self._set_cara(mov.cara, cara_girado)
 
-        horario = True if mov.direccion == 1 else False
+        horario = bool(mov.direccion == 1)
         direccion = mov.direccion
         linea = mov.nivel - 1
         if mov.cara in [Cara.D, Cara.B, Cara.R]:

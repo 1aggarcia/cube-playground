@@ -1,3 +1,6 @@
+# deshabilitar aviso de acceder a métodos privados
+# pylint: disable=W0212
+
 import unittest
 import numpy as np
 

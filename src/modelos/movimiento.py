@@ -91,9 +91,10 @@ def movimiento_de_texto(texto: str) -> Movimiento:
     # determinal dirección (opcional)
     if i >= length:
         return Movimiento(cara, 1, nivel, ancho)
-    elif texto[i] == "'":
+    if texto[i] == "'":
         return Movimiento(cara, -1, nivel, ancho)
-    elif texto[i] == '2':
+    if texto[i] == '2':
         return Movimiento(cara, 2, nivel, ancho)
-    else:
-        raise ValueError(f'Carácter ilegal en movimiento: {texto[i]}')
+
+    # hay uno o más carácters que no tienen nada que ver con un movimiento
+    raise ValueError(f'Carácter ilegal en movimiento: {texto[i]}')

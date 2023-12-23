@@ -76,8 +76,8 @@ def cotar_horizontalmente(
     if direccion == 2:
         # para un doble movimiento, haz dos movimientos primos
         return cotar_horizontalmente(estado_nuevo, fila, -1)
-    else:
-        return estado_nuevo
+
+    return estado_nuevo
 
 
 def cotar_verticalmente(
@@ -130,8 +130,8 @@ def cotar_verticalmente(
     if direccion == 2:
         # para un doble movimiento, haz dos movimientos primos
         return cotar_verticalmente(estado_nuevo, columna, -1)
-    else:
-        return estado_nuevo
+
+    return estado_nuevo
 
 
 def cortar_frontera(
@@ -176,7 +176,7 @@ def cortar_frontera(
         estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d * -1)
 
     if direccion == 2:
-        return cortar_frontera(estado_nuevo, linea, -1)
-    else:
         # para un doble movimiento, haz dos movimientos primos
-        return estado_nuevo
+        return cortar_frontera(estado_nuevo, linea, -1)
+
+    return estado_nuevo

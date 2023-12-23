@@ -1,3 +1,6 @@
+# deshabilitar aviso de chequear x == x
+# pylint: disable=R0124
+
 import unittest
 
 import modelos.movimiento as mv
@@ -18,7 +21,7 @@ class ProbarCubo(unittest.TestCase):
         # Deben ser simétricos
         # Iguales
         self.assertTrue(x == y)
-        self.assertTrue(y ==x )
+        self.assertTrue(y == x)
         # No iguales
         self.assertFalse(x == diferente)
         self.assertFalse(diferente == x)
