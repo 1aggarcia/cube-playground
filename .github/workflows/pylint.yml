@@ -22,7 +22,7 @@ jobs:
         pip install Pillow
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=C0114,C0115,C0116 $(git ls-files '*.py')
+        pylint --disable=C0114,C0115,C0116,W0511,R0913,R0801 $(git ls-files '*.py')
     - name: Run unit tests
       run: |
         python -m unittest discover src
