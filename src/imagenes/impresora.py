@@ -41,7 +41,7 @@ def imprimir_cubo(cubo: Cubo):
     # crear imagen
     imagen = Image.new('RGB', (ancho_px, altura_px), colores.AMARILLO_1)
 
-    # dibujar el cubo en el imagen
+    # dibujar el cubo en la imagen
     for cara in Cara:
         offset_x = OFFSETS_X[cara] * dim + 1
         offset_y = OFFSETS_Y[cara] * dim + 1

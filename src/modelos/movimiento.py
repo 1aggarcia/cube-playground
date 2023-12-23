@@ -10,11 +10,13 @@ class Movimiento:
         Debe ser 1 por un movimiento en sentido horario, -1 por uno en
         sentido antihorario, o 2 para uno doble
     * nivel - cuantas capas de profundidad quieres girar. 1 es solo la cara.
-        Debe ser menos de la dimension del cubo
+        Debe ser menos de la dimension del cubo, más que 0
     * ancho - True si quieres girar cada capa entre la cara y el nivel,
         False si solo quieres girar la capa al nivel dado.
     """
     def __init__(self, cara: Cara, direccion: Literal[-1, 1, 2], nivel: int, ancho: bool):
+        if nivel < 1:
+            raise ValueError('nivel debe ser por lo menos 1')
         self.cara = cara
         self.direccion = direccion
         self.nivel = nivel
@@ -48,19 +50,50 @@ class Movimiento:
 
         return resultado
 
-def movimiento_de_texto(texto: str):
+def movimiento_de_texto(texto: str) -> Movimiento:
     """
     Convertir texto a un movimiento
+    * requiere que el texto tenga una letra que represente una cara,
+        e.j. <U>
+    * requiere que el nivel esté antes de la cara, e.j. <3U>
+    * requiere que el carácter <w> aparezca después de la cara si
+        el movimiento es ancho, e.j. <Uw>
+    * requiere que la dirección sea indicada por <'> para prima o <2> para
+        double, al fin del movimiento, e.j. <U'>, <Uw2>, <3Dw'>
     """
-    # Casos posibles:
-    # SIN NIVEL
-    #     len = 1: U
-    #     len = 2: Uw, U', U2
-    #     len = 3: Uw', Uw2
-    # CON NIVEL
-    #     (n = 2, n.valor = 99)
-    #     len = n + 1: 99U
-    #     len = n + 2: 99Uw, 99U', 99U2
-    #     len = n + 3: 99Uw', 99Uw2
+    length = len(texto)
 
-    raise NotImplementedError()
+    if length < 1:
+        raise ValueError('texto está vacío')
+    i = 0
+
+    # determinar nivel (opcional)
+    nivel = 1
+    while texto[i].isdigit():
+        i += 1
+    if i != 0:
+        nivel = int(texto[0:i])
+
+    # determinar cara (obligatorio)
+    if i >= length:
+        raise ValueError('El texto no contiene una cara')
+    cara = Cara[texto[i]]
+    i += 1
+
+    # determinar ancho (opcional)
+    ancho = False
+    if i >= length:
+        return Movimiento(cara, 1, nivel, False)
+    if texto[i] == 'w':
+        ancho = True
+        i += 1
+
+    # determinal dirección (opcional)
+    if i >= length:
+        return Movimiento(cara, 1, nivel, ancho)
+    elif texto[i] == "'":
+        return Movimiento(cara, -1, nivel, ancho)
+    elif texto[i] == '2':
+        return Movimiento(cara, 2, nivel, ancho)
+    else:
+        raise ValueError(f'Carácter ilegal en movimiento: {texto[i]}')

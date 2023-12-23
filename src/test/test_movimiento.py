@@ -69,3 +69,66 @@ class ProbarCubo(unittest.TestCase):
 
         mov_largo_ancho_doble = mv.Movimiento(Cara.B, 2, 2, True)
         self.assertEqual(str(mov_largo_ancho_doble), "2Bw2")
+
+    def test_movimiento_de_texto(self):
+        # SIN NIVEL
+        # len = 1
+        self.assertEqual(
+            mv.movimiento_de_texto('U'),
+            mv.Movimiento(Cara.U, 1, 1, False)
+        )
+
+        # len = 2: Uw, U', U2
+        self.assertEqual(
+            mv.movimiento_de_texto('Dw'),
+            mv.Movimiento(Cara.D, 1, 1, True)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto("L'"),
+            mv.Movimiento(Cara.L, -1, 1, False)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto('R2'),
+            mv.Movimiento(Cara.R, 2, 1, False)
+        )
+
+        # len = 3: Uw', Uw2
+        self.assertEqual(
+            mv.movimiento_de_texto("Dw'"),
+            mv.Movimiento(Cara.D, -1, 1, True)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto('Rw2'),
+            mv.Movimiento(Cara.R, 2, 1, True)
+        )
+
+        # CON NIVEL
+        # len = n + 1: 99U
+        self.assertEqual(
+            mv.movimiento_de_texto('99U'),
+            mv.Movimiento(Cara.U, 1, 99, False)
+        )
+
+        # len = n + 2: 4Uw, 99U', 99U2
+        self.assertEqual(
+            mv.movimiento_de_texto('4Dw'),
+            mv.Movimiento(Cara.D, 1, 4, True)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto("22B'"),
+            mv.Movimiento(Cara.B, -1, 22, False)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto('4L2'),
+            mv.Movimiento(Cara.L, 2, 4, False)
+        )
+
+        # len = n + 3: 99Uw', 99Uw2
+        self.assertEqual(
+            mv.movimiento_de_texto("5923Fw'"),
+            mv.Movimiento(Cara.F, -1, 5923, True)
+        )
+        self.assertEqual(
+            mv.movimiento_de_texto('5Uw2'),
+            mv.Movimiento(Cara.U, 2, 5, True)
+        )

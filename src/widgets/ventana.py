@@ -41,7 +41,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.CUBO_RESUELTO_25
+    cubo = cubos.CUBO_RESUELTO_3
     movimientos = []
 
     def callback(cara: Cara, direccion: Literal[-1, 1, 2]):
