@@ -1,6 +1,7 @@
 from modelos.cubo import generar_cubo, crear_cubo_de_texto
 
-CUBO_RESUELTO_3 = generar_cubo(5)
+CUBO_RESUELTO_3 = generar_cubo(3)
+CUBO_RESUELTO_7 = generar_cubo(7)
 CUBO_RESUELTO_25 = generar_cubo(25)
 
 MI_CUBO = crear_cubo_de_texto(

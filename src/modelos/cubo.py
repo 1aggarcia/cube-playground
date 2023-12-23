@@ -2,7 +2,7 @@ import copy
 import numpy as np
 
 from constantes.enums import Cara
-from modelos.movimiento import Movimiento
+from modelos.movimiento import Movimiento, movimiento_de_texto
 import modelos.cubo_operaciones as op
 # from modelos.validador_de_cubo import validar_caras
 
@@ -70,12 +70,14 @@ class Cubo:
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
 
-    def ejecutar_algoritmo(self, algorithmo: list[Movimiento]):
+    def ejecutar_algoritmo(self, algorithmo: list[str]):
         """
-        Dado una lista de movimientos, ejecuta cada movimiento en el cubo
+        Dado una lista de texto representando movimientos,
+        ejecuta cada movimiento en el cubo.
+        * requiere que cada elemento sea una representación válida de un movimiento
         """
         for mov in algorithmo:
-            self.mover(mov)
+            self.mover(movimiento_de_texto(mov))
 
     def mover(self, mov: Movimiento):
         if mov.nivel == 1:
