@@ -25,7 +25,7 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
             realizar_alg(alg)
             text_entrada.delete(0, tk.END)
             historial.extend(alg)
-            text_historial.insert(tk.END, f' {texto}')
+            text_historial.insert(tk.END, f'{texto} ')
         except (ValueError, KeyError):
             messagebox.showerror('Error', 'Invalid Move Sequence Entered')
 
@@ -34,7 +34,7 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
         invertido = mv.invertir_movimiento(mov)
         realizar_alg([str(invertido)])
         text_historial.delete(1.0, tk.END)
-        text_historial.insert(1.0, str(historial))
+        text_historial.insert(1.0, ' '.join(historial))
 
     text_historial = tk.Text(frame, width=30, height=10)
     text_entrada = tk.Entry(frame, width=30)

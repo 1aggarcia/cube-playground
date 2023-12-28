@@ -1,12 +1,9 @@
 import tkinter as tk
 
-from modelos.movimiento import Movimiento
 from constantes import cubos
 from constantes import colores
 from . import dibujar_cubo as dibujar
 from . import controlar_cubo as control
-
-OLL = ["R", "U", "R'", "U'", "R'", "F", "R2", "U", "R'", "U'", "F'"]
 
 def crear_ventana():
     # configurar ventana
