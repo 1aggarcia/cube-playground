@@ -1,20 +1,37 @@
 import tkinter as tk
+from tkinter import messagebox
 
-from modelos.cubo import Cubo
 from modelos.movimiento import Movimiento
 from constantes import colores
-from constantes.enums import Cara
 
 PADDING = 10
 
-historial: list[Movimiento] = [Movimiento(Cara.B, 1, 1, False), Movimiento(Cara.B, 1, 1, False)]
+historial: list[str] = []
 
-def crear_frame_control(raiz: tk.Misc):
+def crear_frame_control(raiz: tk.Misc, realizar_alg):
+    """
+    Crea y retorna el frame de control para la ventana del cubo.
+    :param realizar_mov - debe ser una función que ejecute un movimiento y
+        actualice el frame apropiadamente
+    :param realizar_alg - muy parecido, la única diferencia es que debe
+        ejecutar un algorithmo en vez de un movimiento
+    """
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
 
-    text_historial = _crear_frame_historial(frame)
-    text_entrada = _crear_frame_entrada(frame)
-    frame_buttons = _crear_frame_buttons(frame)
+    def hacer_alg():
+        texto = text_entrada.get().upper()
+        alg = texto.split(' ')
+        try:
+            realizar_alg(alg)
+            text_entrada.delete(0, tk.END)
+            historial.extend(alg)
+            text_historial.insert(tk.END, f' {texto}')
+        except (ValueError, KeyError):
+            messagebox.showerror('Error', 'Invalid Move Sequence Entered')
+
+    text_historial = _crear_text_historial(frame)
+    text_entrada = _crear_text_entrada(frame)
+    frame_buttons = _crear_frame_buttons(frame, hacer_alg)
 
     text_historial.pack()
     text_entrada.pack()
@@ -23,37 +40,22 @@ def crear_frame_control(raiz: tk.Misc):
     return frame
 
 
-def _crear_frame_historial(raiz: tk.Misc):
-    frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
-
-    label = tk.Label(frame, text='Moves applied:')
-    text = tk.Text(frame, width=30, height=10)
-    text.insert(1.0, str(historial))
-    text.configure(state="disabled")
-
-    label.pack()
-    text.pack()
-
-    return frame
+def _crear_text_historial(raiz: tk.Misc):
+    return tk.Text(raiz, width=30, height=10)
 
 
-def _crear_frame_entrada(raiz: tk.Misc):
-    frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
-
-    label = tk.Label(frame, text='Sequence of moves:')
-    text = tk.Entry(frame, width=30)
-
-    label.pack()
-    text.pack()
-
-    return frame
+def _crear_text_entrada(raiz: tk.Misc):
+    return tk.Entry(raiz, width=30)
 
 
-def _crear_frame_buttons(raiz: tk.Misc):
+def _crear_frame_buttons(raiz: tk.Misc, hacer_alg):
+    """
+    Crea y retorna un frame de buttons para controlar el cubo
+    """
     frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
 
     # crear botones
-    button_aplicar = tk.Button(frame, text='Apply Algorithm')
+    button_aplicar = tk.Button(frame, text='Apply Algorithm', command=hacer_alg)
     button_deshacer = tk.Button(frame, text='Undo last move')
 
     button_invertir = tk.Button(frame, text='Invert Algorithm')
