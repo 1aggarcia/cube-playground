@@ -50,6 +50,22 @@ class Movimiento:
 
         return resultado
 
+
+def invertir_movimiento(movimiento: Movimiento):
+    """
+    Retorna el mismo movimiento al revés, es decir, con la dirección invertida
+    """
+    if movimiento.direccion == 2:
+        return movimiento
+
+    return Movimiento(
+        movimiento.cara,
+        movimiento.direccion * -1, # type: ignore
+        movimiento.nivel,
+        movimiento.ancho
+    )
+
+
 def movimiento_de_texto(texto: str) -> Movimiento:
     """
     Convertir texto a un movimiento
@@ -69,7 +85,7 @@ def movimiento_de_texto(texto: str) -> Movimiento:
 
     # determinar nivel (opcional)
     nivel = 1
-    while texto[i].isdigit() and i >= length:
+    while texto[i].isdigit() and i < length:
         i += 1
     if i != 0:
         nivel = int(texto[0:i])

@@ -135,3 +135,14 @@ class ProbarCubo(unittest.TestCase):
             mv.movimiento_de_texto('5Uw2'),
             mv.Movimiento(Cara.U, 2, 5, True)
         )
+
+    def test_invertir_movimiento(self):
+        mov_a = mv.Movimiento(Cara.D, 1, 1, True)
+        mov_a_invertida = mv.Movimiento(Cara.D, -1, 1, True)
+
+        self.assertEqual(mov_a_invertida, mv.invertir_movimiento(mov_a))
+        self.assertEqual(mov_a, mv.invertir_movimiento(mov_a_invertida))
+
+        mov_b = mv.Movimiento(Cara.F, 2, 32, False)
+
+        self.assertEqual(mov_b, mv.invertir_movimiento(mov_b))
