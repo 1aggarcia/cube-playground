@@ -13,4 +13,3 @@ COLORES_DE_CUBO = {
     Cara.L: '#ff6f00', # naranja
     Cara.R: '#FF0000', # rojo
 }
-'Colores para cada cara del cubo en códigos de hex'

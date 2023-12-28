@@ -6,6 +6,7 @@ from constantes import cubos
 from constantes import colores
 from constantes.enums import Cara
 from . import widgets_de_cubo as widgets
+from . import controlar_cubo as control
 
 OLL = ["R", "U", "R'", "U'", "R'", "F", "R2", "U", "R'", "U'", "F'"]
 
@@ -43,7 +44,7 @@ def _crear_frame_central(raiz: tk.Misc):
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = widgets.crear_frame_cubo(frame, cubo)
-    frame_control = widgets.crear_frame_control(frame, cubo, callback, callback_algorithmo)
+    frame_control = control.crear_frame_control(frame)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)
