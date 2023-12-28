@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from modelos.movimiento import Movimiento
+import modelos.movimiento as mv
 from constantes import colores
 
 PADDING = 10
@@ -29,9 +29,16 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
         except (ValueError, KeyError):
             messagebox.showerror('Error', 'Invalid Move Sequence Entered')
 
-    text_historial = _crear_text_historial(frame)
-    text_entrada = _crear_text_entrada(frame)
-    frame_buttons = _crear_frame_buttons(frame, hacer_alg)
+    def deshacer():
+        mov = mv.movimiento_de_texto(historial.pop())
+        invertido = mv.invertir_movimiento(mov)
+        realizar_alg([str(invertido)])
+        text_historial.delete(1.0, tk.END)
+        text_historial.insert(1.0, str(historial))
+
+    text_historial = tk.Text(frame, width=30, height=10)
+    text_entrada = tk.Entry(frame, width=30)
+    frame_buttons = _crear_frame_buttons(frame, hacer_alg, deshacer)
 
     text_historial.pack()
     text_entrada.pack()
@@ -40,15 +47,7 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
     return frame
 
 
-def _crear_text_historial(raiz: tk.Misc):
-    return tk.Text(raiz, width=30, height=10)
-
-
-def _crear_text_entrada(raiz: tk.Misc):
-    return tk.Entry(raiz, width=30)
-
-
-def _crear_frame_buttons(raiz: tk.Misc, hacer_alg):
+def _crear_frame_buttons(raiz: tk.Misc, hacer_alg, deshacer):
     """
     Crea y retorna un frame de buttons para controlar el cubo
     """
@@ -56,7 +55,7 @@ def _crear_frame_buttons(raiz: tk.Misc, hacer_alg):
 
     # crear botones
     button_aplicar = tk.Button(frame, text='Apply Algorithm', command=hacer_alg)
-    button_deshacer = tk.Button(frame, text='Undo last move')
+    button_deshacer = tk.Button(frame, text='Undo last move', command=deshacer)
 
     button_invertir = tk.Button(frame, text='Invert Algorithm')
     button_reflejar = tk.Button(frame, text='Mirror Algorithm')
