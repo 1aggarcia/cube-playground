@@ -28,7 +28,7 @@ def _crear_frame_central(raiz: tk.Misc):
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
     frame_cubo = dibujar.crear_frame_cubo(frame, cubo)
-    frame_control = control.crear_frame_control(frame, realizar_alg)
+    frame_control = control.crear_frame_control(frame, cubo, realizar_alg)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)

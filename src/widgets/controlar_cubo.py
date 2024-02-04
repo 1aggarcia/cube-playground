@@ -2,13 +2,15 @@ import tkinter as tk
 from tkinter import messagebox
 
 import modelos.movimiento as mv
+from modelos.cubo import Cubo
 from constantes import colores
+from imagenes.impresora import imprimir_cubo
 
 PADDING = 10
 
 historial: list[str] = []
 
-def crear_frame_control(raiz: tk.Misc, realizar_alg):
+def crear_frame_control(raiz: tk.Misc, cubo: Cubo, realizar_alg):
     """
     Crea y retorna el frame de control para la ventana del cubo.
     :param realizar_mov - debe ser una función que ejecute un movimiento y
@@ -19,7 +21,7 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
 
     def hacer_alg():
-        texto = text_entrada.get().upper()
+        texto = text_entrada.get()
         alg = texto.split(' ')
         try:
             realizar_alg(alg)
@@ -34,11 +36,12 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
         invertido = mv.invertir_movimiento(mov)
         realizar_alg([str(invertido)])
         text_historial.delete(1.0, tk.END)
-        text_historial.insert(1.0, ' '.join(historial))
+        text_historial.insert(tk.END, ' '.join(historial))
+        text_historial.insert(tk.END, ' ')
 
     text_historial = tk.Text(frame, width=30, height=10)
     text_entrada = tk.Entry(frame, width=30)
-    frame_buttons = _crear_frame_buttons(frame, hacer_alg, deshacer)
+    frame_buttons = _crear_frame_buttons(frame, cubo, hacer_alg, deshacer)
 
     text_historial.pack()
     text_entrada.pack()
@@ -47,11 +50,14 @@ def crear_frame_control(raiz: tk.Misc, realizar_alg):
     return frame
 
 
-def _crear_frame_buttons(raiz: tk.Misc, hacer_alg, deshacer):
+def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer):
     """
     Crea y retorna un frame de buttons para controlar el cubo
     """
     frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
+
+    def imagen():
+        imprimir_cubo(cubo)
 
     # crear botones
     button_aplicar = tk.Button(frame, text='Apply Algorithm', command=hacer_alg)
@@ -60,7 +66,7 @@ def _crear_frame_buttons(raiz: tk.Misc, hacer_alg, deshacer):
     button_invertir = tk.Button(frame, text='Invert Algorithm')
     button_reflejar = tk.Button(frame, text='Mirror Algorithm')
 
-    button_png = tk.Button(frame, text='Export PNG')
+    button_png = tk.Button(frame, text='Export PNG', command=imagen)
     button_reset = tk.Button(frame, text='Reset Cube State')
 
     # posicionarlos
