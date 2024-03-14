@@ -4,6 +4,7 @@ from typing import Callable
 
 import modelos.movimiento as mv
 from modelos.cubo import Cubo
+from modelos.cubo_operaciones import generar_scramble
 from constantes import colores
 from imagenes.impresora import imprimir_cubo
 
@@ -49,9 +50,15 @@ def crear_frame_control(
         text_historial.delete(1.0, tk.END)
         text_historial.insert(tk.END, ' '.join(historial))
 
+    def mezclar():
+        scramble = generar_scramble(cubo.dimension)
+        realizar_alg([str(mov) for mov in scramble])
+        historial.extend([str(mov) for mov in scramble])
+        # actualizar ui
+
     text_historial = tk.Text(frame, width=30, height=10)
     text_entrada = tk.Entry(frame, width=30)
-    frame_buttons = _crear_frame_buttons(frame, cubo, hacer_alg, deshacer)
+    frame_buttons = _crear_frame_buttons(frame, cubo, hacer_alg, deshacer, mezclar)
 
     text_historial.pack()
     text_entrada.pack()
@@ -60,7 +67,7 @@ def crear_frame_control(
     return frame
 
 
-def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer):
+def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer, mezclar):
     """
     Crea y retorna un frame de buttons para controlar el cubo
     """
@@ -71,8 +78,9 @@ def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer):
 
     button_invertir = tk.Button(frame,
                                 text='Invert Algorithm', state='disabled')
-    button_reflejar = tk.Button(frame,
-    text='Mirror Algorithm', state='disabled')
+    # button_reflejar = tk.Button(frame,
+    #                             text='Mirror Algorithm', state='disabled')
+    button_mezclar = tk.Button(frame, text='Scramble', command=mezclar)
 
     button_png = tk.Button(frame, text='Export PNG',
                             command=lambda: imprimir_cubo(cubo))
@@ -83,7 +91,9 @@ def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer):
     button_deshacer.grid(row=0, column=1)
 
     button_invertir.grid(row=1, column=0)
-    button_reflejar.grid(row=1, column=1)
+    # button_reflejar.grid(row=1, column=1)
+    button_mezclar.grid(row=1, column=1)
+
 
     button_png.grid(row=2, column=0)
     button_reset.grid(row=2, column=1)

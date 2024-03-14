@@ -20,8 +20,7 @@ class Cubo:
     * R (right) - la derecha
     """
     # constructor
-    def __init__(self,
-                *,
+    def __init__(self, *,
                 u: np.ndarray,
                 d: np.ndarray,
                 f: np.ndarray,
@@ -71,13 +70,13 @@ class Cubo:
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
 
-    def ejecutar_algoritmo(self, algorithmo: list[str]):
+    def ejecutar_algoritmo(self, algoritmo: list[str]):
         """
         Dado una lista de texto representando movimientos,
         ejecuta cada movimiento en el cubo.
         * requiere que cada elemento sea una representación válida de un movimiento
         """
-        for mov in algorithmo:
+        for mov in algoritmo:
             self.mover(movimiento_de_texto(mov))
 
     def mover(self, mov: Movimiento):
@@ -111,7 +110,7 @@ class Cubo:
                 self._estado, linea, direccion)
 
 
-# métodos públicos
+# funciones públicas
 
 def copiar_cubo(cubo: Cubo):
     """
@@ -127,8 +126,7 @@ def copiar_cubo(cubo: Cubo):
     )
 
 
-def crear_cubo_de_texto(
-            *,
+def crear_cubo_de_texto(*,
             u: list[list[str]],
             d: list[list[str]],
             f: list[list[str]],
