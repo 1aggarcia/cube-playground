@@ -21,6 +21,7 @@ class Cubo:
     """
     # constructor
     def __init__(self,
+                *,
                 u: np.ndarray,
                 d: np.ndarray,
                 f: np.ndarray,
@@ -127,6 +128,7 @@ def copiar_cubo(cubo: Cubo):
 
 
 def crear_cubo_de_texto(
+            *,
             u: list[list[str]],
             d: list[list[str]],
             f: list[list[str]],

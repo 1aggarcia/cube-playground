@@ -1,3 +1,5 @@
+# pylint: disable=W0212
+
 import unittest
 import numpy as np
 
@@ -5,20 +7,32 @@ from modelos.cubo import crear_cubo_de_texto
 from constantes.enums import Cara
 import modelos.cubo_operaciones as op
 
+
 class ProbarOperaciones(unittest.TestCase):
     def test_generar_scramble(self):
+        # 2x2
+        scramble = op.generar_scramble(2)
+        print(scramble)
 
-        scramble = op.generar_scramble()
+        print("2x2: Verificando la longitud del scramble")
+        self.assertEqual(op._longitud_de_scramble(2), len(scramble))
 
-        print("Verificando la longitud del scramble")
-        self.assertEqual(op.LONGITUD_DE_SCRAMBLE, len(scramble))
+        print("2x2: Verificando que cada par de caras es diferente")
+        for mov_a, mov_b in zip(scramble, scramble[1:]):
+            self.assertNotEqual(mov_a.cara, mov_b.cara)
 
-        print("Verificando que cada par de caras es diferente")
+        # 4x4
+        scramble = op.generar_scramble(4)
+        print(scramble)
+
+        print("4x4: Verificando la longitud del scramble")
+        self.assertEqual(op._longitud_de_scramble(4), len(scramble))
+
+        print("4x4: Verificando que cada par de caras es diferente")
         for mov_a, mov_b in zip(scramble, scramble[1:]):
             self.assertNotEqual(mov_a.cara, mov_b.cara)
 
         print("Abrobado: generar_scramble")
-
 
     def test_girar_matriz(self):
         # 90 degrados (sentido horario)
@@ -208,6 +222,14 @@ class ProbarOperaciones(unittest.TestCase):
         for cara in Cara:
             self.assertTrue(np.array_equal(resultado_c[cara],
                                            esperado_c[cara]))
+
+    def test_longitud_de_scramble(self):
+        for i, v in enumerate(op.LONGITUD_DE_SCRAMBLES[2:], start=2):
+            self.assertEqual(v, op._longitud_de_scramble(i))
+
+        self.assertEqual(130, op._longitud_de_scramble(11))
+        self.assertEqual(510, op._longitud_de_scramble(49))
+
 
 if __name__ == '__main__':
     unittest.main()
