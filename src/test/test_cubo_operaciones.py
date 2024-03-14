@@ -5,8 +5,20 @@ from modelos.cubo import crear_cubo_de_texto
 from constantes.enums import Cara
 import modelos.cubo_operaciones as op
 
-class ProbarCubo(unittest.TestCase):
-    # métodos privados
+class ProbarOperaciones(unittest.TestCase):
+    def test_generar_scramble(self):
+
+        scramble = op.generar_scramble()
+
+        print("Verificando la longitud del scramble")
+        self.assertEqual(op.LONGITUD_DE_SCRAMBLE, len(scramble))
+
+        print("Verificando que cada par de caras es diferente")
+        for mov_a, mov_b in zip(scramble, scramble[1:]):
+            self.assertNotEqual(mov_a.cara, mov_b.cara)
+
+        print("Abrobado: generar_scramble")
+
 
     def test_girar_matriz(self):
         # 90 degrados (sentido horario)

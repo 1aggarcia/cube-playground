@@ -1,5 +1,8 @@
-# cubes produced by impresora.py
+# cubos producidos por impresora.py
 src/imagenes/cubos/*.png
+
+.DS_Store
+cube_sim.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

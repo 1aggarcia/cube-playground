@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from typing import Callable
 
 import modelos.movimiento as mv
 from modelos.cubo import Cubo
@@ -10,13 +11,13 @@ PADDING = 10
 
 historial: list[str] = []
 
-def crear_frame_control(raiz: tk.Misc, cubo: Cubo, realizar_alg):
+def crear_frame_control(
+        raiz: tk.Misc, cubo: Cubo, realizar_alg: Callable[[list[str]], None]
+    ):
     """
     Crea y retorna el frame de control para la ventana del cubo.
-    :param realizar_mov - debe ser una función que ejecute un movimiento y
+    :param realizar_alg - debe ser una función que ejecute un algorítmo y
         actualice el frame apropiadamente
-    :param realizar_alg - muy parecido, la única diferencia es que debe
-        ejecutar un algorithmo en vez de un movimiento
     """
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
 
@@ -28,8 +29,8 @@ def crear_frame_control(raiz: tk.Misc, cubo: Cubo, realizar_alg):
             text_entrada.delete(0, tk.END)
             historial.extend(alg)
             text_historial.insert(tk.END, f'{texto} ')
-        except (ValueError, KeyError):
-            messagebox.showerror('Error', 'Invalid Move Sequence Entered')
+        except (ValueError, KeyError) as e:
+            messagebox.showerror('Error', f'Error: {e}')
 
     def deshacer():
         mov = mv.movimiento_de_texto(historial.pop())

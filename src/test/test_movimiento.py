@@ -6,7 +6,7 @@ import unittest
 import modelos.movimiento as mv
 from constantes.enums import Cara
 
-class ProbarCubo(unittest.TestCase):
+class ProbarMovimiento(unittest.TestCase):
 
     def test_eq(self):
         x = mv.Movimiento(Cara.D, 1, 1, False)

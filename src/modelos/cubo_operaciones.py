@@ -1,7 +1,11 @@
+from typing import Literal
+
 import copy
+import random
 import numpy as np
 
 from constantes.enums import Cara
+from modelos.movimiento import Movimiento
 
 # el ciclo que siguen las caras al hacer el movimiento U
 CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
@@ -12,6 +16,29 @@ CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 # el ciclo que siguen las caras al hacer el movimiento F
 # cada tuple representa (Cara, rotaciones necesarias antes de copiar)
 CARAS_FRONTERIZAS = [(Cara.D, 0), (Cara. L, -1), (Cara.U, 2), (Cara.R, 1)]
+
+LONGITUD_DE_SCRAMBLE = 25
+
+
+def generar_scramble():
+    scramble: list[Movimiento] = []
+
+    for _ in range(LONGITUD_DE_SCRAMBLE):
+        if len(scramble) == 0:
+            cara = random.choice(list(Cara))
+        else:
+            # hay que evitar a elegir la misma cara dos veces
+            ultima_cara = scramble[-1].cara
+
+            caras_disponibles = list(Cara)
+            caras_disponibles.remove(ultima_cara)
+            cara = random.choice(caras_disponibles)
+
+        direccion: Literal[-1, 1, 2] = random.choice([-1, 1, 2])
+        scramble.append(Movimiento(cara, direccion, 1, False))
+
+    return scramble
+
 
 def girar_matriz(matriz: np.ndarray, orientacion: int):
     """
@@ -41,6 +68,7 @@ def girar_matriz_horario(matriz: np.ndarray):
 
 def girar_matriz_antihorario(matriz: np.ndarray):
     return girar_matriz(matriz, -1)
+
 
 def cotar_horizontalmente(
         estado_de_cubo: dict[Cara, np.ndarray], fila: int, direccion: int

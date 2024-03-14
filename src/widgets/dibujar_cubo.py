@@ -32,7 +32,7 @@ def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
 def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
     '''
     Colora el frame dado con el cubo dado
-    * requiere que el frame tiene 6 niños con los nombres'u', 'd', 'l', 'r', 'f', 'b'
+    * requiere que el frame tenga 6 niños con los nombres 'u', 'd', 'l', 'r', 'f', 'b'
     * requiere que cada nino del frame sea un Frame con nxn ninos Frame,
         donde n = dimension del cubo
     * modifica el frame dado, colora todos los cubitos

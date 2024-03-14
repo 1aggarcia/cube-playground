@@ -9,7 +9,7 @@ def crear_ventana():
     # configurar ventana
     ventana = tk.Tk()
     ventana.config(bg=colores.VERDE_1)
-    ventana.geometry('700x550')
+    ventana.geometry('1100x600')
 
     # crear y posicionar widget
     frame_central = _crear_frame_central(ventana)

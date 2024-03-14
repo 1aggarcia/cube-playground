@@ -8,8 +8,6 @@ from modelos import cubo
 from constantes.enums import Cara
 
 class ProbarCubo(unittest.TestCase):
-    # métodos privados
-
     def test_convertir_a_caras(self):
         lista_a = [['U', 'L'], ['B', 'D']]
         lista_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
