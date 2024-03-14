@@ -26,6 +26,8 @@ def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
     cara_b.grid(row=1, column=3)
     cara_d.grid(row=2, column=1)
 
+    cubo.al_cambiar(lambda: colorar_cubo(frame, cubo))
+
     return frame
 
 

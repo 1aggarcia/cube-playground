@@ -1,6 +1,7 @@
 # cubos producidos por impresora.py
 src/imagenes/cubos/*.png
 
+.vscode
 .DS_Store
 cube_sim.py
 

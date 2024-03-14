@@ -2,8 +2,8 @@ import tkinter as tk
 
 from constantes import cubos
 from constantes import colores
-from . import dibujar_cubo as dibujar
-from . import controlar_cubo as control
+from widgets.dibujar_cubo import crear_frame_cubo
+from widgets.controlar_cubo import crear_frame_control
 
 def crear_ventana():
     # configurar ventana
@@ -21,14 +21,10 @@ def crear_ventana():
 def _crear_frame_central(raiz: tk.Misc):
     cubo = cubos.CUBO_RESUELTO_3
 
-    def realizar_alg(algorithmo: list[str]):
-        cubo.ejecutar_algoritmo(algorithmo)
-        dibujar.colorar_cubo(frame_cubo, cubo)
-
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)
-    frame_cubo = dibujar.crear_frame_cubo(frame, cubo)
-    frame_control = control.crear_frame_control(frame, cubo, realizar_alg)
+    frame_cubo = crear_frame_cubo(frame, cubo)
+    frame_control = crear_frame_control(frame, cubo)
 
     # posicionar widgets
     frame_cubo.grid(row=0, column=0)

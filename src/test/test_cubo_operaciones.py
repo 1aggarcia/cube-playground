@@ -21,7 +21,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertNotEqual(mov_a.cara, mov_b.cara)
 
         # 4x4
-        scramble = op.generar_scramble(2)
+        scramble = op.generar_scramble(4)
 
         print("4x4: Verificando la longitud del scramble")
         self.assertEqual(op._longitud_de_scramble(4), len(scramble))

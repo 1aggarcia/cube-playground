@@ -1,3 +1,4 @@
+from typing import Callable
 import copy
 import numpy as np
 
@@ -38,6 +39,7 @@ class Cubo:
             Cara.L: l,
             Cara.R: r
         }
+        self._oyentes = []
 
     # métodos sobrescritos
 
@@ -108,6 +110,14 @@ class Cubo:
             # caras fronterizas
             self._estado = op.cortar_frontera(
                 self._estado, linea, direccion)
+        self._notificar_a_oyentes()
+
+    def al_cambiar(self, callback: Callable):
+        self._oyentes.append(callback)
+
+    def _notificar_a_oyentes(self):
+        for callback in self._oyentes:
+            callback()
 
 
 # funciones públicas

@@ -10,64 +10,64 @@ from imagenes.impresora import imprimir_cubo
 
 PADDING = 10
 
-def crear_frame_control(
-        raiz: tk.Misc, cubo: Cubo, realizar_alg: Callable[[list[str]], None]
-    ):
+def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
     """
     Crea y retorna el frame de control para la ventana del cubo.
-    :param realizar_alg - debe ser una función que ejecute un algorítmo y
-        actualice el frame apropiadamente
     """
     historial: list[str] = []
 
     frame = tk.Frame(raiz, bg=colores.VERDE_2)
 
+    text_historial = tk.Text(frame, width=30, height=10)
+    text_entrada = tk.Entry(frame, width=30)
+
+    text_historial.pack()
+    text_entrada.pack()
+
+    # funciones callback para actualizar la UI
+    def exhibir_historial():
+        text_historial.delete(1.0, tk.END)
+        text_historial.insert(tk.END, ' '.join(historial))
+
     def hacer_alg():
         texto = text_entrada.get()
         alg = texto.split(' ')
         try:
-            realizar_alg(alg)
+            cubo.ejecutar_algoritmo(alg)
         except (ValueError, KeyError) as e:
             messagebox.showerror('Error', f'Error: {e}')
             return
 
         text_entrada.delete(0, tk.END)
         historial.extend(alg)
-
-        # ¿text_historial está vacío?
-        if text_historial.compare("end-1c", "==", 1.0):
-            text_historial.insert(tk.END, f'{texto}')
-        else:
-            text_historial.insert(tk.END, f' {texto}')
+        exhibir_historial()
 
     def deshacer():
         if len(historial) == 0:
             return
 
         mov = mv.movimiento_de_texto(historial.pop())
+        exhibir_historial()
         invertido = mv.invertir_movimiento(mov)
-        realizar_alg([str(invertido)])
-        text_historial.delete(1.0, tk.END)
-        text_historial.insert(tk.END, ' '.join(historial))
+        cubo.mover(invertido)
 
     def mezclar():
         scramble = generar_scramble(cubo.dimension)
-        realizar_alg([str(mov) for mov in scramble])
+        cubo.ejecutar_algoritmo([str(mov) for mov in scramble])
         historial.extend([str(mov) for mov in scramble])
-        # actualizar ui
+        exhibir_historial()
 
-    text_historial = tk.Text(frame, width=30, height=10)
-    text_entrada = tk.Entry(frame, width=30)
-    frame_buttons = _crear_frame_buttons(frame, cubo, hacer_alg, deshacer, mezclar)
-
-    text_historial.pack()
-    text_entrada.pack()
+    frame_buttons = \
+        _crear_frame_buttons(frame, cubo, hacer_alg, deshacer, mezclar)
     frame_buttons.pack()
 
     return frame
 
 
-def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer, mezclar):
+def _crear_frame_buttons(
+        raiz: tk.Misc, cubo: Cubo,
+        hacer_alg: Callable, deshacer: Callable, mezclar: Callable
+    ):
     """
     Crea y retorna un frame de buttons para controlar el cubo
     """
@@ -78,8 +78,6 @@ def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer, mezclar
 
     button_invertir = tk.Button(frame,
                                 text='Invert Algorithm', state='disabled')
-    # button_reflejar = tk.Button(frame,
-    #                             text='Mirror Algorithm', state='disabled')
     button_mezclar = tk.Button(frame, text='Scramble', command=mezclar)
 
     button_png = tk.Button(frame, text='Export PNG',
@@ -91,7 +89,6 @@ def _crear_frame_buttons(raiz: tk.Misc, cubo: Cubo, hacer_alg, deshacer, mezclar
     button_deshacer.grid(row=0, column=1)
 
     button_invertir.grid(row=1, column=0)
-    # button_reflejar.grid(row=1, column=1)
     button_mezclar.grid(row=1, column=1)
 
 
