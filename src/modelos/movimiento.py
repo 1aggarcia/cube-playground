@@ -24,10 +24,10 @@ class Movimiento:
 
     def __eq__(self, __value: object) -> bool:
         return (
-            isinstance(__value, Movimiento) and
-            self.cara == __value.cara and
-            self.direccion == __value.direccion and
-            self.ancho == __value.ancho
+            isinstance(__value, Movimiento)
+            and self.cara == __value.cara
+            and self.direccion == __value.direccion
+            and self.ancho == __value.ancho
         )
 
     def __repr__(self):

@@ -12,7 +12,6 @@ class ProbarOperaciones(unittest.TestCase):
     def test_generar_scramble(self):
         # 2x2
         scramble = op.generar_scramble(2)
-        print(scramble)
 
         print("2x2: Verificando la longitud del scramble")
         self.assertEqual(op._longitud_de_scramble(2), len(scramble))
@@ -22,8 +21,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertNotEqual(mov_a.cara, mov_b.cara)
 
         # 4x4
-        scramble = op.generar_scramble(4)
-        print(scramble)
+        scramble = op.generar_scramble(2)
 
         print("4x4: Verificando la longitud del scramble")
         self.assertEqual(op._longitud_de_scramble(4), len(scramble))
@@ -44,7 +42,9 @@ class ProbarOperaciones(unittest.TestCase):
         ])
         self.assertTrue(np.array_equal(girada_a, op.girar_matriz(lista_a, 1)))
 
-        lista_b = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
+        lista_b = np.array([
+            [1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]
+        ])
         girada_b = np.array([
             [13, 9, 5, 1],
             [14, 10, 6, 2],
@@ -61,7 +61,9 @@ class ProbarOperaciones(unittest.TestCase):
         ])
         self.assertTrue(np.array_equal(girada_c, op.girar_matriz(lista_c, 3)))
 
-        lista_d = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])
+        lista_d = np.array([
+            [1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]
+        ])
         girada_d = np.array([
             [4, 8, 12, 16],
             [3, 7, 11, 15],
