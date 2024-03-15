@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from constantes import cubos
 from constantes import colores
+from modelos.cubo import generar_cubo
 from widgets.dibujar_cubo import crear_frame_cubo
 from widgets.controlar_cubo import crear_frame_control
 
@@ -19,7 +19,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = cubos.CUBO_RESUELTO_3
+    cubo = generar_cubo(3)
 
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)

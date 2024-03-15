@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 
 from modelos.cubo import Cubo
 from constantes import colores
@@ -50,6 +51,9 @@ def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
             raise ValueError(
                 'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos'
             ) from exc
+
+        time.sleep(0.01)
+        frame.update()
 
 
 def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:

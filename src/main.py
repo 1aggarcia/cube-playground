@@ -14,5 +14,4 @@ if __name__=="__main__":
 # desde /src/
 
 
-# TODO: modelos/cubo.py - escribir pruebas
 # TODO: modelos/validador_de_cubo.py - validar cubo

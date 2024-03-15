@@ -43,7 +43,10 @@ class ProbarOperaciones(unittest.TestCase):
         self.assertTrue(np.array_equal(girada_a, op.girar_matriz(lista_a, 1)))
 
         lista_b = np.array([
-            [1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+            [9, 10, 11, 12],
+            [13, 14, 15, 16]
         ])
         girada_b = np.array([
             [13, 9, 5, 1],
@@ -54,7 +57,11 @@ class ProbarOperaciones(unittest.TestCase):
         self.assertTrue(np.array_equal(girada_b, op.girar_matriz(lista_b, 1)))
 
         # 270 degrados (sentido antihorario)
-        lista_c = np.array([[234, 123], [65, 2], [1, 2]])
+        lista_c = np.array(
+            [[234, 123],
+             [65, 2],
+             [1, 2]]
+        )
         girada_c = np.array([
             [123, 2, 2],
             [234, 65, 1]
@@ -62,7 +69,10 @@ class ProbarOperaciones(unittest.TestCase):
         self.assertTrue(np.array_equal(girada_c, op.girar_matriz(lista_c, 3)))
 
         lista_d = np.array([
-            [1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]
+            [1, 2, 3, 4],
+            [5, 6, 7, 8],
+            [9, 10, 11, 12],
+            [13, 14, 15, 16]
         ])
         girada_d = np.array([
             [4, 8, 12, 16],
