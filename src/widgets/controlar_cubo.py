@@ -38,7 +38,6 @@ def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
             messagebox.showerror('Error', f'Error: {e}')
             return
 
-        text_entrada.delete(0, tk.END)
         historial.extend(alg)
         exhibir_historial()
 
@@ -53,20 +52,25 @@ def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
 
     def mezclar():
         scramble = generar_scramble(cubo.dimension)
-        cubo.ejecutar_algoritmo([str(mov) for mov in scramble])
         historial.extend([str(mov) for mov in scramble])
+        exhibir_historial()
+        cubo.ejecutar_algoritmo([str(mov) for mov in scramble])
+
+    def restatuar():
+        cubo.restaturar()
+        historial.clear()
         exhibir_historial()
 
     frame_buttons = \
-        _crear_frame_buttons(frame, cubo, hacer_alg, deshacer, mezclar)
+        _crear_frame_buttons(frame, cubo, hacer_alg, deshacer, mezclar, restatuar)
     frame_buttons.pack()
 
     return frame
 
 
 def _crear_frame_buttons(
-        raiz: tk.Misc, cubo: Cubo,
-        hacer_alg: Callable, deshacer: Callable, mezclar: Callable
+        raiz: tk.Misc, cubo: Cubo, hacer_alg: Callable,
+        deshacer: Callable, mezclar: Callable, restatuar: Callable
     ):
     """
     Crea y retorna un frame de buttons para controlar el cubo
@@ -82,7 +86,7 @@ def _crear_frame_buttons(
 
     button_png = tk.Button(frame, text='Export PNG',
                             command=lambda: imprimir_cubo(cubo))
-    button_reset = tk.Button(frame, text='Reset Cube State', state='disabled')
+    button_reset = tk.Button(frame, text='Reset Cube State', command=restatuar)
 
     # posicionarlos
     button_aplicar.grid(row=0, column=0)

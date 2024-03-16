@@ -30,6 +30,8 @@ class Cubo:
                 r: np.ndarray
             ):
         # validar_caras(u, d, f, b, l, r)
+        self._oyentes = []
+
         self.dimension = len(u)
         self._estado = {
             Cara.U: u,
@@ -39,7 +41,8 @@ class Cubo:
             Cara.L: l,
             Cara.R: r
         }
-        self._oyentes = []
+        # variable constante
+        self._estado_inicial = copy.deepcopy(self._estado)
 
     # métodos sobrescritos
 
@@ -71,6 +74,11 @@ class Cubo:
 
     def _set_cara(self, cara: Cara, matriz: np.ndarray):
         self._estado[cara] = matriz
+
+    def restaturar(self):
+        """Restatúa el cubo a su estado inicial"""
+        self._estado = copy.deepcopy(self._estado_inicial)
+        self._notificar_a_oyentes()
 
     def ejecutar_algoritmo(self, algoritmo: list[str]):
         """

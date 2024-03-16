@@ -146,5 +146,14 @@ class ProbarCubo(unittest.TestCase):
             ])
         ))
 
+    def test_restaturar(self):
+        cubo_a = cubo.generar_cubo(2)
+        cubo_a_inicial = cubo.copiar_cubo(cubo_a)
+
+        cubo_a.ejecutar_algoritmo(["R", "U", "R'", "U'"])
+
+        # creá el método para ==
+        self.assertTrue(False)
+
 if __name__ == '__main__':
     unittest.main()

@@ -27,12 +27,12 @@ def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
     cara_b.grid(row=1, column=3)
     cara_d.grid(row=2, column=1)
 
-    cubo.al_cambiar(lambda: colorar_cubo(frame, cubo))
+    cubo.al_cambiar(lambda: _colorar_cubo(frame, cubo))
 
     return frame
 
 
-def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
+def _colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
     '''
     Colora el frame dado con el cubo dado
     * requiere que el frame tenga 6 niños con los nombres 'u', 'd', 'l', 'r', 'f', 'b'
@@ -45,15 +45,16 @@ def colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
         try:
             cuadro = frame.nametowidget(cara.value.lower())
             # esta función chequea requisito 2
-            # y modifica el cuadro
             _colorar_cara(cuadro, cubo, cara)
         except KeyError as exc:
             raise ValueError(
                 'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos'
             ) from exc
 
-        time.sleep(0.01)
-        frame.update()
+    # se ve mejor cuando hay espacio de tiempo
+    # entre los movimientos de un algorithmo
+    time.sleep(0.02)
+    frame.update()
 
 
 def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
