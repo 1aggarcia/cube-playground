@@ -4,7 +4,7 @@ import numpy as np
 
 from constantes.enums import Cara
 from modelos.movimiento import Movimiento, movimiento_de_texto
-import modelos.cubo_operaciones as op
+import modelos.operaciones as op
 # from modelos.validador_de_cubo import validar_caras
 
 class Cubo:
@@ -12,6 +12,7 @@ class Cubo:
     Modelo para un cubo de Rubik con 6 caras.
     No se recomienda crear directamente con el constructor.
     Use generar_cubo() o crear_cubo_de_texto().
+
     Las caras son:
     * U (up) - de arriba
     * D (down) - de abajo
@@ -22,13 +23,13 @@ class Cubo:
     """
     # constructor
     def __init__(self, *,
-                u: np.ndarray,
-                d: np.ndarray,
-                f: np.ndarray,
-                b: np.ndarray,
-                l: np.ndarray,
-                r: np.ndarray
-            ):
+            u: np.ndarray,
+            d: np.ndarray,
+            f: np.ndarray,
+            b: np.ndarray,
+            l: np.ndarray,
+            r: np.ndarray
+        ):
         # validar_caras(u, d, f, b, l, r)
         self._oyentes = []
 
@@ -44,8 +45,6 @@ class Cubo:
         # variable constante
         self._estado_inicial = copy.deepcopy(self._estado)
 
-    # métodos sobrescritos
-
     def __str__(self):
         resultado = ""
         for cuadrado in self._estado.values():
@@ -58,22 +57,16 @@ class Cubo:
 
         return resultado
 
-    # métodos
+
+    # métodos públicos
 
     def get_cara(self, cara: Cara):
-        """
-        Retorna una copia de la cara espesificada en el cubo
-        """
+        """Retorna una copia de la cara espesificada en el cubo"""
         return copy.deepcopy(self._estado[cara])
 
     def get_estado(self):
-        """
-        Retorna una copia del estado de cubo
-        """
+        """Retorna una copia del estado de cubo"""
         return copy.deepcopy(self._estado)
-
-    def _set_cara(self, cara: Cara, matriz: np.ndarray):
-        self._estado[cara] = matriz
 
     def restaturar(self):
         """Restatúa el cubo a su estado inicial"""
@@ -102,8 +95,8 @@ class Cubo:
             # estas caras giran con la orden de referencia
             horario = not horario
             linea = self.dimension - mov.nivel
+            # para evitar -2 como dirección
             if direccion != 2:
-                # para evitar -2 como dirección
                 direccion = mov.direccion * -1
 
         if mov.cara in [Cara.U, Cara.D]:
@@ -118,17 +111,24 @@ class Cubo:
             # caras fronterizas
             self._estado = op.cortar_frontera(
                 self._estado, linea, direccion)
+
         self._notificar_a_oyentes()
 
     def al_cambiar(self, callback: Callable):
         self._oyentes.append(callback)
+
+
+    # métodos privados
+
+    def _set_cara(self, cara: Cara, matriz: np.ndarray):
+        self._estado[cara] = matriz
 
     def _notificar_a_oyentes(self):
         for callback in self._oyentes:
             callback()
 
 
-# funciones públicas
+# otras utilidades públicas
 
 def copiar_cubo(cubo: Cubo):
     """
@@ -183,18 +183,6 @@ def generar_cubo(dimension: int):
         l=caras[Cara.L],
         r=caras[Cara.R],
     )
-
-
-def generar_matriz_de_cara(cara: Cara, dimension: int):
-    """
-    crea un matriz nxn llenada con la cara dada
-    * param dimension - n
-    * requiere que dimension >= 2
-    """
-    if dimension < 2:
-        raise ValueError(f'dimension < 2: {dimension}')
-
-    return np.full((dimension, dimension), cara)
 
 
 # métodos privados

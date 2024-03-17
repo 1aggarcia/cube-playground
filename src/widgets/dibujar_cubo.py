@@ -33,13 +33,13 @@ def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
 
 
 def _colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
-    '''
+    """
     Colora el frame dado con el cubo dado
     * requiere que el frame tenga 6 niños con los nombres 'u', 'd', 'l', 'r', 'f', 'b'
     * requiere que cada nino del frame sea un Frame con nxn ninos Frame,
         donde n = dimension del cubo
     * modifica el frame dado, colora todos los cubitos
-    '''
+    """
     for cara in list(Cara):
         # chequear requisito 1
         try:
@@ -58,11 +58,11 @@ def _colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
 
 
 def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
-    '''
+    """
     Crea un frame representando la cara dada con una matriz de nxn cubitos,
     donde n = len(cara) indicado. Lo colora basado en el cubo dado.
     * returns frame con el nombre de la cara en minúscula con nxn niños colorados de tamaño igual
-    '''
+    """
     # calcular tamaño de cubitos para poder encajar todos en el frame
     dimension = cubo.dimension
     tamano_de_cubito = int(TAMANO_DE_CARA / dimension)

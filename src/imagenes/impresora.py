@@ -45,7 +45,7 @@ def imprimir_cubo(cubo: Cubo):
     for cara in Cara:
         offset_x = OFFSETS_X[cara] * dim + 1
         offset_y = OFFSETS_Y[cara] * dim + 1
-        dibujar_cara(imagen, cubo, cara, (offset_x, offset_y))
+        _dibujar_cara(imagen, cubo, cara, (offset_x, offset_y))
 
     # guardar imagen
     nombre = f'{RUTA}/cubo_{dim}x{dim}_{get_fecha()}.png'
@@ -53,7 +53,7 @@ def imprimir_cubo(cubo: Cubo):
     imagen.show()
 
 
-def dibujar_cara(
+def _dibujar_cara(
         image: Image.Image, cubo: Cubo, cara: Cara, offset: tuple[int, int]
     ):
     """
@@ -68,10 +68,10 @@ def dibujar_cara(
             color = colores.COLORES_DE_CUBO[cubito]
             offset_x = offset[0] + x
             offset_y = offset[1] + y
-            dibujar_cuadrado(image, offset_x, offset_y, color)
+            _dibujar_cuadrado(image, offset_x, offset_y, color)
 
 
-def dibujar_cuadrado(image: Image.Image, x: int, y: int, color):
+def _dibujar_cuadrado(image: Image.Image, x: int, y: int, color):
     """
     En la image dada, dibuja un cuadrado en el bloque indicado por
     las coordenadas dadas como x, y

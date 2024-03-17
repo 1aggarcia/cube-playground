@@ -14,7 +14,9 @@ class Movimiento:
     * ancho - True si quieres girar cada capa entre la cara y el nivel,
         False si solo quieres girar la capa al nivel dado.
     """
-    def __init__(self, cara: Cara, direccion: Literal[-1, 1, 2], nivel: int, ancho: bool):
+    def __init__(self,
+        cara: Cara, direccion: Literal[-1, 1, 2], nivel: int, ancho: bool
+    ):
         if nivel < 1:
             raise ValueError('nivel debe ser por lo menos 1')
         self.cara = cara
@@ -81,36 +83,36 @@ def movimiento_de_texto(texto: str) -> Movimiento:
 
     if length < 1:
         raise ValueError('texto está vacío')
-    i = 0
+    posicion = 0
 
     # determinar nivel (opcional)
     nivel = 1
-    while texto[i].isdigit() and i < length:
-        i += 1
-    if i != 0:
-        nivel = int(texto[0:i])
+    while texto[posicion].isdigit() and posicion < length:
+        posicion += 1
+    if posicion != 0:
+        nivel = int(texto[0:posicion])
 
     # determinar cara (obligatorio)
-    if i >= length:
+    if posicion >= length:
         raise ValueError('El texto no contiene una cara')
-    cara = Cara[texto[i]]
-    i += 1
+    cara = Cara[texto[posicion]]
+    posicion += 1
 
     # determinar ancho (opcional)
     ancho = False
-    if i >= length:
+    if posicion >= length:
         return Movimiento(cara, 1, nivel, False)
-    if texto[i] == 'w':
+    if texto[posicion] == 'w':
         ancho = True
-        i += 1
+        posicion += 1
 
-    # determinal dirección (opcional)
-    if i >= length:
+    # determinar dirección (opcional)
+    if posicion >= length:
         return Movimiento(cara, 1, nivel, ancho)
-    if texto[i] == "'":
+    if texto[posicion] == "'":
         return Movimiento(cara, -1, nivel, ancho)
-    if texto[i] == '2':
+    if texto[posicion] == '2':
         return Movimiento(cara, 2, nivel, ancho)
 
-    # hay uno o más carácters que no tienen nada que ver con un movimiento
-    raise ValueError(f'Carácter ilegal en movimiento: {texto[i]}')
+    # hay uno o más caracteres que no tienen nada que ver con el movimiento
+    raise ValueError(f'Carácter ilegal en movimiento: {texto[posicion]}')

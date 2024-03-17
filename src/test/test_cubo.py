@@ -126,26 +126,6 @@ class ProbarCubo(unittest.TestCase):
             ])
         )
 
-    def test_generar_matriz_de_cara(self):
-        self.assertTrue(np.array_equal(
-            cubo.generar_matriz_de_cara(Cara.U, 2),
-            np.array([
-                [Cara.U, Cara.U],
-                [Cara.U, Cara.U],
-            ])
-        ))
-
-        self.assertTrue(np.array_equal(
-            cubo.generar_matriz_de_cara(Cara.R, 5),
-            np.array([
-                [Cara.R, Cara.R, Cara.R, Cara.R, Cara.R],
-                [Cara.R, Cara.R, Cara.R, Cara.R, Cara.R],
-                [Cara.R, Cara.R, Cara.R, Cara.R, Cara.R],
-                [Cara.R, Cara.R, Cara.R, Cara.R, Cara.R],
-                [Cara.R, Cara.R, Cara.R, Cara.R, Cara.R],
-            ])
-        ))
-
     def test_restaturar(self):
         cubo_a = cubo.generar_cubo(2)
         cubo_a_inicial = cubo.copiar_cubo(cubo_a)

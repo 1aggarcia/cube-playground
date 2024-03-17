@@ -5,7 +5,7 @@ import numpy as np
 
 from modelos.cubo import crear_cubo_de_texto
 from constantes.enums import Cara
-import modelos.cubo_operaciones as op
+import modelos.operaciones as op
 
 
 class ProbarOperaciones(unittest.TestCase):

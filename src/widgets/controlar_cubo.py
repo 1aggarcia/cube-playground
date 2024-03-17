@@ -4,7 +4,7 @@ from typing import Callable
 
 import modelos.movimiento as mv
 from modelos.cubo import Cubo
-from modelos.cubo_operaciones import generar_scramble
+from modelos.operaciones import generar_scramble
 from constantes import colores
 from imagenes.impresora import imprimir_cubo
 
@@ -52,9 +52,11 @@ def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
 
     def mezclar():
         scramble = generar_scramble(cubo.dimension)
-        historial.extend([str(mov) for mov in scramble])
+        scramble_str = [str(mov) for mov in scramble]
+
+        historial.extend(scramble_str)
         exhibir_historial()
-        cubo.ejecutar_algoritmo([str(mov) for mov in scramble])
+        cubo.ejecutar_algoritmo(scramble_str)
 
     def restatuar():
         cubo.restaturar()
@@ -76,6 +78,7 @@ def _crear_frame_buttons(
     Crea y retorna un frame de buttons para controlar el cubo
     """
     frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
+
     # crear botones
     button_aplicar = tk.Button(frame, text='Apply Algorithm', command=hacer_alg)
     button_deshacer = tk.Button(frame, text='Undo last move', command=deshacer)

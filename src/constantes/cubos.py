@@ -1,80 +1,76 @@
-from modelos.cubo import generar_cubo, crear_cubo_de_texto
-
-CUBO_RESUELTO_3 = generar_cubo(3)
-CUBO_RESUELTO_7 = generar_cubo(7)
-CUBO_RESUELTO_25 = generar_cubo(25)
+from modelos.cubo import crear_cubo_de_texto
 
 
 MI_CUBO = crear_cubo_de_texto(
-    u=  [['U', 'D'],
+     u= [['U', 'D'],
         ['U', 'U']],
 
-    d=  [['R', 'D'],
+     d= [['R', 'D'],
         ['D', 'L']],
 
-    f=  [['F', 'F'],
+     f= [['F', 'F'],
         ['B', 'R']],
 
-    b=  [['F', 'B'],
+     b= [['F', 'B'],
         ['D', 'B']],
 
-    l=  [['L', 'L'],
+     l= [['L', 'L'],
         ['L', 'U']],
 
-    r=  [['R', 'R'],
+     r= [['R', 'R'],
         ['B', 'F']]
 )
 
 
 SUPERFLIP = crear_cubo_de_texto(
-    u=  [['U', 'B', 'U'],
+     u= [['U', 'B', 'U'],
          ['L', 'U', 'R'],
          ['U', 'F', 'U']],
 
-    d=  [['D', 'F', 'D'],
+     d= [['D', 'F', 'D'],
          ['L', 'D', 'R'],
          ['D', 'B', 'D']],
 
-    f=  [['F', 'U', 'F'],
+     f= [['F', 'U', 'F'],
          ['L', 'F', 'R'],
          ['F', 'D', 'F']],
 
-    b=  [['B', 'U', 'B'],
+     b= [['B', 'U', 'B'],
          ['R', 'B', 'L'],
          ['B', 'D', 'B']],
 
-    l=  [['L', 'U', 'L'],
+     l= [['L', 'U', 'L'],
          ['B', 'L', 'F'],
          ['L', 'D', 'L']],
 
-    r=  [['R', 'U', 'R'],
+     r= [['R', 'U', 'R'],
          ['F', 'R', 'B'],
          ['R', 'D', 'R']],
 )
 
 
 ESQUINA_MALA = crear_cubo_de_texto(
-    u=  [['U', 'U', 'U'],
+     u= [['U', 'U', 'U'],
          ['U', 'U', 'U'],
          ['U', 'U', 'F']],
 
-    d=  [['D', 'D', 'D'],
+     d= [['D', 'D', 'D'],
          ['D', 'D', 'D'],
          ['D', 'D', 'D']],
 
-    f=  [['F', 'F', 'R'],
+     f= [['F', 'F', 'R'],
          ['F', 'F', 'F'],
          ['F', 'F', 'F']],
 
-    b=  [['B', 'B', 'B'],
+     b= [['B', 'B', 'B'],
          ['B', 'B', 'B'],
          ['B', 'B', 'B']],
 
-    l=  [['L', 'L', 'L'],
+     l= [['L', 'L', 'L'],
          ['L', 'L', 'L'],
          ['L', 'L', 'L']],
 
-    r=  [['U', 'R', 'R'],
+     r= [['U', 'R', 'R'],
          ['R', 'R', 'R'],
          ['R', 'R', 'R']],
 )
