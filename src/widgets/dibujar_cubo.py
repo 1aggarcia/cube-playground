@@ -53,7 +53,6 @@ def _colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
 
     # se ve mejor cuando hay espacio de tiempo
     # entre los movimientos de un algorithmo
-    time.sleep(0.02)
     frame.update()
 
 

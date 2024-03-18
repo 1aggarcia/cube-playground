@@ -8,8 +8,6 @@ if __name__=="__main__":
 # $ python -m unittest -v
 # desde /src/
 
-# TODO: limpiar la mezcla de callback
-# TODO: método __eq__ para el cubo
 # TODO: mejorar el algorithmo para mezclar cubos
 # TODO: hacer movimientos anchos (w)
 # TODO: validar cubo
