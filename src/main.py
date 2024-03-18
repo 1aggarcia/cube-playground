@@ -5,7 +5,7 @@ if __name__=="__main__":
     ventana.mainloop()
 
 # PARA EJECUTAR PRUEBAS
-# $ python -m unittest
+# $ python -m unittest -v
 # desde /src/
 
 # TODO: limpiar la mezcla de callback

@@ -48,8 +48,6 @@ class ProbarCubo(unittest.TestCase):
         )
 
     def test_eq(self):
-        print("Verificando la igualdad de cuatro cubos,")
-
         x = cubo.generar_cubo(2)
         y = cubo.generar_cubo(2)
         z = cubo.generar_cubo(2)
@@ -78,8 +76,6 @@ class ProbarCubo(unittest.TestCase):
         # No igual
         self.assertFalse(diferente_a == z)
         self.assertFalse(diferente_b == z)
-
-        print("Abrobado: Cubo.__eq__")
 
     def test_get_cara(self):
         cubo_a = cubo.crear_cubo_de_texto(
@@ -168,9 +164,11 @@ class ProbarCubo(unittest.TestCase):
         cubo_a_inicial = cubo.copiar_cubo(cubo_a)
 
         cubo_a.ejecutar_algoritmo(["R", "U", "R'", "U'"])
+        self.assertNotEqual(cubo_a, cubo_a_inicial)
 
-        # creá el método para ==
-        self.assertTrue(False)
+        cubo_a.restaturar()
+        self.assertEqual(cubo_a, cubo_a_inicial)
+
 
 if __name__ == '__main__':
     unittest.main()
