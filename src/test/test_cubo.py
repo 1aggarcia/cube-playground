@@ -1,6 +1,9 @@
 # deshabilitar aviso de acceder a métodos privados
 # pylint: disable=W0212
 
+# deshabilitar aviso de chequear x == x
+# pylint: disable=R0124
+
 import unittest
 import numpy as np
 
@@ -43,6 +46,40 @@ class ProbarCubo(unittest.TestCase):
                 '[D][F]', '[L][R]\n\n', # R    
             ])
         )
+
+    def test_eq(self):
+        print("Verificando la igualdad de cuatro cubos,")
+
+        x = cubo.generar_cubo(2)
+        y = cubo.generar_cubo(2)
+        z = cubo.generar_cubo(2)
+
+        diferente_a = cubo.generar_cubo(3)
+        diferente_b = cubo.generar_cubo(2)
+        diferente_b.ejecutar_algoritmo(["U"])
+
+        # Deben ser reflexivos
+        self.assertTrue(x == x)
+        self.assertTrue(y == y)
+
+        # Deben ser simétricos
+        # Iguales
+        self.assertTrue(x == y)
+        self.assertTrue(y == x)
+        # No iguales
+        self.assertFalse(x == diferente_a)
+        self.assertFalse(diferente_a == x)
+        self.assertFalse(x == diferente_b)
+        self.assertFalse(diferente_b == x)
+
+        # Deben ser transitivos
+        # Igual
+        self.assertTrue(x == z)
+        # No igual
+        self.assertFalse(diferente_a == z)
+        self.assertFalse(diferente_b == z)
+
+        print("Abrobado: Cubo.__eq__")
 
     def test_get_cara(self):
         cubo_a = cubo.crear_cubo_de_texto(

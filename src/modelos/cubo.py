@@ -45,6 +45,21 @@ class Cubo:
         # variable constante
         self._estado_inicial = copy.deepcopy(self._estado)
 
+    def __eq__(self, __value: object) -> bool:
+        if not isinstance(__value, Cubo):
+            return False
+        if __value.dimension != self.dimension:
+            return False
+
+        for cara in Cara:
+            nuestra_cara = self.get_cara(cara)
+            otra_cara = __value.get_cara(cara)
+            if not np.array_equal(nuestra_cara, otra_cara):
+                return False
+
+        return True
+
+
     def __str__(self):
         resultado = ""
         for cuadrado in self._estado.values():
