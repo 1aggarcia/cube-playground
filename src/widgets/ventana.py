@@ -19,7 +19,7 @@ def crear_ventana():
 
 
 def _crear_frame_central(raiz: tk.Misc):
-    cubo = generar_cubo(4)
+    cubo = generar_cubo(2)
 
     # crear widgets
     frame = tk.Frame(raiz, padx=10, pady=10, bg=colores.VERDE_2)

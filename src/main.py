@@ -11,3 +11,4 @@ if __name__=="__main__":
 # TODO: mejorar el algorithmo para mezclar cubos
 # TODO: hacer movimientos anchos (w)
 # TODO: validar cubo
+# TODO: mejorar la conversión de texto -> algorithmo

@@ -48,6 +48,22 @@ class OperadorDeCubo:
     def imprimir(self):
         imprimir_cubo(self._cubo)
 
+    def invertir(self):
+        texto = self._entrada.get()
+        try:
+            alg = [mv.movimiento_de_texto(mov) for mov in texto.split(' ')]
+        except (ValueError, KeyError) as e:
+            messagebox.showerror('Error', f'Error: {e}')
+            return
+
+        alg_invertido = [mv.invertir_movimiento(mov) for mov in alg]
+        alg_invertido.reverse()
+
+        texto_invertido = [str(mov) for mov in alg_invertido]
+
+        self._entrada.delete(0, tk.END)
+        self._entrada.insert(0, ' '.join(texto_invertido))
+
     def mezclar(self):
         scramble = generar_scramble(self._cubo.dimension)
         scramble_str = [str(mov) for mov in scramble]
@@ -100,7 +116,7 @@ def _crear_frame_buttons(raiz: tk.Misc, operador: OperadorDeCubo):
         frame, text='Undo last move', command=operador.deshacer
     )
     button_invertir = tk.Button(
-        frame, text='Invert Algorithm', state='disabled'
+        frame, text='Invert Algorithm', command=operador.invertir
     )
     button_mezclar = tk.Button(
         frame, text='Scramble', command=operador.mezclar
