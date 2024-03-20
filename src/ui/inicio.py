@@ -1,7 +1,10 @@
 import tkinter as tk
+from tkinter import messagebox
 
 from constantes import colores
+from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
+from ui.ursina.ventana import ventana_ursina
 
 DIMENSION_POR_DEFECTO = 3
 
@@ -9,18 +12,27 @@ DIMENSION_POR_DEFECTO = 3
 def ventana_inicial():
     ventana = tk.Tk()
     ventana.config(bg=colores.VERDE_1)
-    ventana.geometry('200x200')
+    ventana.geometry('400x200')
 
-    def abrir():
+    def abrir(destino: Ventana):
         ventana.destroy()
-        abrir_ventana()
+        abrir_ventana(destino)
 
-    button = tk.Button(ventana, text='Open new cube', command=abrir)
-    button.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    button_cubo = tk.Button(ventana, text='Open new cube',
+                            command=lambda: abrir(Ventana.Cubo))
+    button_ursina = tk.Button(ventana, text='Ursina (Beta)',
+                            command=lambda: abrir(Ventana.Ursina))
+
+    button_cubo.place(relx=0.25, rely=0.5, anchor=tk.CENTER)
+    button_ursina.place(relx=0.75, rely=0.5, anchor=tk.CENTER)
 
     return ventana
 
 
-def abrir_ventana():
-    ventana = ventana_de_cubo(DIMENSION_POR_DEFECTO)
-    ventana.mainloop()
+def abrir_ventana(destino: Ventana):
+    if destino == Ventana.Ursina:
+        app = ventana_ursina()
+        app.run()
+    else:
+        ventana = ventana_de_cubo(DIMENSION_POR_DEFECTO)
+        ventana.mainloop()
