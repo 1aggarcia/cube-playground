@@ -1,5 +1,4 @@
 import tkinter as tk
-import time
 
 from modelos.cubo import Cubo
 from constantes import colores

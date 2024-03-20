@@ -1,7 +1,7 @@
-from widgets.ventana import crear_ventana
+from ui.inicio import ventana_inicial
 
 if __name__=="__main__":
-    ventana = crear_ventana()
+    ventana = ventana_inicial()
     ventana.mainloop()
 
 # PARA EJECUTAR PRUEBAS
