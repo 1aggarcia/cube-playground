@@ -1,4 +1,4 @@
-# Ursina fuerza a romper estas reglas
+# Ursina nos fuerza a romper estas reglas
 # pylint: disable=W0401
 # pylint: disable=W0622
 # pylint: disable=W0614
@@ -14,6 +14,57 @@ def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
     # cubo = generar_cubo(dimension)
+    generar_cubitos_mas_eficiente(dimension)
+
+    EditorCamera()
+
+    return aplicacion
+
+
+def generar_cubitos_eficiente(dimension: int):
+    desviacion = -(dimension - 1) / 2
+    posiciones = [desviacion, -desviacion]
+
+    # cuenta binaria para las esquinas
+    for x in posiciones:
+        for y in posiciones:
+            for z in posiciones:
+                cubito = Cubito(Cara.D)
+                cubito.pos(x, y, z)
+
+    # centros
+    for z in posiciones:
+        for fila in range(dimension - 2):
+            for columna in range(dimension - 2):
+                x = desviacion + 1 + fila
+                y = desviacion + 1 + columna
+                cubito = Cubito(Cara.F)
+                cubito.pos(x, y, z)
+
+
+def generar_cubitos_mas_eficiente(dimension: int):
+    desviacion = -(dimension - 1) / 2
+
+    for capa in range(dimension):
+        for columna in range(dimension):
+            for fila in range(dimension):
+                x = desviacion + fila
+                y = desviacion + columna
+                z = desviacion + capa
+
+                if (
+                    0 < capa < dimension - 1
+                    and 0 < columna < dimension - 1
+                    and 0 < fila < dimension - 1
+                ):
+                    continue
+
+                cara_arbitraria = random.choice(list(Cara))
+                cubito = Cubito(cara_arbitraria)
+                cubito.pos(x, y, z)
+
+
+def generar_cubitos_nxn(dimension: int):
     desviacion = -(dimension - 1) / 2
 
     for capa in range(dimension):
@@ -26,10 +77,6 @@ def ventana_ursina(dimension: int):
                     desviacion + columna,
                     desviacion + capa
                 )
-
-    EditorCamera()
-
-    return aplicacion
 
 
 class Cubito(Entity):
