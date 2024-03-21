@@ -1,27 +1,61 @@
+# Ursina fuerza a romper estas reglas
+# pylint: disable=W0401
+# pylint: disable=W0622
+# pylint: disable=W0614
+
 from ursina import *
+
 from constantes.enums import Cara
 from constantes.colores import COLORES_DE_CUBO
+# from modelos.cubo import generar_cubo
 
-def ventana_ursina():
+
+def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
-    cubo = Entity(model='cube', texture='white_cube')
-    cubo.color = COLORES_DE_CUBO[Cara.L]
-    cubo.update = lambda: update_cubo(cubo)
-    cubo.input = lambda key: move_cubo(cubo, key)
+    # cubo = generar_cubo(dimension)
+    desviacion = -(dimension - 1) / 2
+
+    for capa in range(dimension):
+        for columna in range(dimension):
+            for fila in range(dimension):
+                cara_arbitraria = random.choice(list(Cara))
+                cubito = Cubito(cara_arbitraria)
+                cubito.pos(
+                    desviacion + fila,
+                    desviacion + columna,
+                    desviacion + capa
+                )
+
+    EditorCamera()
 
     return aplicacion
 
-def update_cubo(cubo: Entity):
-    cubo.rotation_x += 1
-    cubo.rotation_y += 0.6
 
-def move_cubo(cubo: Entity, key: str):
-    if key == 'd':
-        cubo.x += 1
-    elif key == 'a':
-        cubo.x -= 1
-    elif key == 'w':
-        cubo.y += 1
-    elif key == 's':
-        cubo.y -= 1
+class Cubito(Entity):
+    def __init__(self, cara: Cara):
+        super().__init__()
+        self.color = COLORES_DE_CUBO[cara]
+
+        # valores por defecto
+        self.position = Vec3(0, 0, 0)
+        self.model = 'cube'
+        self.texture = 'white_cube'
+
+    def pos(self, x: float, y: float, z: float):
+        self.position = Vec3(x, y, z)
+        return self
+
+    # def update(self):
+    #     self.rotation_x += 1
+    #     self.rotation_y -= 1
+
+    def input(self, key: str):
+        if key == 'd':
+            self.x += 1
+        elif key == 'a':
+            self.x -= 1
+        elif key == 'w':
+            self.y += 1
+        elif key == 's':
+            self.y -= 1

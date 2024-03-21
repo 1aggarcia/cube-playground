@@ -6,13 +6,13 @@ from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
 from ui.ursina.ventana import ventana_ursina
 
-DIMENSION_POR_DEFECTO = 3
+DIMENSION_POR_DEFECTO = 4
 
 
 def ventana_inicial():
     ventana = tk.Tk()
     ventana.config(bg=colores.VERDE_1)
-    ventana.geometry('400x200')
+    ventana.geometry('300x200')
 
     def abrir(destino: Ventana):
         ventana.destroy()
@@ -31,7 +31,7 @@ def ventana_inicial():
 
 def abrir_ventana(destino: Ventana):
     if destino == Ventana.Ursina:
-        app = ventana_ursina()
+        app = ventana_ursina(DIMENSION_POR_DEFECTO)
         app.run()
     else:
         ventana = ventana_de_cubo(DIMENSION_POR_DEFECTO)
