@@ -1,12 +1,11 @@
 import tkinter as tk
-from tkinter import messagebox
 
 from constantes import colores
 from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
 from ui.ursina.ventana import ventana_ursina
 
-DIMENSION_POR_DEFECTO = 4
+DIMENSION_POR_DEFECTO = 2
 
 
 def ventana_inicial():

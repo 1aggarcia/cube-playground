@@ -9,40 +9,38 @@ from constantes.enums import Cara
 from constantes.colores import COLORES_DE_CUBO
 # from modelos.cubo import generar_cubo
 
+VECTORES_DE_CARA = {
+    Cara.U: Vec3(0, 1, 0),
+    Cara.D: Vec3(0, -1, 0),
+    Cara.F: Vec3(0, 0, -1),
+    Cara.B: Vec3(0, 0, 1),
+    Cara.L: Vec3(-1, 0, 0),
+    Cara.R: Vec3(1, 0, 0)
+}
+
 
 def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
-    # cubo = generar_cubo(dimension)
-    generar_cubitos_mas_eficiente(dimension)
+    _generar_cubitos(dimension)
+
+    cubito = Entity(scale=3)
+
+    _crear_plano(cubito, Cara.F, Cara.F)
+    _crear_plano(cubito, Cara.B, Cara.B)
+
+    _crear_plano(cubito, Cara.U, Cara.U)
+    _crear_plano(cubito, Cara.D, Cara.D)
+
+    _crear_plano(cubito, Cara.L, Cara.L)
+    _crear_plano(cubito, Cara.R, Cara.R)
 
     EditorCamera()
 
     return aplicacion
 
 
-def generar_cubitos_eficiente(dimension: int):
-    desviacion = -(dimension - 1) / 2
-    posiciones = [desviacion, -desviacion]
-
-    # cuenta binaria para las esquinas
-    for x in posiciones:
-        for y in posiciones:
-            for z in posiciones:
-                cubito = Cubito(Cara.D)
-                cubito.pos(x, y, z)
-
-    # centros
-    for z in posiciones:
-        for fila in range(dimension - 2):
-            for columna in range(dimension - 2):
-                x = desviacion + 1 + fila
-                y = desviacion + 1 + columna
-                cubito = Cubito(Cara.F)
-                cubito.pos(x, y, z)
-
-
-def generar_cubitos_mas_eficiente(dimension: int):
+def _generar_cubitos(dimension: int):
     desviacion = -(dimension - 1) / 2
 
     for capa in range(dimension):
@@ -64,19 +62,17 @@ def generar_cubitos_mas_eficiente(dimension: int):
                 cubito.pos(x, y, z)
 
 
-def generar_cubitos_nxn(dimension: int):
-    desviacion = -(dimension - 1) / 2
+def _crear_plano(raiz: Entity, cara: Cara, tono: Cara):
+    plano = Entity(
+        parent = raiz,
+        model = 'plane',
+        texture = 'white_cube',
+        color = COLORES_DE_CUBO[tono],
+        origin_y = -0.5
+    )
+    plano.look_at(VECTORES_DE_CARA[cara], 'up')
 
-    for capa in range(dimension):
-        for columna in range(dimension):
-            for fila in range(dimension):
-                cara_arbitraria = random.choice(list(Cara))
-                cubito = Cubito(cara_arbitraria)
-                cubito.pos(
-                    desviacion + fila,
-                    desviacion + columna,
-                    desviacion + capa
-                )
+    return plano
 
 
 class Cubito(Entity):
