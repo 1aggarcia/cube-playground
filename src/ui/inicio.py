@@ -5,7 +5,7 @@ from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
 from ui.ursina.ventana import ventana_ursina
 
-DIMENSION_POR_DEFECTO = 2
+DIMENSION_POR_DEFECTO = 3
 
 
 def ventana_inicial():

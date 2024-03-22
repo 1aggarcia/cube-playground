@@ -7,7 +7,7 @@ from ursina import *
 
 from constantes.enums import Cara
 from constantes.colores import COLORES_DE_CUBO
-# from modelos.cubo import generar_cubo
+from modelos.cubo import Cubo, generar_cubo
 
 VECTORES_DE_CARA = {
     Cara.U: Vec3(0, 1, 0),
@@ -22,44 +22,48 @@ VECTORES_DE_CARA = {
 def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
-    _generar_cubitos(dimension)
+    cubo_2d = generar_cubo(dimension)
+    cubo_3d = _generar_cubitos(cubo_2d)
 
-    cubito = Entity(scale=3)
-
-    _crear_plano(cubito, Cara.F, Cara.F)
-    _crear_plano(cubito, Cara.B, Cara.B)
-
-    _crear_plano(cubito, Cara.U, Cara.U)
-    _crear_plano(cubito, Cara.D, Cara.D)
-
-    _crear_plano(cubito, Cara.L, Cara.L)
-    _crear_plano(cubito, Cara.R, Cara.R)
+    print("---------------------")
+    print(cubo_3d)
+    print("---------------------")
 
     EditorCamera()
 
     return aplicacion
 
 
-def _generar_cubitos(dimension: int):
-    desviacion = -(dimension - 1) / 2
+def _generar_cubitos(cubo: Cubo):
+    dim = cubo.dimension
+    desviacion = -(dim - 1) / 2
 
-    for capa in range(dimension):
-        for columna in range(dimension):
-            for fila in range(dimension):
+    cubitos: list[list[list[Cubito]]] = []
+
+    for capa in range(dim):
+        lista_columna = []
+        for columna in range(dim):
+            lista_fila = []
+            for fila in range(dim):
                 x = desviacion + fila
                 y = desviacion + columna
                 z = desviacion + capa
 
                 if (
-                    0 < capa < dimension - 1
-                    and 0 < columna < dimension - 1
-                    and 0 < fila < dimension - 1
+                    0 < capa < dim - 1
+                    and 0 < columna < dim - 1
+                    and 0 < fila < dim - 1
                 ):
                     continue
 
-                cara_arbitraria = random.choice(list(Cara))
-                cubito = Cubito(cara_arbitraria)
+                cubito = Cubito()
                 cubito.pos(x, y, z)
+
+                lista_fila.append(cubito)
+            lista_columna.append(lista_fila)
+        cubitos.append(lista_columna)
+
+    return cubitos
 
 
 def _crear_plano(raiz: Entity, cara: Cara, tono: Cara):
@@ -76,22 +80,17 @@ def _crear_plano(raiz: Entity, cara: Cara, tono: Cara):
 
 
 class Cubito(Entity):
-    def __init__(self, cara: Cara):
+    def __init__(self):
         super().__init__()
-        self.color = COLORES_DE_CUBO[cara]
 
         # valores por defecto
         self.position = Vec3(0, 0, 0)
-        self.model = 'cube'
-        self.texture = 'white_cube'
+        for cara in Cara:
+            _crear_plano(self, cara, cara)
 
     def pos(self, x: float, y: float, z: float):
         self.position = Vec3(x, y, z)
         return self
-
-    # def update(self):
-    #     self.rotation_x += 1
-    #     self.rotation_y -= 1
 
     def input(self, key: str):
         if key == 'd':
