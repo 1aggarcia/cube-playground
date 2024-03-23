@@ -11,5 +11,5 @@ class Cara(Enum):
 
 
 class Ventana(Enum):
-    Cubo = 'Cubo',
-    Ursina = 'Ursina'
+    CUBO = 'CUBO'
+    URSINA = 'URSINA'

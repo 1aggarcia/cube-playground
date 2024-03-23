@@ -18,9 +18,9 @@ def ventana_inicial():
         abrir_ventana(destino)
 
     button_cubo = tk.Button(ventana, text='Open new cube',
-                            command=lambda: abrir(Ventana.Cubo))
+                            command=lambda: abrir(Ventana.CUBO))
     button_ursina = tk.Button(ventana, text='Ursina (Beta)',
-                            command=lambda: abrir(Ventana.Ursina))
+                            command=lambda: abrir(Ventana.URSINA))
 
     button_cubo.place(relx=0.25, rely=0.5, anchor=tk.CENTER)
     button_ursina.place(relx=0.75, rely=0.5, anchor=tk.CENTER)
@@ -29,7 +29,7 @@ def ventana_inicial():
 
 
 def abrir_ventana(destino: Ventana):
-    if destino == Ventana.Ursina:
+    if destino == Ventana.URSINA:
         app = ventana_ursina(DIMENSION_POR_DEFECTO)
         app.run()
     else:

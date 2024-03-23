@@ -6,9 +6,7 @@
 from ursina import *
 
 from constantes.enums import Cara
-from constantes.colores import COLORES_DE_CUBO
-from modelos.cubo import Cubo, generar_cubo
-from modelos.cubo_ursina import Cubito
+from modelos.cubo3d import generar_cubo3d
 
 VECTORES_DE_CARA = {
     Cara.U: Vec3(0, 1, 0),
@@ -23,43 +21,9 @@ VECTORES_DE_CARA = {
 def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
-    cubo_2d = generar_cubo(dimension)
-    cubo_3d = _generar_cubitos(cubo_2d)
-
-    print(cubo_3d)
+    cubo = generar_cubo3d(dimension)
+    print(cubo.get_cubitos())
 
     EditorCamera()
 
     return aplicacion
-
-
-def _generar_cubitos(cubo: Cubo):
-    dim = cubo.dimension
-    desviacion = -(dim - 1) / 2
-
-    cubitos: list[list[list[Cubito]]] = []
-
-    for capa in range(dim):
-        lista_columna = []
-        for columna in range(dim):
-            lista_fila = []
-            for fila in range(dim):
-                x = desviacion + fila
-                y = desviacion + columna
-                z = desviacion + capa
-
-                if (
-                    0 < capa < dim - 1
-                    and 0 < columna < dim - 1
-                    and 0 < fila < dim - 1
-                ):
-                    continue
-
-                cubito = Cubito()
-                cubito.pos(x, y, z)
-
-                lista_fila.append(cubito)
-            lista_columna.append(lista_fila)
-        cubitos.append(lista_columna)
-
-    return cubitos
