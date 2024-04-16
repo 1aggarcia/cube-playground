@@ -34,6 +34,10 @@ class Cubo:
         self._oyentes = []
 
         self.dimension = len(u)
+        if self.dimension < 2:
+            raise ValueError(
+                f'Dimension must be at least 2: (dimension = {self.dimension})')
+
         self._estado = {
             Cara.U: u,
             Cara.D: d,
@@ -185,6 +189,10 @@ def generar_cubo(dimension: int):
     """
     Genera cubo nxnxn resuelto de la dimension dado
     """
+    if dimension < 2:
+        raise ValueError(
+            f'Dimension must be at least 2: (dimension = {dimension})')
+
     caras = {}
 
     for c in Cara:

@@ -14,8 +14,14 @@ class Cubo3d:
     def get_cubitos(self):
         return self._cubitos
 
+    def hacer_nada(self):
+        return
+
 
 def generar_cubo3d(dimension: int):
+    if dimension < 2:
+        raise ValueError(f'Dimension must be at least 2: {dimension}')
+
     desviacion = - (dimension - 1) / 2
 
     cubitos: list[list[list[Cubito]]] = []
