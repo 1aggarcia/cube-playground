@@ -3,21 +3,47 @@
 
 import unittest
 
-from ursina import Entity, Ursina
+from ursina import Entity, Ursina, color
 from constantes.enums import Cara
-from modelos import cubito
+from modelos import cubito as c
+
+ROSADO = '#FFC0CB'
+BLANCO = '#FFFFFF'
+VERDE = '#00FF00'
 
 class ProbarCubito(unittest.TestCase):
     def test_crear_plano(self):
-        # hace falta chequear el color, modelo, textura y rotación
         Ursina(window_type='none')
         entity = Entity()
 
-        plano_a = cubito._crear_plano(entity, Cara.L, Cara.U)
+        plano_a = c._crear_plano(entity, Cara.L, BLANCO)
         self.assertEqual(plano_a.parent, entity)
         self.assertEqual(plano_a.origin_y, -0.5)
+        self.assertEqual(plano_a.color_getter(), color.hex(BLANCO))
 
-        plano_b = cubito._crear_plano(entity, Cara.L, Cara.F)
+        plano_b = c._crear_plano(entity, Cara.L, VERDE)
         self.assertEqual(plano_b.parent, entity)
         self.assertEqual(plano_b.origin_y, -0.5)
-        self.assertNotEqual(plano_b.color, plano_a.color)
+        self.assertEqual(plano_b.color_getter(), color.hex(VERDE))
+
+    def test_colorar(self):
+        Ursina(window_type='none')
+        cubito = c.Cubito()
+
+        self.assertNotEqual(
+            cubito.planos()[Cara.U].color_getter(),
+            color.hex(ROSADO)
+        )
+        # cambiar el color por rosado
+        cubito.colorar(Cara.U, ROSADO)
+        self.assertEqual(
+            cubito.planos()[Cara.U].color_getter(),
+            color.hex(ROSADO)
+        )
+
+        # intentarlo otra vez
+        cubito.colorar(Cara.U, VERDE)
+        self.assertEqual(
+            cubito.planos()[Cara.U].color_getter(),
+            color.hex(VERDE)
+        )
