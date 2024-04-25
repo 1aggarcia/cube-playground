@@ -1,12 +1,9 @@
-# Ursina nos fuerza a romper estas reglas
-# pylint: disable=W0401
-# pylint: disable=W0622
-# pylint: disable=W0614
-
-from ursina import *
+from ursina import EditorCamera, Ursina, Vec3
 
 from constantes.enums import Cara
 from modelos.cubo3d import generar_cubo3d
+
+ESCALA_CAMARA = 3
 
 VECTORES_DE_CARA = {
     Cara.U: Vec3(0, 1, 0),
@@ -21,9 +18,11 @@ VECTORES_DE_CARA = {
 def ventana_ursina(dimension: int):
     aplicacion = Ursina()
 
-    cubo = generar_cubo3d(dimension)
-    print(cubo.get_cubitos())
+    generar_cubo3d(dimension)
+    scale = dimension / ESCALA_CAMARA
+    #print(cubo.get_cubitos())
 
-    EditorCamera()
+    camera = EditorCamera(ui_size = 1000)
+    camera.scale_setter(Vec3(scale, scale, scale))
 
     return aplicacion

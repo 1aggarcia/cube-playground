@@ -6,16 +6,17 @@ from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
 from ui.ursina.ventana import ventana_ursina
 
-DIMENSION_POR_DEFECTO = 3
-
 
 def ventana_inicial():
     ventana = tk.Tk()
     ventana.config(bg=colores.VERDE_1)
     ventana.geometry('300x200')
+    ventana.eval('tk::PlaceWindow . center')
 
     label_dimension = tk.Label(ventana, text='Dimension:', bg=colores.VERDE_1)
-    entry_dimension = tk.Entry(ventana, text='3')
+    entry_dimension = tk.Entry(ventana)
+
+    entry_dimension.insert(0, '3')
 
     def abrir(destino: Ventana):
         dimension = entry_dimension.get()
@@ -48,11 +49,9 @@ def ventana_inicial():
 
 def abrir_ventana(destino: Ventana, dimension: int):
     if destino == Ventana.URSINA:
-        app = ventana_ursina(dimension)
-        app.run()
+        ventana_ursina(dimension).run()
     else:
-        ventana = ventana_de_cubo(dimension)
-        ventana.mainloop()
+        ventana_de_cubo(dimension).mainloop()
 
 
 if __name__=="__main__":
@@ -60,6 +59,7 @@ if __name__=="__main__":
 
 # PARA EJECUTAR PRUEBAS
 # $ python3 -m unittest -v
+# $ pylint --disable=C0114,C0115,C0116,W0511,R0913,R0801 $(git ls-files '*.py')
 # desde /src/
 
 # TODO: mejorar el algorithmo para mezclar cubos
