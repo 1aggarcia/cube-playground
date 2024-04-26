@@ -1,4 +1,16 @@
+from ursina import Vec3
 from modelos.cubo import crear_cubo_de_texto
+from constantes.enums import Cara
+
+
+VECTORES_DE_CARA = {
+    Cara.U: Vec3(0, 1, 0),
+    Cara.D: Vec3(0, -1, 0),
+    Cara.F: Vec3(0, 0, -1),
+    Cara.B: Vec3(0, 0, 1),
+    Cara.L: Vec3(-1, 0, 0),
+    Cara.R: Vec3(1, 0, 0)
+}
 
 
 MI_CUBO = crear_cubo_de_texto(

@@ -3,15 +3,7 @@ from ursina import Entity, Vec3
 
 from constantes.enums import Cara
 from constantes.colores import COLORES_DE_CUBO
-
-VECTORES_DE_CARA = {
-    Cara.U: Vec3(0, 1, 0),
-    Cara.D: Vec3(0, -1, 0),
-    Cara.F: Vec3(0, 0, -1),
-    Cara.B: Vec3(0, 0, 1),
-    Cara.L: Vec3(-1, 0, 0),
-    Cara.R: Vec3(1, 0, 0)
-}
+from constantes.cubos import VECTORES_DE_CARA
 
 
 class Cubito(Entity):
