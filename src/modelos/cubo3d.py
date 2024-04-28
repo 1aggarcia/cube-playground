@@ -15,7 +15,7 @@ class Cubo3d:
         self.dimension = len(cubitos)
         self._cubitos = cubitos
 
-    def get_cubitos(self):
+    def cubitos(self):
         return self._cubitos
 
     def pintar(self, cubo: Cubo):
@@ -50,13 +50,13 @@ class Cubo3d:
                 self._cubitos[pos_x][pos_y][z].colorar(Cara.F, color)
 
         # la cara L
-            pos_z = 0
-            for y, fila in enumerate(estado[Cara.L]):
-                for x, col in enumerate(fila):
-                    pos_y = dim - y - 1
-                    pos_x = dim - x - 1
-                    color = COLORES_DE_CUBO[col]
-                    self._cubitos[pos_x][pos_y][pos_z].colorar(Cara.L, color)
+        pos_z = 0
+        for y, fila in enumerate(estado[Cara.L]):
+            for x, col in enumerate(fila):
+                pos_y = dim - y - 1
+                pos_x = dim - x - 1
+                color = COLORES_DE_CUBO[col]
+                self._cubitos[pos_x][pos_y][pos_z].colorar(Cara.L, color)
 
         # ERROR: tiene la posición (0, 1, -1)
         # pero debería tener la posición (-1, 1, 0)
