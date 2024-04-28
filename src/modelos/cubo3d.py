@@ -18,6 +18,7 @@ class Cubo3d:
     def cubitos(self):
         return self._cubitos
 
+    # TODO: Acortar esta función
     def pintar(self, cubo: Cubo):
         """
         Pintar este Cubo3d con el estado actual de un Cubo de 2D.
@@ -33,34 +34,58 @@ class Cubo3d:
 
         estado = cubo.get_estado()
 
+        #################################################
+        # la cara D
+        pos_y = 0
+        for z, fila in enumerate(estado[Cara.D]):
+            for x, etiqueta in enumerate(fila):
+                color = COLORES_DE_CUBO[etiqueta]
+                self._cubitos[x][pos_y][z].colorar(Cara.D, color)
+
         # la cara U
         pos_y = dim - 1
-        for x, fila in enumerate(estado[Cara.U]):
-            for z, col in enumerate(fila):
-                pos_x = dim - x - 1
-                color = COLORES_DE_CUBO[col]
-                self._cubitos[pos_x][pos_y][z].colorar(Cara.U, color)
+        for z, fila in enumerate(estado[Cara.U]):
+            for x, etiqueta in enumerate(fila):
+                z_inv = dim - z - 1
+                color = COLORES_DE_CUBO[etiqueta]
+                self._cubitos[x][pos_y][z_inv].colorar(Cara.U, color)
 
+        #################################################
         # la cara F
-        pos_x = 0
-        for y, fila in enumerate(estado[Cara.F]):
-            for z, col in enumerate(fila):
-                pos_y = dim - y - 1
-                color = COLORES_DE_CUBO[col]
-                self._cubitos[pos_x][pos_y][z].colorar(Cara.F, color)
-
-        # la cara L
         pos_z = 0
-        for y, fila in enumerate(estado[Cara.L]):
-            for x, col in enumerate(fila):
-                pos_y = dim - y - 1
-                pos_x = dim - x - 1
-                color = COLORES_DE_CUBO[col]
-                self._cubitos[pos_x][pos_y][pos_z].colorar(Cara.L, color)
+        for y, fila in enumerate(estado[Cara.F]):
+            for x, etiqueta in enumerate(fila):
+                y_inv = dim - y - 1
+                color = COLORES_DE_CUBO[etiqueta]
+                self._cubitos[x][y_inv][pos_z].colorar(Cara.F, color)
 
-        # ERROR: tiene la posición (0, 1, -1)
-        # pero debería tener la posición (-1, 1, 0)
-        # print(self._cubitos[0][2][1].position)
+        # la cara B
+        pos_z = dim - 1
+        for y, fila in enumerate(estado[Cara.B]):
+            for x, etiqueta in enumerate(fila):
+                x_inv = dim - x - 1
+                y_inv = dim - y - 1
+                color = COLORES_DE_CUBO[etiqueta]
+                self._cubitos[x_inv][y_inv][pos_z].colorar(Cara.B, color)
+
+        #################################################
+        # la cara L
+        pos_x = 0
+        for y, fila in enumerate(estado[Cara.L]):
+            for z, col in enumerate(fila):
+                y_inv = dim - y - 1
+                z_inv = dim - z - 1
+                color = COLORES_DE_CUBO[col]
+                self._cubitos[pos_x][y_inv][z_inv].colorar(Cara.L, color)
+
+        # la cara R
+        pos_x = dim - 1
+        for y, fila in enumerate(estado[Cara.R]):
+            for z, col in enumerate(fila):
+                y_inv = dim - y - 1
+                z_inv = dim - z - 1
+                color = COLORES_DE_CUBO[col]
+                self._cubitos[pos_x][y_inv][z].colorar(Cara.R, color)
 
 
 def generar_cubo3d(dimension: int):
@@ -86,7 +111,7 @@ def generar_cubo3d(dimension: int):
                 pos_y = desviacion + y
                 pos_z = desviacion + z
 
-                cubitos[x][y][z] = Cubito().pos(pos_x, pos_y, pos_z)
+                cubitos[x][y][z] = Cubito(pos_x, pos_y, pos_z)
 
     return Cubo3d(cubitos)
 

@@ -14,11 +14,11 @@ class Cubito(Entity):
     Tiene seis lados con colores distintos que se pueden colorar, y una
     posición mutable.
     """
-    def __init__(self):
+    def __init__(self, x: float, y: float, z: float):
         super().__init__()
 
         # valores por defecto
-        self.position = Vec3(0, 0, 0)
+        self.position = Vec3(x, y, z)
 
         self._planos: dict[Cara, Entity] = {}
         for cara in Cara:

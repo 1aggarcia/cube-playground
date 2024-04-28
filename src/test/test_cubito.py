@@ -28,7 +28,7 @@ class ProbarCubito(unittest.TestCase):
 
     def test_colorar(self):
         Ursina(window_type='none')
-        cubito = c.Cubito()
+        cubito = c.Cubito(0, 0, 0)
 
         self.assertNotEqual(
             cubito.planos()[Cara.U].color_getter(),
