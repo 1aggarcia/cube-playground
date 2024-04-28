@@ -17,12 +17,11 @@ class Cubito(Entity):
     def __init__(self, x: float, y: float, z: float):
         super().__init__()
 
-        # valores por defecto
         self.position = Vec3(x, y, z)
-
-        self._planos: dict[Cara, Entity] = {}
-        for cara in Cara:
-            self._planos[cara] = _crear_plano(self, cara, COLORES_DE_CUBO[cara])
+        self._planos = {
+            cara: _crear_plano(self, cara, COLORES_DE_CUBO[cara])
+            for cara in Cara
+        }
 
     def pos(self, x: float, y: float, z: float):
         self.position = Vec3(x, y, z)

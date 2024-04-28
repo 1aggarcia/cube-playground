@@ -11,14 +11,13 @@ class Cubo3d:
 
     Debe usarse dentro de una aplicación Ursina
     """
-    def __init__(self, cubitos: list[list[list[Cubito]]]):
+    def __init__(self, cubitos: list[list[list[Cubito | None]]]):
         self.dimension = len(cubitos)
         self._cubitos = cubitos
 
     def cubitos(self):
         return self._cubitos
 
-    # TODO: Acortar esta función
     def pintar(self, cubo: Cubo):
         """
         Pintar este Cubo3d con el estado actual de un Cubo de 2D.
@@ -34,58 +33,12 @@ class Cubo3d:
 
         estado = cubo.get_estado()
 
-        #################################################
-        # la cara D
-        pos_y = 0
-        for z, fila in enumerate(estado[Cara.D]):
-            for x, etiqueta in enumerate(fila):
-                color = COLORES_DE_CUBO[etiqueta]
-                self._cubitos[x][pos_y][z].colorar(Cara.D, color)
-
-        # la cara U
-        pos_y = dim - 1
-        for z, fila in enumerate(estado[Cara.U]):
-            for x, etiqueta in enumerate(fila):
-                z_inv = dim - z - 1
-                color = COLORES_DE_CUBO[etiqueta]
-                self._cubitos[x][pos_y][z_inv].colorar(Cara.U, color)
-
-        #################################################
-        # la cara F
-        pos_z = 0
-        for y, fila in enumerate(estado[Cara.F]):
-            for x, etiqueta in enumerate(fila):
-                y_inv = dim - y - 1
-                color = COLORES_DE_CUBO[etiqueta]
-                self._cubitos[x][y_inv][pos_z].colorar(Cara.F, color)
-
-        # la cara B
-        pos_z = dim - 1
-        for y, fila in enumerate(estado[Cara.B]):
-            for x, etiqueta in enumerate(fila):
-                x_inv = dim - x - 1
-                y_inv = dim - y - 1
-                color = COLORES_DE_CUBO[etiqueta]
-                self._cubitos[x_inv][y_inv][pos_z].colorar(Cara.B, color)
-
-        #################################################
-        # la cara L
-        pos_x = 0
-        for y, fila in enumerate(estado[Cara.L]):
-            for z, col in enumerate(fila):
-                y_inv = dim - y - 1
-                z_inv = dim - z - 1
-                color = COLORES_DE_CUBO[col]
-                self._cubitos[pos_x][y_inv][z_inv].colorar(Cara.L, color)
-
-        # la cara R
-        pos_x = dim - 1
-        for y, fila in enumerate(estado[Cara.R]):
-            for z, col in enumerate(fila):
-                y_inv = dim - y - 1
-                z_inv = dim - z - 1
-                color = COLORES_DE_CUBO[col]
-                self._cubitos[pos_x][y_inv][z].colorar(Cara.R, color)
+        for cara in Cara:
+            for y, fila in enumerate(estado[cara]):
+                for x, etiqueta in enumerate(fila):
+                    color = COLORES_DE_CUBO[etiqueta]
+                    cubito = _get_cubito(self._cubitos, x, y, cara)
+                    cubito.colorar(cara, color)
 
 
 def generar_cubo3d(dimension: int):
@@ -126,3 +79,32 @@ def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
         or y in (0, dimension - 1)
         or z in (0, dimension - 1)
     )
+
+
+def _get_cubito(cubitos: list[list[list[Cubito | None]]], x: int, y: int, cara: Cara):
+    """
+    Retorna una referencia al cubito indicado por las coordenadas en 2D,
+    y la cara especificada
+
+    `y` y `z` deben ser en el rango de 0 - len(cubitos)
+    """
+    maximo = len(cubitos) - 1
+    cubito = None
+
+    if cara == Cara.D:
+        cubito = cubitos[x][0][y]
+    elif cara == Cara.U:
+        cubito = cubitos[x][maximo][maximo - y]
+    elif cara == Cara.F:
+        cubito = cubitos[x][maximo - y][0]
+    elif cara == Cara.B:
+        cubito = cubitos[maximo - x][maximo - y][maximo]
+    elif cara == Cara.L:
+        cubito = cubitos[0][maximo - y][maximo - x]
+    elif cara == Cara.R:
+        cubito = cubitos[maximo][maximo - y][x]
+
+    if cubito is None:
+        raise ReferenceError('cubito no encontrado')
+
+    return cubito
