@@ -63,37 +63,41 @@ class Cubo3d:
         # print(self._cubitos[0][2][1].position)
 
 
-# TODO: reparar las posiciones
 def generar_cubo3d(dimension: int):
     if dimension < 2:
         raise ValueError(f'Dimension must be at least 2: {dimension}')
 
     desviacion = - (dimension - 1) / 2
 
-    cubitos: list[list[list[Cubito]]] = []
+    # crea tensor 3d lleno de `None`
+    # el espacio adentro no es usado, así que se hace `None` para ahorrar recursos
+    cubitos: list[list[list[Cubito | None]]] = [
+        [[None for _ in range(dimension)] for _ in range(dimension)] for _ in range(dimension)
+    ]
 
-    for capa in range(dimension):
-        lista_columna = []
-        for columna in range(dimension):
-            lista_fila = []
-            for fila in range(dimension):
-                x = desviacion + fila
-                y = desviacion + columna
-                z = desviacion + capa
-
-                if (
-                    0 < capa < dimension - 1
-                    and 0 < columna < dimension - 1
-                    and 0 < fila < dimension - 1
-                ):
-                    lista_fila.append(None)
+    # crear cubitos a los bordes del tensor
+    for x in range(dimension):
+        for y in range(dimension):
+            for z in range(dimension):
+                if not _es_borde(x, y, z, dimension):
                     continue
 
-                cubito = Cubito()
-                cubito.pos(x, y, z)
+                pos_x = desviacion + x
+                pos_y = desviacion + y
+                pos_z = desviacion + z
 
-                lista_fila.append(cubito)
-            lista_columna.append(lista_fila)
-        cubitos.append(lista_columna)
+                cubitos[x][y][z] = Cubito().pos(pos_x, pos_y, pos_z)
 
     return Cubo3d(cubitos)
+
+
+def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
+    """
+    Retorna `True` si las cordenadas `x`, `y`, `z` están al borde de un cubo
+    NxNxN con la dimensión `dimension`
+    """
+    return (
+        x in (0, dimension - 1)
+        or y in (0, dimension - 1)
+        or z in (0, dimension - 1)
+    )

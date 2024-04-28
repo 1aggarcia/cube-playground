@@ -1,5 +1,4 @@
 import unittest
-
 from modelos import cubo3d
 
 class ProbarCubo3d(unittest.TestCase):
