@@ -15,6 +15,7 @@ def ventana_ursina(dimension: int):
     scramble = generar_scramble(dimension)
 
     cubo_2d.ejecutar_algoritmo([str(mov) for mov in scramble])
+    # cubo_2d.ejecutar_algoritmo(['U2', 'D2', 'F2', 'B2', 'R2', 'L2'])
 
     cubo_3d = generar_cubo3d(cubo_2d.dimension)
     cubo_3d.pintar(cubo_2d)

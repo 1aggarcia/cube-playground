@@ -33,7 +33,7 @@ def ventana_inicial():
 
     button_cubo = tk.Button(ventana, text='Open new cube',
                             command=lambda: abrir(Ventana.CUBO))
-    button_ursina = tk.Button(ventana, text='Ursina (Beta)',
+    button_ursina = tk.Button(ventana, text='Open in 3D (Beta)',
                             command=lambda: abrir(Ventana.URSINA))
 
     label_dimension.grid(row=0, column=0)

@@ -1,8 +1,32 @@
-# Cube Playground
-Rubik's Cube playground in Python. I wrote the code in Spanish just to practice the language but the UI will be avaliable in English.
+# Cube Playground (WIP)
+This is a Rubik's cube sandbox explorer built in Python. I wrote the code in Spanish just to practice the language but the UI will be avaliable in English. Later I may take the time to translate all the code to English.
 
-Presently, this codebase is capable of executing algorithms (sequences of moves), generating scrambles, and producing PNG images of Rubik's cubes of any size. These interactions can be done in the TKinter window opened by running `src/main.py`, but the initial cube is always a solved 3x3.
+## Current features:
+- Rubik's cube generation of any size NxN, (2x2, 3x3, 100x100, as much as your CPU can handle)
+- Algorithm execution (sequences of moves) via manual input
+- Automatic scrambling
+- Production of PNG images of any cube state
 
-[NumPy](https://pypi.org/project/numpy/) and [Pillow](https://pypi.org/project/pillow/) are required to run this code, as well as Python 3.10ish
+A barebones 3D visualization is currently functional, I am working on integrating the other features into the 3D window. For now the primary functionality is operational in the 2D visualizer window.
 
-In the future, these features will be better integrated into the UI, including the ability to save cubes to open later and explore further. I'd like to implement an optimal solver, which will be slow (solving cubes optimally is an NP problem), as well as render cubes in 3D space instead of with TKinter. Maybe one day I'll even find a way to make a web client for it.
+## Requirements:
+- Python 3.12
+- [NumPy](https://pypi.org/project/numpy/)  (matrix operaitons)
+- [Pillow](https://pypi.org/project/pillow/) (image generation)
+- [Ursina](https://www.ursinaengine.org/) (3d graphics)
+
+You can install these libraries through pip by running:
+```
+pip install -r src/requirements.txt
+```
+Once you have all the requirements installed, you can run the program by running:
+```
+python src/main.py
+```
+
+## Screenshots
+
+<img src="./screenshots/3x3_3d.png" width="250"/>
+<img src="./screenshots/3x3_flat.png" width="400"/>
+<img src="./screenshots/20x20_3d.png" width="250"/>
+<img src="./screenshots/2x2_flat.png" width="400"/>
