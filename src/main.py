@@ -4,7 +4,7 @@ from tkinter import messagebox
 from constantes import colores
 from constantes.enums import Ventana
 from ui.cubo.ventana import ventana_de_cubo
-from ui.ursina.ventana import ventana_ursina
+from ui.ursina.app import iniciar_app_ursina
 
 
 def ventana_inicial():
@@ -49,7 +49,7 @@ def ventana_inicial():
 
 def abrir_ventana(destino: Ventana, dimension: int):
     if destino == Ventana.URSINA:
-        ventana_ursina(dimension).run()
+        iniciar_app_ursina(dimension)
     else:
         ventana_de_cubo(dimension).mainloop()
 
