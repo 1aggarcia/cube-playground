@@ -33,10 +33,10 @@ class Cubo:
         # validar_caras(u, d, f, b, l, r)
         self._oyentes = []
 
-        self.dimension = len(u)
-        if self.dimension < 2:
+        self._dimension = len(u)
+        if self._dimension < 2:
             raise ValueError(
-                f'Dimension must be at least 2: (dimension = {self.dimension})')
+                f'Dimension must be at least 2: (dimension = {self._dimension})')
 
         self._estado = {
             Cara.U: u,
@@ -52,7 +52,7 @@ class Cubo:
     def __eq__(self, __value: object) -> bool:
         if not isinstance(__value, Cubo):
             return False
-        if __value.dimension != self.dimension:
+        if __value._dimension != self._dimension:
             return False
 
         for cara in Cara:
@@ -79,13 +79,17 @@ class Cubo:
 
     # métodos públicos
 
+    @property
+    def dimension(self):
+        return self._dimension
+
+    @property
+    def estado(self):
+        return copy.deepcopy(self._estado)
+
     def get_cara(self, cara: Cara):
         """Retorna una copia de la cara espesificada en el cubo"""
         return copy.deepcopy(self._estado[cara])
-
-    def get_estado(self):
-        """Retorna una copia del estado de cubo"""
-        return copy.deepcopy(self._estado)
 
     def restaturar(self):
         """Restatúa el cubo a su estado inicial"""
@@ -113,7 +117,7 @@ class Cubo:
         if mov.cara in [Cara.D, Cara.B, Cara.R]:
             # estas caras giran con la orden de referencia
             horario = not horario
-            linea = self.dimension - mov.nivel
+            linea = self._dimension - mov.nivel
             # para evitar -2 como dirección
             if direccion != 2:
                 direccion = mov.direccion * -1

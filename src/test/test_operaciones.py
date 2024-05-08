@@ -83,7 +83,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = op.cotar_horizontalmente(cubo_a.get_estado(), 0, 1)
+        resultado_a = op.cotar_horizontalmente(cubo_a.estado, 0, 1)
         esperado_a = {
             Cara.F: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
             Cara.L: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
@@ -97,7 +97,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cotar_horizontalmente(cubo_a.get_estado(), 1, -1)
+        resultado_b = op.cotar_horizontalmente(cubo_a.estado, 1, -1)
         esperado_b = {
             Cara.R: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
             Cara.F: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
@@ -111,7 +111,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cotar_horizontalmente(cubo_a.get_estado(), 0, 2)
+        resultado_c = op.cotar_horizontalmente(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.F: np.array([[Cara.R, Cara.L], [Cara.F, Cara.B]]),
             Cara.B: np.array([[Cara.F, Cara.R], [Cara.L, Cara.B]]),
@@ -134,7 +134,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = op.cotar_verticalmente(cubo_a.get_estado(), 0, -1)
+        resultado_a = op.cotar_verticalmente(cubo_a.estado, 0, -1)
         esperado_a = {
             Cara.F: np.array([[Cara.D, Cara.R], [Cara.U, Cara.B]]),
             Cara.U: np.array([[Cara.F, Cara.U], [Cara.F, Cara.D]]),
@@ -148,7 +148,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cotar_verticalmente(cubo_a.get_estado(), 1, 1)
+        resultado_b = op.cotar_verticalmente(cubo_a.estado, 1, 1)
         esperado_b = {
             Cara.U: np.array([[Cara.B, Cara.L], [Cara.U, Cara.R]]),
             Cara.B: np.array([[Cara.D, Cara.L], [Cara.R, Cara.B]]),
@@ -162,7 +162,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cotar_verticalmente(cubo_a.get_estado(), 0, 2)
+        resultado_c = op.cotar_verticalmente(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.U: np.array([[Cara.D, Cara.U], [Cara.U, Cara.D]]),
             Cara.D: np.array([[Cara.B, Cara.R], [Cara.U, Cara.D]]),
@@ -185,7 +185,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['R', 'L'], ['F', 'B']],
             r = [['B', 'U'], ['F', 'L']]
         )
-        resultado_a = op.cortar_frontera(cubo_a.get_estado(), 0, 1)
+        resultado_a = op.cortar_frontera(cubo_a.estado, 0, 1)
         esperado_a = {
             Cara.L: np.array([[Cara.R, Cara.D], [Cara.F, Cara.R]]),
             Cara.U: np.array([[Cara.D, Cara.L], [Cara.B, Cara.L]]),
@@ -199,7 +199,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cortar_frontera(cubo_a.get_estado(), 1, -1)
+        resultado_b = op.cortar_frontera(cubo_a.estado, 1, -1)
         esperado_b = {
             Cara.D: np.array([[Cara.D, Cara.R], [Cara.R, Cara.F]]),
             Cara.L: np.array([[Cara.L, Cara.L], [Cara.D, Cara.B]]),
@@ -213,7 +213,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cortar_frontera(cubo_a.get_estado(), 0, 2)
+        resultado_c = op.cortar_frontera(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.U: np.array([[Cara.D, Cara.L], [Cara.R, Cara.D]]),
             Cara.D: np.array([[Cara.U, Cara.U], [Cara.U, Cara.D]]),

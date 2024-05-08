@@ -43,7 +43,7 @@ class Cubo3d:
                 + f' self.dimension = {self.dimension}'
             )
 
-        estado = self._cubo_2d.get_estado()
+        estado = self._cubo_2d.estado
 
         for cara in Cara:
             for y, fila in enumerate(estado[cara]):
