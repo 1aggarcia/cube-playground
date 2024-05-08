@@ -1,12 +1,15 @@
+# deshabilitar aviso de acceder a métodos privados
+# pylint: disable=W0212
+
 import unittest
 from modelos import cubo3d
 
 class ProbarCubo3d(unittest.TestCase):
-    def test_generar_cubo3d(self):
+    def test_generar_cubitos(self):
         dim = 3
         desviacion = -1
 
-        cubitos = cubo3d.generar_cubo3d(dim).cubitos()
+        cubitos = cubo3d._generar_cubitos(dim)
         self.assertEqual(len(cubitos), dim)
 
         for x, cuadrado in enumerate(cubitos):
@@ -25,7 +28,7 @@ class ProbarCubo3d(unittest.TestCase):
                         self.assertIsNone(cubito)
                         continue
 
-                    pos = cubito.position_getter()
+                    pos = cubito.position_getter() # type: ignore
 
                     print("\n----------------")
                     print(f'idx = ({x}, {y}, {z})')

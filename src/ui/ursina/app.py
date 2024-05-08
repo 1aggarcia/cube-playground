@@ -1,6 +1,5 @@
 from ursina import EditorCamera, Ursina, Vec3, Entity
-from modelos.cubo3d import generar_cubo3d
-from modelos.cubo import generar_cubo, Cubo
+from modelos.cubo3d import Cubo3d
 from modelos.movimiento import Movimiento
 from modelos.operaciones import generar_scramble
 
@@ -13,32 +12,29 @@ ESCALA_CAMARA = 3
 def iniciar_app_ursina(dimension: int):
     aplicacion = Ursina()
 
-    cubo_3d = generar_cubo3d(dimension)
-
-    cubo_2d = generar_cubo(dimension)
-    cubo_2d.al_cambiar(lambda: cubo_3d.pintar(cubo_2d))
+    cubo = Cubo3d(dimension)
 
     escala = dimension / ESCALA_CAMARA
     camera = EditorCamera(ui_size = 1000)
     camera.scale_setter(Vec3(escala, escala, escala))
 
     controlador = Entity()
-    controlador.input = lambda key: al_teclar(key, cubo_2d)
+    controlador.input = lambda key: al_teclar(key, cubo)
 
     aplicacion.run()
 
 
-def al_teclar(key: str, cubo_2d: Cubo):
+def al_teclar(key: str, cubo: Cubo3d):
     if key == "space":
-        cubo_2d.restaturar()
+        cubo.cubo_2d.restaturar()
 
     elif key == "s":
-        scramble = generar_scramble(cubo_2d.dimension)
-        cubo_2d.ejecutar_algoritmo([str(mov) for mov in scramble])
+        scramble = generar_scramble(cubo.cubo_2d.dimension)
+        cubo.cubo_2d.ejecutar_algoritmo([str(mov) for mov in scramble])
 
     elif key == "i":
-        imprimir_cubo(cubo_2d)
+        imprimir_cubo(cubo.cubo_2d)
 
     elif key.upper() in Cara:
         mov = Movimiento(Cara[key.upper()], 1, 1, False)
-        cubo_2d.mover(mov)
+        cubo.cubo_2d.mover(mov)

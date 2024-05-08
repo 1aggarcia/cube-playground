@@ -1,5 +1,5 @@
 from modelos.cubito import Cubito
-from modelos.cubo import Cubo
+from modelos.cubo import generar_cubo
 from constantes.enums import Cara
 from constantes.colores import COLORES_DE_CUBO
 
@@ -11,19 +11,31 @@ class Cubo3d:
 
     Debe usarse dentro de una aplicación Ursina
     """
-    def __init__(self, cubitos: list[list[list[Cubito | None]]]):
-        self.dimension = len(cubitos)
-        self._cubitos = cubitos
+    def __init__(self, dimension: int):
+        self._dimension = dimension
+        self._cubitos = _generar_cubitos(dimension)
+        self._cubo_2d = generar_cubo(dimension)
 
+        self.cubo_2d.al_cambiar(self.pintar)
+
+    @property
+    def dimension(self):
+        return self._dimension
+
+    @property
     def cubitos(self):
         return self._cubitos
 
-    def pintar(self, cubo: Cubo):
+    @property
+    def cubo_2d(self):
+        return self._cubo_2d
+
+    def pintar(self):
         """
         Pintar este Cubo3d con el estado actual de un Cubo de 2D.
         No modifica el argumento `cubo`.
         """
-        dim = cubo.dimension
+        dim = self._cubo_2d.dimension
         if dim != self.dimension:
             raise ValueError(
                 'La dimensión del cubo de referencia es diferente'
@@ -31,7 +43,7 @@ class Cubo3d:
                 + f' self.dimension = {self.dimension}'
             )
 
-        estado = cubo.get_estado()
+        estado = self._cubo_2d.get_estado()
 
         for cara in Cara:
             for y, fila in enumerate(estado[cara]):
@@ -41,7 +53,7 @@ class Cubo3d:
                     cubito.colorar(cara, color)
 
 
-def generar_cubo3d(dimension: int):
+def _generar_cubitos(dimension: int):
     if dimension < 2:
         raise ValueError(f'Dimension must be at least 2: {dimension}')
 
@@ -66,7 +78,7 @@ def generar_cubo3d(dimension: int):
 
                 cubitos[x][y][z] = Cubito(pos_x, pos_y, pos_z)
 
-    return Cubo3d(cubitos)
+    return cubitos
 
 
 def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
