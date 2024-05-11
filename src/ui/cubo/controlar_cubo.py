@@ -3,7 +3,7 @@ from tkinter import messagebox
 
 import modelos.movimiento as mv
 from modelos.cubo import Cubo
-from modelos.operaciones import generar_scramble
+from util.scrambles import generar_scramble
 from constantes import colores
 from imagenes.impresora import imprimir_cubo
 

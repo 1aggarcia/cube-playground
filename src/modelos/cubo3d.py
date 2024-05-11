@@ -9,14 +9,14 @@ class Cubo3d:
     Modelo para representar un cubo de Rubik en 3D con Cubitos utilizando
     la librería Ursina.
 
-    Debe usarse dentro de una aplicación Ursina
+    Debe usarse después de haber iniciado una aplicación Ursina
     """
     def __init__(self, dimension: int):
         self._dimension = dimension
         self._cubitos = _generar_cubitos(dimension)
         self._cubo_2d = generar_cubo(dimension)
 
-        self.cubo_2d.al_cambiar(self.pintar)
+        self.cubo_2d.al_cambiar(lambda: _pintar_cubo(self))
 
     @property
     def dimension(self):
@@ -30,28 +30,29 @@ class Cubo3d:
     def cubo_2d(self):
         return self._cubo_2d
 
-    def pintar(self):
-        """
-        Pintar este Cubo3d con el estado actual de un Cubo de 2D.
-        No modifica el argumento `cubo`.
-        """
-        estado = self._cubo_2d.estado
 
-        for cara in Cara:
-            for y, fila in enumerate(estado[cara]):
-                for x, etiqueta in enumerate(fila):
-                    color = COLORES_DE_CUBO[etiqueta]
-                    cubito = _get_cubito(self._cubitos, x, y, cara)
-                    cubito.colorar(cara, color)
+def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
+    """
+    Retorna `True` si las cordenadas `x`, `y`, `z` están al borde de un cubo
+    NxNxN con la dimensión `dimension`
+    """
+    return (
+        x in (0, dimension - 1)
+        or y in (0, dimension - 1)
+        or z in (0, dimension - 1)
+    )
 
 
 def _generar_cubitos(dimension: int):
+    """
+    Crear una matriz 3d para un Cubo3d con entidades de Ursina
+    """
     if dimension < 2:
         raise ValueError(f'Dimension must be at least 2: {dimension}')
 
     desviacion = - (dimension - 1) / 2
 
-    # crea tensor 3d lleno de `None`
+    # crea matriz 3d lleno de `None`
     # el espacio adentro no es usado, así que se hace `None` para ahorrar recursos
     cubitos: list[list[list[Cubito | None]]] = [
         [[None for _ in range(dimension)] for _ in range(dimension)] for _ in range(dimension)
@@ -71,18 +72,6 @@ def _generar_cubitos(dimension: int):
                 cubitos[x][y][z] = Cubito(pos_x, pos_y, pos_z)
 
     return cubitos
-
-
-def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
-    """
-    Retorna `True` si las cordenadas `x`, `y`, `z` están al borde de un cubo
-    NxNxN con la dimensión `dimension`
-    """
-    return (
-        x in (0, dimension - 1)
-        or y in (0, dimension - 1)
-        or z in (0, dimension - 1)
-    )
 
 
 def _get_cubito(cubitos: list[list[list[Cubito | None]]], x: int, y: int, cara: Cara):
@@ -112,3 +101,18 @@ def _get_cubito(cubitos: list[list[list[Cubito | None]]], x: int, y: int, cara: 
         raise ReferenceError('cubito no encontrado')
 
     return cubito
+
+
+def _pintar_cubo(cubo: Cubo3d):
+    """
+    Pintar el cubo con el estado actual su cubo en 2d.
+    * Modifica los cubitos del cubo.
+    """
+    estado = cubo.cubo_2d.estado
+
+    for cara in Cara:
+        for y, fila in enumerate(estado[cara]):
+            for x, etiqueta in enumerate(fila):
+                color = COLORES_DE_CUBO[etiqueta]
+                cubito = _get_cubito(cubo.cubitos, x, y, cara)
+                cubito.colorar(cara, color)

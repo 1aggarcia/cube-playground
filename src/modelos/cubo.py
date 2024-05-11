@@ -4,8 +4,7 @@ import numpy as np
 
 from constantes.enums import Cara
 from modelos.movimiento import Movimiento, movimiento_de_texto
-import modelos.operaciones as op
-# from modelos.validador_de_cubo import validar_caras
+import util.matrices as ma
 
 class Cubo:
     """
@@ -63,7 +62,6 @@ class Cubo:
 
         return True
 
-
     def __str__(self):
         resultado = ""
         for cuadrado in self._estado.values():
@@ -108,7 +106,7 @@ class Cubo:
     def mover(self, mov: Movimiento):
         if mov.nivel == 1:
             # solo giramos la cara si nivel = 1
-            cara_girado = op.girar_matriz(self._estado[mov.cara], mov.direccion)
+            cara_girado = ma.girar_matriz(self._estado[mov.cara], mov.direccion)
             self._set_cara(mov.cara, cara_girado)
 
         horario = bool(mov.direccion == 1)
@@ -124,15 +122,15 @@ class Cubo:
 
         if mov.cara in [Cara.U, Cara.D]:
             # caras horizontales
-            self._estado = op.cotar_horizontalmente(
+            self._estado = ma.cotar_horizontalmente(
                 self._estado, linea, direccion)
         elif mov.cara in [Cara.L, Cara.R]:
             # caras verticales
-            self._estado = op.cotar_verticalmente(
+            self._estado = ma.cotar_verticalmente(
                 self._estado, linea, direccion)
         else:
             # caras fronterizas
-            self._estado = op.cortar_frontera(
+            self._estado = ma.cortar_frontera(
                 self._estado, linea, direccion)
 
         self._notificar_a_oyentes()
@@ -212,7 +210,7 @@ def generar_cubo(dimension: int):
     )
 
 
-# métodos privados
+# funciones privadas
 
 def _convertir_a_caras(lista: list[list[str]]):
     """

@@ -31,19 +31,19 @@ class ProbarCubito(unittest.TestCase):
         cubito = c.Cubito(0, 0, 0)
 
         self.assertNotEqual(
-            cubito.planos()[Cara.U].color_getter(),
+            cubito.planos[Cara.U].color_getter(),
             color.hex(ROSADO)
         )
         # cambiar el color por rosado
         cubito.colorar(Cara.U, ROSADO)
         self.assertEqual(
-            cubito.planos()[Cara.U].color_getter(),
+            cubito.planos[Cara.U].color_getter(),
             color.hex(ROSADO)
         )
 
         # intentarlo otra vez
         cubito.colorar(Cara.U, VERDE)
         self.assertEqual(
-            cubito.planos()[Cara.U].color_getter(),
+            cubito.planos[Cara.U].color_getter(),
             color.hex(VERDE)
         )

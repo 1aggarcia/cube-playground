@@ -1,9 +1,12 @@
 from typing import Literal
+from dataclasses import dataclass
 from constantes.enums import Cara
 
+
+@dataclass(frozen=True)
 class Movimiento:
     """
-    Objeto que define un movimiento del cubo. No se debería modificar.
+    Objeto que define un movimiento del cubo. No se puede modificar.
     El movimiento es definido por:
     * cara - la cara que girará
     * direccion - número de rotaciones de 90 degrados de capa.
@@ -14,15 +17,10 @@ class Movimiento:
     * ancho - True si quieres girar cada capa entre la cara y el nivel,
         False si solo quieres girar la capa al nivel dado.
     """
-    def __init__(self,
-        cara: Cara, direccion: Literal[-1, 1, 2], nivel: int, ancho: bool
-    ):
-        if nivel < 1:
-            raise ValueError('nivel debe ser por lo menos 1')
-        self.cara = cara
-        self.direccion = direccion
-        self.nivel = nivel
-        self.ancho = ancho
+    cara: Cara
+    direccion: Literal[-1, 1, 2]
+    nivel: int
+    ancho: bool
 
     def __eq__(self, __value: object) -> bool:
         return (
@@ -70,7 +68,7 @@ def invertir_movimiento(movimiento: Movimiento):
 
 def movimiento_de_texto(texto: str) -> Movimiento:
     """
-    Convertir texto a un movimiento
+    Convertir texto en un movimiento
     * requiere que el texto tenga una letra que represente una cara,
         e.j. <U>
     * requiere que el nivel esté antes de la cara, e.j. <3U>
@@ -98,7 +96,7 @@ def movimiento_de_texto(texto: str) -> Movimiento:
     cara = Cara[texto[posicion]]
     posicion += 1
 
-    # determinar ancho (opcional)
+    # determinar si es ancho (opcional)
     ancho = False
     if posicion >= length:
         return Movimiento(cara, 1, nivel, False)

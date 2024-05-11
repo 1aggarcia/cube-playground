@@ -23,10 +23,7 @@ class Cubito(Entity):
             for cara in Cara
         }
 
-    def pos(self, x: float, y: float, z: float):
-        self.position = Vec3(x, y, z)
-        return self
-
+    @property
     def planos(self):
         return deepcopy(self._planos)
 

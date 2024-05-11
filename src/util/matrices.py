@@ -1,11 +1,7 @@
-from typing import Literal
-
 import copy
-import random
 import numpy as np
 
 from constantes.enums import Cara
-from modelos.movimiento import Movimiento
 
 # el ciclo que siguen las caras al hacer el movimiento U
 CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
@@ -16,32 +12,6 @@ CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
 # el ciclo que siguen las caras al hacer el movimiento F
 # cada tuple representa (Cara, rotaciones necesarias antes de copiar)
 CARAS_FRONTERIZAS = [(Cara.D, 0), (Cara. L, -1), (Cara.U, 2), (Cara.R, 1)]
-
-# LONGITUD_DE_SCRAMBLES[dimensión] = # de movimientos,
-# donde 2 <= dimensión <= 10
-LONGITUD_DE_SCRAMBLES = [0, 0, 9, 25, 40, 60, 80, 90, 100, 110, 120]
-
-
-def generar_scramble(dimension: int) -> list[Movimiento]:
-    scramble = []
-
-    for _ in range(_longitud_de_scramble(dimension)):
-        if len(scramble) == 0:
-            cara = random.choice(list(Cara))
-        else:
-            # hay que evitar a elegir la misma cara dos veces
-            ultima_cara = scramble[-1].cara
-
-            caras_disponibles = list(Cara)
-            caras_disponibles.remove(ultima_cara)
-            cara = random.choice(caras_disponibles)
-
-        nivel = random.randint(1, dimension // 2)
-        direccion: Literal[-1, 1, 2] = random.choice([-1, 1, 2])
-
-        scramble.append(Movimiento(cara, direccion, nivel, False))
-
-    return scramble
 
 
 def girar_matriz(matriz: np.ndarray, orientacion: int):
@@ -212,20 +182,3 @@ def cortar_frontera(
         return cortar_frontera(estado_nuevo, linea, -1)
 
     return estado_nuevo
-
-
-def _longitud_de_scramble(dimension: int):
-    """
-    Devuelve la longitud para un scramble de un como con la dimensión dada
-    * requiere `dimension` >= 2
-    """
-    if dimension < 2:
-        raise ValueError(f"La dimensión debe ser al menos 2: {dimension}")
-
-    if dimension < len(LONGITUD_DE_SCRAMBLES):
-        return LONGITUD_DE_SCRAMBLES[dimension]
-
-    escalar_de_dim = 10
-    compensacion = 20
-
-    return (dimension * escalar_de_dim) + compensacion

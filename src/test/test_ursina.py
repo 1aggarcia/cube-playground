@@ -6,43 +6,48 @@ from ursina import Ursina
 
 from ui.ursina import app
 from modelos.cubo import generar_cubo
+from modelos.cubo3d import Cubo3d
 from modelos.movimiento import movimiento_de_texto
+from modelos.estado_ursina import EstadoUrsina
 
 class ProbarUrsina(unittest.TestCase):
     def test_al_teclar(self):
         Ursina(window_type='none')
 
-        cubo_prueba = generar_cubo(3)
+        estado = EstadoUrsina(Cubo3d(3))
         cubo_modelo = generar_cubo(3)
 
-        # movimientos básicos
-        app.al_teclar("u", cubo_prueba)
-        cubo_modelo.mover(movimiento_de_texto("U"))
-        self.assertEqual(cubo_modelo, cubo_prueba)
+        def _validar_igualdad():
+            self.assertEqual(cubo_modelo, estado.cubo.cubo_2d)
 
-        app.al_teclar("d", cubo_prueba)
-        app.al_teclar("b", cubo_prueba)
-        app.al_teclar("d", cubo_prueba)
-        app.al_teclar("f", cubo_prueba)
+        # movimientos básicos
+        app.al_teclar("u", estado)
+        cubo_modelo.mover(movimiento_de_texto("U"))
+        _validar_igualdad()
+
+        app.al_teclar("d", estado)
+        app.al_teclar("b", estado)
+        app.al_teclar("d", estado)
+        app.al_teclar("f", estado)
         cubo_modelo.mover(movimiento_de_texto("D"))
         cubo_modelo.mover(movimiento_de_texto("B"))
         cubo_modelo.mover(movimiento_de_texto("D"))
         cubo_modelo.mover(movimiento_de_texto("F"))
-        self.assertEqual(cubo_modelo, cubo_prueba)
+        _validar_igualdad()
 
         # teclas irrelevantes
-        app.al_teclar("d up", cubo_prueba)
-        self.assertEqual(cubo_modelo, cubo_prueba)
+        app.al_teclar("d up", estado)
+        _validar_igualdad()
 
-        app.al_teclar("u hold", cubo_prueba)
-        app.al_teclar("t", cubo_prueba)
-        self.assertEqual(cubo_modelo, cubo_prueba)
+        app.al_teclar("u hold", estado)
+        app.al_teclar("t", estado)
+        _validar_igualdad()
 
         # restatuar
-        app.al_teclar("space", cubo_prueba)
+        app.al_teclar("space", estado)
         cubo_modelo.restaturar()
-        self.assertEqual(cubo_modelo, cubo_prueba)
+        _validar_igualdad()
 
         # mezclar
-        app.al_teclar("s", cubo_prueba)
-        self.assertNotEqual(cubo_modelo, cubo_prueba)
+        app.al_teclar("s", estado)
+        self.assertNotEqual(cubo_modelo, estado.cubo.cubo_2d)

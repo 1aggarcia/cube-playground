@@ -5,22 +5,23 @@ import numpy as np
 
 from modelos.cubo import crear_cubo_de_texto
 from constantes.enums import Cara
-import modelos.operaciones as op
+import util.matrices as ma
+import util.scrambles as sc
 
 
 class ProbarOperaciones(unittest.TestCase):
     def test_generar_scramble(self):
         # 2x2
-        scramble = op.generar_scramble(2)
+        scramble = sc.generar_scramble(2)
 
-        self.assertEqual(op._longitud_de_scramble(2), len(scramble))
+        self.assertEqual(sc._longitud_de_scramble(2), len(scramble))
         for mov_a, mov_b in zip(scramble, scramble[1:]):
             self.assertNotEqual(mov_a.cara, mov_b.cara)
 
         # 4x4
-        scramble = op.generar_scramble(4)
+        scramble = sc.generar_scramble(4)
 
-        self.assertEqual(op._longitud_de_scramble(4), len(scramble))
+        self.assertEqual(sc._longitud_de_scramble(4), len(scramble))
         for mov_a, mov_b in zip(scramble, scramble[1:]):
             self.assertNotEqual(mov_a.cara, mov_b.cara)
 
@@ -32,7 +33,7 @@ class ProbarOperaciones(unittest.TestCase):
             [8, 5, 2],
             [9, 6, 3]
         ])
-        self.assertTrue(np.array_equal(girada_a, op.girar_matriz(lista_a, 1)))
+        self.assertTrue(np.array_equal(girada_a, ma.girar_matriz(lista_a, 1)))
 
         lista_b = np.array([
             [1, 2, 3, 4],
@@ -46,7 +47,7 @@ class ProbarOperaciones(unittest.TestCase):
             [15, 11, 7, 3],
             [16, 12, 8, 4]
         ])
-        self.assertTrue(np.array_equal(girada_b, op.girar_matriz(lista_b, 1)))
+        self.assertTrue(np.array_equal(girada_b, ma.girar_matriz(lista_b, 1)))
 
         # 270 degrados (sentido antihorario)
         lista_c = np.array(
@@ -58,7 +59,7 @@ class ProbarOperaciones(unittest.TestCase):
             [123, 2, 2],
             [234, 65, 1]
         ])
-        self.assertTrue(np.array_equal(girada_c, op.girar_matriz(lista_c, 3)))
+        self.assertTrue(np.array_equal(girada_c, ma.girar_matriz(lista_c, 3)))
 
         lista_d = np.array([
             [1, 2, 3, 4],
@@ -72,7 +73,7 @@ class ProbarOperaciones(unittest.TestCase):
             [2, 6, 10, 14],
             [1, 5, 9, 13]
         ])
-        self.assertTrue(np.array_equal(girada_d, op.girar_matriz(lista_d, 3)))
+        self.assertTrue(np.array_equal(girada_d, ma.girar_matriz(lista_d, 3)))
 
     def test_cortar_horizontalmente(self):
         cubo_a = crear_cubo_de_texto(
@@ -83,7 +84,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = op.cotar_horizontalmente(cubo_a.estado, 0, 1)
+        resultado_a = ma.cotar_horizontalmente(cubo_a.estado, 0, 1)
         esperado_a = {
             Cara.F: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
             Cara.L: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
@@ -97,7 +98,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cotar_horizontalmente(cubo_a.estado, 1, -1)
+        resultado_b = ma.cotar_horizontalmente(cubo_a.estado, 1, -1)
         esperado_b = {
             Cara.R: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
             Cara.F: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
@@ -111,7 +112,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cotar_horizontalmente(cubo_a.estado, 0, 2)
+        resultado_c = ma.cotar_horizontalmente(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.F: np.array([[Cara.R, Cara.L], [Cara.F, Cara.B]]),
             Cara.B: np.array([[Cara.F, Cara.R], [Cara.L, Cara.B]]),
@@ -134,7 +135,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = op.cotar_verticalmente(cubo_a.estado, 0, -1)
+        resultado_a = ma.cotar_verticalmente(cubo_a.estado, 0, -1)
         esperado_a = {
             Cara.F: np.array([[Cara.D, Cara.R], [Cara.U, Cara.B]]),
             Cara.U: np.array([[Cara.F, Cara.U], [Cara.F, Cara.D]]),
@@ -148,7 +149,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cotar_verticalmente(cubo_a.estado, 1, 1)
+        resultado_b = ma.cotar_verticalmente(cubo_a.estado, 1, 1)
         esperado_b = {
             Cara.U: np.array([[Cara.B, Cara.L], [Cara.U, Cara.R]]),
             Cara.B: np.array([[Cara.D, Cara.L], [Cara.R, Cara.B]]),
@@ -162,7 +163,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cotar_verticalmente(cubo_a.estado, 0, 2)
+        resultado_c = ma.cotar_verticalmente(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.U: np.array([[Cara.D, Cara.U], [Cara.U, Cara.D]]),
             Cara.D: np.array([[Cara.B, Cara.R], [Cara.U, Cara.D]]),
@@ -185,7 +186,7 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['R', 'L'], ['F', 'B']],
             r = [['B', 'U'], ['F', 'L']]
         )
-        resultado_a = op.cortar_frontera(cubo_a.estado, 0, 1)
+        resultado_a = ma.cortar_frontera(cubo_a.estado, 0, 1)
         esperado_a = {
             Cara.L: np.array([[Cara.R, Cara.D], [Cara.F, Cara.R]]),
             Cara.U: np.array([[Cara.D, Cara.L], [Cara.B, Cara.L]]),
@@ -199,7 +200,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_a[cara],
                                            esperado_a[cara]))
 
-        resultado_b = op.cortar_frontera(cubo_a.estado, 1, -1)
+        resultado_b = ma.cortar_frontera(cubo_a.estado, 1, -1)
         esperado_b = {
             Cara.D: np.array([[Cara.D, Cara.R], [Cara.R, Cara.F]]),
             Cara.L: np.array([[Cara.L, Cara.L], [Cara.D, Cara.B]]),
@@ -213,7 +214,7 @@ class ProbarOperaciones(unittest.TestCase):
             self.assertTrue(np.array_equal(resultado_b[cara],
                                            esperado_b[cara]))
 
-        resultado_c = op.cortar_frontera(cubo_a.estado, 0, 2)
+        resultado_c = ma.cortar_frontera(cubo_a.estado, 0, 2)
         esperado_c = {
             Cara.U: np.array([[Cara.D, Cara.L], [Cara.R, Cara.D]]),
             Cara.D: np.array([[Cara.U, Cara.U], [Cara.U, Cara.D]]),
@@ -228,11 +229,11 @@ class ProbarOperaciones(unittest.TestCase):
                                            esperado_c[cara]))
 
     def test_longitud_de_scramble(self):
-        for i, v in enumerate(op.LONGITUD_DE_SCRAMBLES[2:], start=2):
-            self.assertEqual(v, op._longitud_de_scramble(i))
+        for i, v in enumerate(sc.LONGITUD_DE_SCRAMBLES[2:], start=2):
+            self.assertEqual(v, sc._longitud_de_scramble(i))
 
-        self.assertEqual(130, op._longitud_de_scramble(11))
-        self.assertEqual(510, op._longitud_de_scramble(49))
+        self.assertEqual(130, sc._longitud_de_scramble(11))
+        self.assertEqual(510, sc._longitud_de_scramble(49))
 
 
 if __name__ == '__main__':
