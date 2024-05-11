@@ -3,9 +3,9 @@ from modelos.cubo3d import Cubo3d
 from modelos.movimiento import Movimiento, invertir_movimiento
 from modelos.estado_ursina import EstadoUrsina
 from util.scrambles import generar_scramble
+from util.impresora import imprimir_cubo
 
 from constantes.enums import Cara
-from imagenes.impresora import imprimir_cubo
 
 
 ESCALA_CAMARA = 3

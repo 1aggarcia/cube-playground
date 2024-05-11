@@ -4,8 +4,8 @@ from tkinter import messagebox
 import modelos.movimiento as mv
 from modelos.cubo import Cubo
 from util.scrambles import generar_scramble
+from util.impresora import imprimir_cubo
 from constantes import colores
-from imagenes.impresora import imprimir_cubo
 
 PADDING = 10
 
