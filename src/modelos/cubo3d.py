@@ -35,14 +35,6 @@ class Cubo3d:
         Pintar este Cubo3d con el estado actual de un Cubo de 2D.
         No modifica el argumento `cubo`.
         """
-        dim = self._cubo_2d.dimension
-        if dim != self.dimension:
-            raise ValueError(
-                'La dimensión del cubo de referencia es diferente'
-                + f' que la del Cubo3d: cubo.dimension = {dim},'
-                + f' self.dimension = {self.dimension}'
-            )
-
         estado = self._cubo_2d.estado
 
         for cara in Cara:
