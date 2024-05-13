@@ -55,7 +55,7 @@ def _generar_cubitos(dimension: int):
     # crea matriz 3d lleno de `None`
     # el espacio adentro no es usado, así que se hace `None` para ahorrar recursos
     cubitos: list[list[list[Cubito | None]]] = [
-        [[None for _ in range(dimension)] for _ in range(dimension)] for _ in range(dimension)
+        [[None] * dimension for _ in range(dimension)] for _ in range(dimension)
     ]
 
     # crear cubitos a los bordes del tensor

@@ -14,9 +14,7 @@ ESCALA_CAMARA = 3
 def iniciar_app_ursina(dimension: int):
     aplicacion = Ursina()
 
-    cubo = Cubo3d(dimension)
-
-    estado = EstadoUrsina(cubo)
+    estado = EstadoUrsina(Cubo3d(dimension))
 
     escala = dimension / ESCALA_CAMARA
     camera = EditorCamera(ui_size = 1000)

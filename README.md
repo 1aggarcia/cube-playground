@@ -26,7 +26,7 @@ python src/main.py
 
 ## Screenshots
 
-<img src="./screenshots/3x3_3d.png" width="250"/>
-<img src="./screenshots/3x3_flat.png" width="400"/>
-<img src="./screenshots/20x20_3d.png" width="250"/>
-<img src="./screenshots/2x2_flat.png" width="400"/>
+<img src="./images/screenshots/3x3_3d.png" width="250"/>
+<img src="./images/screenshots/3x3_flat.png" width="400"/>
+<img src="./images/screenshots/20x20_3d.png" width="250"/>
+<img src="./images/screenshots/2x2_flat.png" width="400"/>

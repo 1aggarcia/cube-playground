@@ -5,6 +5,7 @@ from modelos.cubo import generar_cubo
 from ui.cubo.dibujar_cubo import crear_frame_cubo
 from ui.cubo.controlar_cubo import crear_frame_control
 
+
 def ventana_de_cubo(dimension: int):
     # configurar ventana
     ventana = tk.Tk()

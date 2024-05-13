@@ -6,7 +6,7 @@ from constantes import colores
 from modelos.cubo import Cubo
 
 # donde guardar las imágenes
-RUTA = '../images'
+RUTA = '../images/generated'
 
 # a qué posiciónes se empezará a dibujar las caras
 OFFSETS_X = {
