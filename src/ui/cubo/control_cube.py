@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 
-import modelos.movimiento as mv
-from modelos.cubo import Cubo
+import modelos.move as mv
+from modelos.cube import Cubo
 from util.scrambles import generar_scramble
-from util.impresora import imprimir_cubo
-from constantes import colores
+from util.printer import imprimir_cubo
+from constantes import colors
 
 PADDING = 10
 
@@ -86,7 +86,7 @@ def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
     """
     Crea y retorna el frame de control para la ventana del cubo.
     """
-    frame = tk.Frame(raiz, bg=colores.VERDE_2)
+    frame = tk.Frame(raiz, bg=colors.VERDE_2)
 
     text_historial = tk.Text(frame, width=30, height=10)
     entrada = tk.Entry(frame, width=30)

@@ -1,19 +1,19 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from constantes import colores
+from constantes import colors
 from constantes.enums import Ventana
-from ui.cubo.ventana import ventana_de_cubo
+from ui.cubo.window import ventana_de_cubo
 from ui.ursina.app import iniciar_app_ursina
 
 
 def ventana_inicial():
     ventana = tk.Tk()
-    ventana.config(bg=colores.VERDE_1)
+    ventana.config(bg=colors.VERDE_1)
     ventana.geometry('300x200')
     ventana.eval('tk::PlaceWindow . center')
 
-    label_dimension = tk.Label(ventana, text='Dimension:', bg=colores.VERDE_1)
+    label_dimension = tk.Label(ventana, text='Dimension:', bg=colors.VERDE_1)
     entry_dimension = tk.Entry(ventana)
 
     entry_dimension.insert(0, '3')

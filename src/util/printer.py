@@ -2,8 +2,8 @@ from datetime import datetime
 from PIL import Image, ImageDraw
 
 from constantes.enums import Cara
-from constantes import colores
-from modelos.cubo import Cubo
+from constantes import colors
+from modelos.cube import Cubo
 
 # donde guardar las imágenes
 RUTA = '../images/generated'
@@ -39,7 +39,7 @@ def imprimir_cubo(cubo: Cubo):
     altura_px = altura * BLOQUE
 
     # crear imagen
-    imagen = Image.new('RGB', (ancho_px, altura_px), colores.AMARILLO_1)
+    imagen = Image.new('RGB', (ancho_px, altura_px), colors.AMARILLO_1)
 
     # dibujar el cubo en la imagen
     for cara in Cara:
@@ -65,7 +65,7 @@ def _dibujar_cara(
 
     for y, fila in enumerate(cuadrado):
         for x, cubito in enumerate(fila):
-            color = colores.COLORES_DE_CUBO[cubito]
+            color = colors.COLORES_DE_CUBO[cubito]
             offset_x = offset[0] + x
             offset_y = offset[1] + y
             _dibujar_cuadrado(image, offset_x, offset_y, color)

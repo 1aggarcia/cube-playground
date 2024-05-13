@@ -1,5 +1,5 @@
 from ursina import Vec3
-from modelos.cubo import crear_cubo_de_texto
+from modelos.cube import crear_cubo_de_texto
 from constantes.enums import Cara
 
 

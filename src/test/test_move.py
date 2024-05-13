@@ -3,7 +3,7 @@
 
 import unittest
 
-import modelos.movimiento as mv
+import modelos.move as mv
 from constantes.enums import Cara
 
 class ProbarMovimiento(unittest.TestCase):

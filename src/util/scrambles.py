@@ -2,7 +2,7 @@ from typing import Literal
 import random
 
 from constantes.enums import Cara
-from modelos.movimiento import Movimiento
+from modelos.move import Movimiento
 
 # LONGITUD_DE_SCRAMBLES[dimensión] = # de movimientos,
 # donde 2 <= dimensión <= 10

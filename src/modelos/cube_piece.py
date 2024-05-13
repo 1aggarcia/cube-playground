@@ -2,8 +2,8 @@ from copy import deepcopy
 from ursina import Entity, Vec3
 
 from constantes.enums import Cara
-from constantes.colores import COLORES_DE_CUBO
-from constantes.cubos import VECTORES_DE_CARA
+from constantes.colors import COLORES_DE_CUBO
+from constantes.cubes import VECTORES_DE_CARA
 
 
 class Cubito(Entity):

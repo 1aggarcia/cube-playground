@@ -1,14 +1,14 @@
 import tkinter as tk
 
-from modelos.cubo import Cubo
-from constantes import colores
+from modelos.cube import Cubo
+from constantes import colors
 from constantes.enums import Cara
 
 TAMANO_DE_CARA = 160 # ancho y altura de una cara
 
 
 def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
-    frame = tk.Frame(raiz, bg=colores.VERDE_2, padx=10)
+    frame = tk.Frame(raiz, bg=colors.VERDE_2, padx=10)
 
     # crear widgets para cada cara
     cara_u = _crear_frame_de_cara(frame, cubo, Cara.U)
@@ -107,6 +107,6 @@ def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
             # El cubito [i][j] en 2D en una cara es lo mismo que
             # el cubito [i*dimension + j] in 1D
             cubito = ninos[i*dimension + j]
-            color = colores.COLORES_DE_CUBO[cuadro[i][j]]
+            color = colors.COLORES_DE_CUBO[cuadro[i][j]]
             # la modificación
             cubito.configure(bg = color) # type: ignore

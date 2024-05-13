@@ -2,14 +2,14 @@
 # pylint: disable=W0212
 
 import unittest
-from modelos import cubo3d
+from modelos import cube3d
 
 class ProbarCubo3d(unittest.TestCase):
     def test_generar_cubitos(self):
         dim = 3
         desviacion = -1
 
-        cubitos = cubo3d._generar_cubitos(dim)
+        cubitos = cube3d._generar_cubitos(dim)
         self.assertEqual(len(cubitos), dim)
 
         for x, cuadrado in enumerate(cubitos):

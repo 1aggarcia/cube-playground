@@ -7,7 +7,7 @@
 import unittest
 import numpy as np
 
-from modelos import cubo
+from modelos import cube
 from constantes.enums import Cara
 
 class ProbarCubo(unittest.TestCase):
@@ -17,17 +17,17 @@ class ProbarCubo(unittest.TestCase):
         lista_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
 
         self.assertTrue(
-            np.array_equal(cubo._convertir_a_caras(lista_a),
+            np.array_equal(cube._convertir_a_caras(lista_a),
             np.array([[Cara.U, Cara.L],[Cara.B, Cara.D]]))
         )
 
-        self.assertRaises(ValueError, cubo._convertir_a_caras, lista_b)
-        self.assertRaises(KeyError, cubo._convertir_a_caras, lista_c)
+        self.assertRaises(ValueError, cube._convertir_a_caras, lista_b)
+        self.assertRaises(KeyError, cube._convertir_a_caras, lista_c)
 
     # métodos de clase
 
     def test_str(self):
-        cubo_a = cubo.Cubo(
+        cubo_a = cube.Cubo(
             u = np.array([[Cara.U, Cara.R], [Cara.D, Cara.B]]),
             d = np.array([[Cara.U, Cara.F], [Cara.U, Cara.U]]),
             f = np.array([[Cara.B, Cara.R], [Cara.B, Cara.D]]),
@@ -48,12 +48,12 @@ class ProbarCubo(unittest.TestCase):
         )
 
     def test_eq(self):
-        x = cubo.generar_cubo(2)
-        y = cubo.generar_cubo(2)
-        z = cubo.generar_cubo(2)
+        x = cube.generar_cubo(2)
+        y = cube.generar_cubo(2)
+        z = cube.generar_cubo(2)
 
-        diferente_a = cubo.generar_cubo(3)
-        diferente_b = cubo.generar_cubo(2)
+        diferente_a = cube.generar_cubo(3)
+        diferente_b = cube.generar_cubo(2)
         diferente_b.ejecutar_algoritmo(["U"])
 
         # Deben ser reflexivos
@@ -78,7 +78,7 @@ class ProbarCubo(unittest.TestCase):
         self.assertFalse(diferente_b == z)
 
     def test_get_cara(self):
-        cubo_a = cubo.crear_cubo_de_texto(
+        cubo_a = cube.crear_cubo_de_texto(
             u = [['U', 'D'], ['U', 'U']],
             d = [['R', 'D'], ['D', 'L']],
             f = [['F', 'F'], ['B', 'R']],
@@ -96,7 +96,7 @@ class ProbarCubo(unittest.TestCase):
         ))
 
     def test_set_cara(self):
-        cubo_a = cubo.generar_cubo(2)
+        cubo_a = cube.generar_cubo(2)
 
         cara_l = np.array([[Cara.F, Cara.D], [Cara.U, Cara.U]])
         cubo_a._set_cara(Cara.L, cara_l)
@@ -113,7 +113,7 @@ class ProbarCubo(unittest.TestCase):
 
 
     def test_crear_cubo_de_texto(self):
-        cubo_a = cubo.crear_cubo_de_texto(
+        cubo_a = cube.crear_cubo_de_texto(
             u = [['U', 'D'], ['U', 'U']],
             d = [['R', 'D'], ['D', 'L']],
             f = [['F', 'F'], ['B', 'R']],
@@ -135,8 +135,8 @@ class ProbarCubo(unittest.TestCase):
 
 
     def test_generar_cubo(self):
-        cubo_a = cubo.generar_cubo(2)
-        cubo_b = cubo.generar_cubo(3)
+        cubo_a = cube.generar_cubo(2)
+        cubo_b = cube.generar_cubo(3)
 
         self.assertEqual(str(cubo_a),
             '\n'.join([
@@ -160,8 +160,8 @@ class ProbarCubo(unittest.TestCase):
         )
 
     def test_restaturar(self):
-        cubo_a = cubo.generar_cubo(2)
-        cubo_a_inicial = cubo.copiar_cubo(cubo_a)
+        cubo_a = cube.generar_cubo(2)
+        cubo_a_inicial = cube.copiar_cubo(cubo_a)
 
         cubo_a.ejecutar_algoritmo(["R", "U", "R'", "U'"])
         self.assertNotEqual(cubo_a, cubo_a_inicial)

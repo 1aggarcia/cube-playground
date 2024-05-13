@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
-from modelos.cubo3d import Cubo3d
-from modelos.movimiento import Movimiento
+from modelos.cube3d import Cubo3d
+from modelos.move import Movimiento
 
 
 @dataclass(frozen=True)

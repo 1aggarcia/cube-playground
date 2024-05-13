@@ -5,7 +5,7 @@ import unittest
 
 from ursina import Entity, Ursina, color
 from constantes.enums import Cara
-from modelos import cubito as c
+from modelos import cube_piece as c
 
 ROSADO = '#FFC0CB'
 BLANCO = '#FFFFFF'
