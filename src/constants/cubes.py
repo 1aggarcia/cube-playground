@@ -1,6 +1,6 @@
 from ursina import Vec3
-from modelos.cube import crear_cubo_de_texto
-from constantes.enums import Cara
+from models.cube import crear_cubo_de_texto
+from constants.enums import Cara
 
 
 VECTORES_DE_CARA = {

@@ -7,8 +7,8 @@
 import unittest
 import numpy as np
 
-from modelos import cube
-from constantes.enums import Cara
+from models import cube
+from constants.enums import Cara
 
 class ProbarCubo(unittest.TestCase):
     def test_convertir_a_caras(self):

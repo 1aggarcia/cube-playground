@@ -1,11 +1,11 @@
 from ursina import EditorCamera, Ursina, Vec3, Entity
-from modelos.cube3d import Cubo3d
-from modelos.move import Movimiento, invertir_movimiento
-from modelos.ursina_state import EstadoUrsina
+from models.cube3d import Cubo3d
+from models.move import Movimiento, invertir_movimiento
+from models.ursina_state import EstadoUrsina
 from util.scrambles import generar_scramble
 from util.printer import imprimir_cubo
 
-from constantes.enums import Cara
+from constants.enums import Cara
 
 
 ESCALA_CAMARA = 3

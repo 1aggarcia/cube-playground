@@ -2,8 +2,8 @@ from typing import Callable
 import copy
 import numpy as np
 
-from constantes.enums import Cara
-from modelos.move import Movimiento, movimiento_de_texto
+from constants.enums import Cara
+from models.move import Movimiento, movimiento_de_texto
 import util.matrices as ma
 
 class Cubo:

@@ -1,11 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
 
-import modelos.move as mv
-from modelos.cube import Cubo
+import models.move as mv
+from models.cube import Cubo
 from util.scrambles import generar_scramble
 from util.printer import imprimir_cubo
-from constantes import colors
+from constants import colors
 
 PADDING = 10
 

@@ -5,10 +5,10 @@ import unittest
 from ursina import Ursina
 
 from ui.ursina import app
-from modelos.cube import generar_cubo
-from modelos.cube3d import Cubo3d
-from modelos.move import movimiento_de_texto
-from modelos.ursina_state import EstadoUrsina
+from models.cube import generar_cubo
+from models.cube3d import Cubo3d
+from models.move import movimiento_de_texto
+from models.ursina_state import EstadoUrsina
 
 class ProbarUrsina(unittest.TestCase):
     def test_al_teclar(self):

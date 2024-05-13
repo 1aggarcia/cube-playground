@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from constantes import colors
-from constantes.enums import Ventana
-from ui.cubo.window import ventana_de_cubo
+from constants import colors
+from constants.enums import Ventana
+from ui.cube.window import ventana_de_cubo
 from ui.ursina.app import iniciar_app_ursina
 
 

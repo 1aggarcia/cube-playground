@@ -1,9 +1,9 @@
 from datetime import datetime
 from PIL import Image, ImageDraw
 
-from constantes.enums import Cara
-from constantes import colors
-from modelos.cube import Cubo
+from constants.enums import Cara
+from constants import colors
+from models.cube import Cubo
 
 # donde guardar las imágenes
 RUTA = '../images/generated'

@@ -2,7 +2,7 @@
 # pylint: disable=W0212
 
 import unittest
-from modelos import cube3d
+from models import cube3d
 
 class ProbarCubo3d(unittest.TestCase):
     def test_generar_cubitos(self):

@@ -1,9 +1,9 @@
 import tkinter as tk
 
-from constantes import colors
-from modelos.cube import generar_cubo
-from ui.cubo.draw_cube import crear_frame_cubo
-from ui.cubo.control_cube import crear_frame_control
+from constants import colors
+from models.cube import generar_cubo
+from ui.cube.draw_cube import crear_frame_cubo
+from ui.cube.control_cube import crear_frame_control
 
 
 def ventana_de_cubo(dimension: int):

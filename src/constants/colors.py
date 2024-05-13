@@ -1,4 +1,4 @@
-from constantes.enums import Cara
+from constants.enums import Cara
 
 VERDE_1 = '#4fe3a5'
 VERDE_2 = '#189a64'

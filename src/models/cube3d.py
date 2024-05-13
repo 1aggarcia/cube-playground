@@ -1,7 +1,7 @@
-from modelos.cube_piece import Cubito
-from modelos.cube import generar_cubo
-from constantes.enums import Cara
-from constantes.colors import COLORES_DE_CUBO
+from models.cube_piece import Cubito
+from models.cube import generar_cubo
+from constants.enums import Cara
+from constants.colors import COLORES_DE_CUBO
 
 
 class Cubo3d:

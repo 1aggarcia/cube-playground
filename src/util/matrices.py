@@ -1,7 +1,7 @@
 import copy
 import numpy as np
 
-from constantes.enums import Cara
+from constants.enums import Cara
 
 # el ciclo que siguen las caras al hacer el movimiento U
 CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]

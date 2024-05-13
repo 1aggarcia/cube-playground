@@ -3,8 +3,8 @@
 import unittest
 import numpy as np
 
-from modelos.cube import crear_cubo_de_texto
-from constantes.enums import Cara
+from models.cube import crear_cubo_de_texto
+from constants.enums import Cara
 import util.matrices as ma
 import util.scrambles as sc
 

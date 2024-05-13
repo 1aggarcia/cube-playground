@@ -1,6 +1,6 @@
 from typing import Literal
 from dataclasses import dataclass
-from constantes.enums import Cara
+from constants.enums import Cara
 
 
 @dataclass(frozen=True)

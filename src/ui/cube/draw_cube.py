@@ -1,8 +1,8 @@
 import tkinter as tk
 
-from modelos.cube import Cubo
-from constantes import colors
-from constantes.enums import Cara
+from models.cube import Cubo
+from constants import colors
+from constants.enums import Cara
 
 TAMANO_DE_CARA = 160 # ancho y altura de una cara
 
