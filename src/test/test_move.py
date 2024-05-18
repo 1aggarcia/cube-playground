@@ -1,148 +1,146 @@
-# deshabilitar aviso de chequear x == x
+# disable x == x warning
 # pylint: disable=R0124
 
 import unittest
 
 import models.move as mv
-from constants.enums import Cara
+from constants.enums import Face
 
-class ProbarMovimiento(unittest.TestCase):
+class TestMove(unittest.TestCase):
 
     def test_eq(self):
-        x = mv.Movimiento(Cara.D, 1, 1, False)
-        y = mv.Movimiento(Cara.D, 1, 1, False)
-        z = mv.Movimiento(Cara.D, 1, 1, False)
-        diferente = mv.Movimiento(Cara.U, 2, 4, True)
+        x = mv.Move(Face.D, 1, 1, False)
+        y = mv.Move(Face.D, 1, 1, False)
+        z = mv.Move(Face.D, 1, 1, False)
+        different = mv.Move(Face.U, 2, 4, True)
 
-        # Deben ser reflexivos
+        # Reflexivity
         self.assertTrue(x == x)
         self.assertTrue(y == y)
 
-        # Deben ser simétricos
-        # Iguales
+        # Symmetry
+        # Same
         self.assertTrue(x == y)
         self.assertTrue(y == x)
-        # No iguales
-        self.assertFalse(x == diferente)
-        self.assertFalse(diferente == x)
+        # Different
+        self.assertFalse(x == different)
+        self.assertFalse(different == x)
 
-        # Deben ser transitivos
-        # Igual
+        # Transitivity
         self.assertTrue(x == z)
-        # No igual
-        self.assertFalse(diferente == z)
+        self.assertFalse(different == z)
 
     def test_str(self):
-        # nivel = 1
-        mov_corto = mv.Movimiento(Cara.U, 1, 1, False)
-        self.assertEqual(str(mov_corto), "U")
+        # depth = 1
+        short_move = mv.Move(Face.U, 1, 1, False)
+        self.assertEqual(str(short_move), "U")
 
-        mov_primo = mv.Movimiento(Cara.D, -1, 1, False)
-        self.assertEqual(str(mov_primo), "D'")
+        inv_move = mv.Move(Face.D, -1, 1, False)
+        self.assertEqual(str(inv_move), "D'")
 
-        mov_doble = mv.Movimiento(Cara.B, 2, 1, False)
-        self.assertEqual(str(mov_doble), "B2")
+        double_move = mv.Move(Face.B, 2, 1, False)
+        self.assertEqual(str(double_move), "B2")
 
-        # nivel = 1 y ancho
-        mov_ancho = mv.Movimiento(Cara.U, 1, 1, True)
-        self.assertEqual(str(mov_ancho), "Uw")
+        # depth = 1 & wide
+        wide_move = mv.Move(Face.U, 1, 1, True)
+        self.assertEqual(str(wide_move), "Uw")
 
-        mov_ancho_primo = mv.Movimiento(Cara.D, -1, 1, True)
-        self.assertEqual(str(mov_ancho_primo), "Dw'")
+        wide_inv_move = mv.Move(Face.D, -1, 1, True)
+        self.assertEqual(str(wide_inv_move), "Dw'")
 
-        mov_ancho_doble = mv.Movimiento(Cara.B, 2, 1, True)
-        self.assertEqual(str(mov_ancho_doble), "Bw2")
+        wide_double_move = mv.Move(Face.B, 2, 1, True)
+        self.assertEqual(str(wide_double_move), "Bw2")
 
-        # nivel > 1
-        mov_largo = mv.Movimiento(Cara.U, 1, 2, False)
-        self.assertEqual(str(mov_largo), "2U")
+        # depth > 1
+        large_move = mv.Move(Face.U, 1, 2, False)
+        self.assertEqual(str(large_move), "2U")
 
-        mov_largo_primo = mv.Movimiento(Cara.D, -1, 3, False)
-        self.assertEqual(str(mov_largo_primo), "3D'")
+        large_inv_move = mv.Move(Face.D, -1, 3, False)
+        self.assertEqual(str(large_inv_move), "3D'")
 
-        mov_largo_doble = mv.Movimiento(Cara.B, 2, 99, False)
-        self.assertEqual(str(mov_largo_doble), "99B2")
+        large_double_move = mv.Move(Face.B, 2, 99, False)
+        self.assertEqual(str(large_double_move), "99B2")
 
-        # nivel > 1 y ancho
-        mov_largo_ancho = mv.Movimiento(Cara.U, 1, 34, True)
-        self.assertEqual(str(mov_largo_ancho), "34Uw")
+        # depth > 1 & wide
+        large_wide_move = mv.Move(Face.U, 1, 34, True)
+        self.assertEqual(str(large_wide_move), "34Uw")
 
-        mov_largo_ancho_primo = mv.Movimiento(Cara.D, -1, 4, True)
-        self.assertEqual(str(mov_largo_ancho_primo), "4Dw'")
+        large_wide_inv_move = mv.Move(Face.D, -1, 4, True)
+        self.assertEqual(str(large_wide_inv_move), "4Dw'")
 
-        mov_largo_ancho_doble = mv.Movimiento(Cara.B, 2, 2, True)
-        self.assertEqual(str(mov_largo_ancho_doble), "2Bw2")
+        large_wide_double_move = mv.Move(Face.B, 2, 2, True)
+        self.assertEqual(str(large_wide_double_move), "2Bw2")
 
-    def test_movimiento_de_texto(self):
-        # SIN NIVEL
+    def test_text_to_move(self):
+        # NO DEPTH
         # len = 1
         self.assertEqual(
-            mv.movimiento_de_texto('U'),
-            mv.Movimiento(Cara.U, 1, 1, False)
+            mv.text_to_move('U'),
+            mv.Move(Face.U, 1, 1, False)
         )
 
         # len = 2: Uw, U', U2
         self.assertEqual(
-            mv.movimiento_de_texto('Dw'),
-            mv.Movimiento(Cara.D, 1, 1, True)
+            mv.text_to_move('Dw'),
+            mv.Move(Face.D, 1, 1, True)
         )
         self.assertEqual(
-            mv.movimiento_de_texto("L'"),
-            mv.Movimiento(Cara.L, -1, 1, False)
+            mv.text_to_move("L'"),
+            mv.Move(Face.L, -1, 1, False)
         )
         self.assertEqual(
-            mv.movimiento_de_texto('R2'),
-            mv.Movimiento(Cara.R, 2, 1, False)
+            mv.text_to_move('R2'),
+            mv.Move(Face.R, 2, 1, False)
         )
 
         # len = 3: Uw', Uw2
         self.assertEqual(
-            mv.movimiento_de_texto("Dw'"),
-            mv.Movimiento(Cara.D, -1, 1, True)
+            mv.text_to_move("Dw'"),
+            mv.Move(Face.D, -1, 1, True)
         )
         self.assertEqual(
-            mv.movimiento_de_texto('Rw2'),
-            mv.Movimiento(Cara.R, 2, 1, True)
+            mv.text_to_move('Rw2'),
+            mv.Move(Face.R, 2, 1, True)
         )
 
-        # CON NIVEL
+        # WITH DEPTH
         # len = n + 1: 99U
         self.assertEqual(
-            mv.movimiento_de_texto('99U'),
-            mv.Movimiento(Cara.U, 1, 99, False)
+            mv.text_to_move('99U'),
+            mv.Move(Face.U, 1, 99, False)
         )
 
         # len = n + 2: 4Uw, 99U', 99U2
         self.assertEqual(
-            mv.movimiento_de_texto('4Dw'),
-            mv.Movimiento(Cara.D, 1, 4, True)
+            mv.text_to_move('4Dw'),
+            mv.Move(Face.D, 1, 4, True)
         )
         self.assertEqual(
-            mv.movimiento_de_texto("22B'"),
-            mv.Movimiento(Cara.B, -1, 22, False)
+            mv.text_to_move("22B'"),
+            mv.Move(Face.B, -1, 22, False)
         )
         self.assertEqual(
-            mv.movimiento_de_texto('4L2'),
-            mv.Movimiento(Cara.L, 2, 4, False)
+            mv.text_to_move('4L2'),
+            mv.Move(Face.L, 2, 4, False)
         )
 
         # len = n + 3: 99Uw', 99Uw2
         self.assertEqual(
-            mv.movimiento_de_texto("5923Fw'"),
-            mv.Movimiento(Cara.F, -1, 5923, True)
+            mv.text_to_move("5923Fw'"),
+            mv.Move(Face.F, -1, 5923, True)
         )
         self.assertEqual(
-            mv.movimiento_de_texto('5Uw2'),
-            mv.Movimiento(Cara.U, 2, 5, True)
+            mv.text_to_move('5Uw2'),
+            mv.Move(Face.U, 2, 5, True)
         )
 
-    def test_invertir_movimiento(self):
-        mov_a = mv.Movimiento(Cara.D, 1, 1, True)
-        mov_a_invertida = mv.Movimiento(Cara.D, -1, 1, True)
+    def test_invert_move(self):
+        move_a = mv.Move(Face.D, 1, 1, True)
+        expected = mv.Move(Face.D, -1, 1, True)
 
-        self.assertEqual(mov_a_invertida, mv.invertir_movimiento(mov_a))
-        self.assertEqual(mov_a, mv.invertir_movimiento(mov_a_invertida))
+        self.assertEqual(expected, mv.invert_move(move_a))
+        self.assertEqual(move_a, mv.invert_move(expected))
 
-        mov_b = mv.Movimiento(Cara.F, 2, 32, False)
+        move_b = mv.Move(Face.F, 2, 32, False)
 
-        self.assertEqual(mov_b, mv.invertir_movimiento(mov_b))
+        self.assertEqual(move_b, mv.invert_move(move_b))

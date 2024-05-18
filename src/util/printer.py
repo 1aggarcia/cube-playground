@@ -1,87 +1,85 @@
 from datetime import datetime
 from PIL import Image, ImageDraw
 
-from constants.enums import Cara
+from constants.enums import Face
 from constants import colors
-from models.cube import Cubo
+from models.cube import Cube
 
-# donde guardar las imágenes
-RUTA = '../images/generated'
+SAVE_PATH = '../images/generated'
 
-# a qué posiciónes se empezará a dibujar las caras
+# which positions the faces begin at
 OFFSETS_X = {
-    Cara.U: 1, Cara.D: 1, Cara.F: 1, Cara.B: 3, Cara.R: 2, Cara.L: 0
+    Face.U: 1, Face.D: 1, Face.F: 1, Face.B: 3, Face.R: 2, Face.L: 0
 }
 OFFSETS_Y = {
-    Cara.U: 0, Cara.D: 2, Cara.F: 1, Cara.B: 1, Cara.R: 1, Cara.L: 1
+    Face.U: 0, Face.D: 2, Face.F: 1, Face.B: 1, Face.R: 1, Face.L: 1
 }
 
-# tamaño de un cubito
-BLOQUE = 50
+# size of a sticker block
+BLOCK = 50
 
 PADDING = 2
 
-# cuantos bloques de ancho y altura tomará la imagen
-ANCHO = 4
-ALTURA = 3
+# the number of blocks in that the image takes up
+WIDTH = 4
+HEIGHT = 3
 
-def imprimir_cubo(cubo: Cubo):
+def print_cube(cube: Cube):
     """
-    Dado un cubo, produce una imagen PNG con el estado del cubo en 2D.
-    El archivo tendrá el nombre "cubo_{n}x{x}_{AAAAMMDD}_{HHMMSS}.png",
-    por ejemplo: "cubo_3x3_20231218_213301.png"
+    Given a cube, produce a PNG image with the cube state in 2D.
+    The file will have the name "cubo_{n}x{x}_{YYYYMMDD}_{HHMMSS}.png",
+    for example: "cube_3x3_20240518_100452.png"
     """
-    dim = cubo.dimension
-    ancho = PADDING + (dim * ANCHO)
-    altura = PADDING + (dim * ALTURA)
+    dim = cube.dimension
+    width = PADDING + (dim * WIDTH)
+    height = PADDING + (dim * HEIGHT)
 
-    ancho_px = ancho * BLOQUE
-    altura_px = altura * BLOQUE
+    width_px = width * BLOCK
+    height_px = height * BLOCK
 
-    # crear imagen
-    imagen = Image.new('RGB', (ancho_px, altura_px), colors.AMARILLO_1)
+    # create image
+    imagen = Image.new('RGB', (width_px, height_px), colors.YELLOW_1)
 
-    # dibujar el cubo en la imagen
-    for cara in Cara:
-        offset_x = OFFSETS_X[cara] * dim + 1
-        offset_y = OFFSETS_Y[cara] * dim + 1
-        _dibujar_cara(imagen, cubo, cara, (offset_x, offset_y))
+    # draw cube into the image
+    for face in Face:
+        offset_x = OFFSETS_X[face] * dim + 1
+        offset_y = OFFSETS_Y[face] * dim + 1
+        _draw_face(imagen, cube, face, (offset_x, offset_y))
 
-    # guardar imagen
-    nombre = f'{RUTA}/cubo_{dim}x{dim}_{get_fecha()}.png'
-    imagen.save(nombre)
+    # save image
+    name = f'{SAVE_PATH}/cube_{dim}x{dim}_{timestamp()}.png'
+    imagen.save(name)
     imagen.show()
 
 
-def _dibujar_cara(
-        image: Image.Image, cubo: Cubo, cara: Cara, offset: tuple[int, int]
+def _draw_face(
+        image: Image.Image, cube: Cube, face: Face, offset: tuple[int, int]
     ):
     """
-    En la image dada, dibuja la cara dada del cubo empezando en los
-    bloques indicado por el offset.
-    :param offset tendrá la forma (offset_x, offset_y)
+    In the given image, draw the face indicated of the cube given
+    starting at the blocks indicated by the offset
+    - offset must have the form (offset_x, offset_y)
     """
-    cuadrado = cubo.get_cara(cara)
+    square = cube.get_face(face)
 
-    for y, fila in enumerate(cuadrado):
-        for x, cubito in enumerate(fila):
-            color = colors.COLORES_DE_CUBO[cubito]
+    for y, row in enumerate(square):
+        for x, piece in enumerate(row):
+            color = colors.CUBE_COLORS[piece]
             offset_x = offset[0] + x
             offset_y = offset[1] + y
-            _dibujar_cuadrado(image, offset_x, offset_y, color)
+            _draw_block(image, offset_x, offset_y, color)
 
 
-def _dibujar_cuadrado(image: Image.Image, x: int, y: int, color):
+def _draw_block(image: Image.Image, x: int, y: int, color):
     """
-    En la image dada, dibuja un cuadrado en el bloque indicado por
-    las coordenadas dadas como x, y
+    In the given image, draw a block at position (x, y) with the given color
     """
-    inicio = (x * BLOQUE, y * BLOQUE)
-    fin = ((x+1) * BLOQUE, (y+1) * BLOQUE)
+    start = (x * BLOCK, y * BLOCK)
+    end = ((x+1) * BLOCK, (y+1) * BLOCK)
 
     draw = ImageDraw.Draw(image)
-    draw.rectangle((inicio, fin), fill=color, outline='black', width=2)
+    draw.rectangle((start, end), fill=color, outline='black', width=2)
 
 
-def get_fecha():
+def timestamp():
     return datetime.now().strftime("%Y%m%d_%H%M%S")

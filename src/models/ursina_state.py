@@ -1,18 +1,19 @@
 from dataclasses import dataclass, field
 
-from models.cube3d import Cubo3d
-from models.move import Movimiento
+from models.cube3d import Cube3d
+from models.move import Move
 
 
 @dataclass(frozen=True)
-class EstadoUrsina:
+class UrsinaState:
     """
-    Conjunto de campos del estado de una app Ursina
+    Fields comprising the state of our Ursina app
 
-    - cubo: El Cubo3d de la app
-    - teclas: Las teclas que han sido presionadas
-    - historial: Una pila de los movimientos realizados en el cubo
+    - cube: The app's Cube3d model
+    - keys: The keys that have been pressed
+    - history: Stack of moves executed on the cube
+
     """
-    cubo: Cubo3d
-    teclas: set[str] = field(default_factory=set)
-    historial: list[Movimiento] = field(default_factory=list)
+    cube: Cube3d
+    keys: set[str] = field(default_factory=set)
+    history: list[Move] = field(default_factory=list)

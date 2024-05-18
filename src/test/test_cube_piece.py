@@ -1,49 +1,49 @@
-# deshabilitar aviso de acceder a métodos privados
+# disable private member access warning
 # pylint: disable=W0212
 
 import unittest
 
 from ursina import Entity, Ursina, color
-from constants.enums import Cara
+from constants.enums import Face
 from models import cube_piece as c
 
-ROSADO = '#FFC0CB'
-BLANCO = '#FFFFFF'
-VERDE = '#00FF00'
+PINK = '#FFC0CB'
+WHITE = '#FFFFFF'
+GREEN = '#00FF00'
 
-class ProbarCubito(unittest.TestCase):
-    def test_crear_plano(self):
+class TestCubePiece(unittest.TestCase):
+    def test_create_plane(self):
         Ursina(window_type='none')
         entity = Entity()
 
-        plano_a = c._crear_plano(entity, Cara.L, BLANCO)
-        self.assertEqual(plano_a.parent, entity)
-        self.assertEqual(plano_a.origin_y, -0.5)
-        self.assertEqual(plano_a.color_getter(), color.hex(BLANCO))
+        plane_a = c._create_plane(entity, Face.L, WHITE)
+        self.assertEqual(plane_a.parent, entity)
+        self.assertEqual(plane_a.origin_y, -0.5)
+        self.assertEqual(plane_a.color_getter(), color.hex(WHITE))
 
-        plano_b = c._crear_plano(entity, Cara.L, VERDE)
-        self.assertEqual(plano_b.parent, entity)
-        self.assertEqual(plano_b.origin_y, -0.5)
-        self.assertEqual(plano_b.color_getter(), color.hex(VERDE))
+        plane_b = c._create_plane(entity, Face.L, GREEN)
+        self.assertEqual(plane_b.parent, entity)
+        self.assertEqual(plane_b.origin_y, -0.5)
+        self.assertEqual(plane_b.color_getter(), color.hex(GREEN))
 
-    def test_colorar(self):
+    def test_set_color(self):
         Ursina(window_type='none')
-        cubito = c.Cubito(0, 0, 0)
+        piece = c.CubePiece(0, 0, 0)
 
         self.assertNotEqual(
-            cubito.planos[Cara.U].color_getter(),
-            color.hex(ROSADO)
+            piece.planes[Face.U].color_getter(),
+            color.hex(PINK)
         )
-        # cambiar el color por rosado
-        cubito.colorar(Cara.U, ROSADO)
+        # change the color to pink
+        piece.set_color(Face.U, PINK)
         self.assertEqual(
-            cubito.planos[Cara.U].color_getter(),
-            color.hex(ROSADO)
+            piece.planes[Face.U].color_getter(),
+            color.hex(PINK)
         )
 
-        # intentarlo otra vez
-        cubito.colorar(Cara.U, VERDE)
+        # try it again
+        piece.set_color(Face.U, GREEN)
         self.assertEqual(
-            cubito.planos[Cara.U].color_getter(),
-            color.hex(VERDE)
+            piece.planes[Face.U].color_getter(),
+            color.hex(GREEN)
         )

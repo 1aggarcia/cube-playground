@@ -1,108 +1,110 @@
 from typing import Literal
 from dataclasses import dataclass
-from constants.enums import Cara
+from constants.enums import Face
 
 
 @dataclass(frozen=True)
-class Movimiento:
+class Move:
     """
-    Objeto que define un movimiento del cubo. No se puede modificar.
-    El movimiento es definido por:
-    * cara - la cara que girará
-    * direccion - número de rotaciones de 90 degrados de capa.
-        Debe ser 1 por un movimiento en sentido horario, -1 por uno en
-        sentido antihorario, o 2 para uno doble
-    * nivel - cuantas capas de profundidad quieres girar. 1 es solo la cara.
-        Debe ser menos de la dimension del cubo, más que 0
-    * ancho - True si quieres girar cada capa entre la cara y el nivel,
-        False si solo quieres girar la capa al nivel dado.
+    Immutable model of a Rubik's cube move. Is is defined by:
+
+    - face: The face to turn on the cube
+    - direction: number of 90 degree rotations on the layer.
+        * Should be 1 for a clockwise turn, -1 for a counterclockwise turn
+        * Should be 2 for a 180 degree turn
+    - depth: How many layers deep the cube should be turned.
+        Must be between 1 - cube dimension
+    - is_wide: True if every layer between the depth layer and surface layer
+        should be turned, False if only the depth layer should be turned
     """
-    cara: Cara
-    direccion: Literal[-1, 1, 2]
-    nivel: int
-    ancho: bool
+    face: Face
+    direction: Literal[-1, 1, 2]
+    depth: int
+    is_wide: bool
 
     def __repr__(self):
-        resultado = self.cara.value
+        result = self.face.value
 
-        if self.ancho:
-            # un movimiento ancho: U -> Uw
-            resultado += 'w'
+        if self.is_wide:
+            # wide turn: U -> Uw
+            result += 'w'
 
-        if self.direccion == -1:
-            # un movimiento primo: U -> U' o Uw -> Uw'
-            resultado += "'"
-        elif self.direccion == 2:
-            # un movimiento doble: U -> U2 o Uw -> Uw2
-            resultado += "2"
+        if self.direction == -1:
+            # Inverted turn: U -> U' or Uw -> Uw'
+            result += "'"
+        elif self.direction == 2:
+            # double turn: U -> U2 or Uw -> Uw2
+            result += "2"
 
-        if self.nivel > 1:
-            # un movimiento de múltiples capas: U -> 3U o Uw' -> 3Uw' etc.
-            resultado = str(self.nivel) + resultado
+        if self.depth > 1:
+            # U -> 3U or Uw' -> 3Uw' etc.
+            result = str(self.depth) + result
 
-        return resultado
+        return result
 
 
-def invertir_movimiento(movimiento: Movimiento):
+def invert_move(move: Move):
     """
-    Retorna el mismo movimiento al revés, es decir, con la dirección invertida
+    Return the same move, but with the direction reversed
     """
-    if movimiento.direccion == 2:
-        return movimiento
+    if move.direction == 2:
+        return move
 
-    return Movimiento(
-        movimiento.cara,
-        movimiento.direccion * -1, # type: ignore
-        movimiento.nivel,
-        movimiento.ancho
+    return Move(
+        move.face,
+        move.direction * -1,
+        move.depth,
+        move.is_wide
     )
 
 
-def movimiento_de_texto(texto: str) -> Movimiento:
+def text_to_move(text: str) -> Move:
     """
-    Convertir texto en un movimiento
-    * requiere que el texto tenga una letra que represente una cara,
-        e.j. <U>
-    * requiere que el nivel esté antes de la cara, e.j. <3U>
-    * requiere que el carácter <w> aparezca después de la cara si
-        el movimiento es ancho, e.j. <Uw>
-    * requiere que la dirección sea indicada por <'> para prima o <2> para
-        double, al fin del movimiento, e.j. <U'>, <Uw2>, <3Dw'>
+    Convert a string to a move
+
+    * requires that the text have a letter representing a face, e.g. <U>
+    * requires the depth to be before the face, e.g. <3U>
+    * requires that the character <w> appear after the face, if wide move.
+        e.g. <Uw>
+    * requires the direction to be indicated by <'> for prime or <2> for
+        double, at the end of the move, e.g. <U'>, <Uw2>, <3Dw'>
+    
+    Returns a move interpreted from `text`
     """
-    length = len(texto)
+    length = len(text)
 
     if length < 1:
-        raise ValueError('texto está vacío')
-    posicion = 0
+        raise ValueError('text is empty')
+    pos = 0
 
-    # determinar nivel (opcional)
-    nivel = 1
-    while texto[posicion].isdigit() and posicion < length:
-        posicion += 1
-    if posicion != 0:
-        nivel = int(texto[0:posicion])
+    # determine depth (optional)
+    depth = 1
+    while text[pos].isdigit() and pos < length:
+        pos += 1
+    if pos != 0:
+        depth = int(text[0:pos])
 
-    # determinar cara (obligatorio)
-    if posicion >= length:
-        raise ValueError('El texto no contiene una cara')
-    cara = Cara[texto[posicion]]
-    posicion += 1
+    # determine face (mandatory)
+    if pos >= length:
+        raise ValueError('Passed in text has no face')
+    cara = Face[text[pos]]
+    pos += 1
 
-    # determinar si es ancho (opcional)
-    ancho = False
-    if posicion >= length:
-        return Movimiento(cara, 1, nivel, False)
-    if texto[posicion] == 'w':
-        ancho = True
-        posicion += 1
+    # determine if the move is wide (optional)
+    wide = False
+    if pos >= length:
+        return Move(cara, 1, depth, False)
+    if text[pos] == 'w':
+        wide = True
+        pos += 1
 
-    # determinar dirección (opcional)
-    if posicion >= length:
-        return Movimiento(cara, 1, nivel, ancho)
-    if texto[posicion] == "'":
-        return Movimiento(cara, -1, nivel, ancho)
-    if texto[posicion] == '2':
-        return Movimiento(cara, 2, nivel, ancho)
+    # determine direction (optional)
+    if pos >= length:
+        return Move(cara, 1, depth, wide)
+    if text[pos] == "'":
+        return Move(cara, -1, depth, wide)
+    if text[pos] == '2':
+        return Move(cara, 2, depth, wide)
 
-    # hay uno o más caracteres que no tienen nada que ver con el movimiento
-    raise ValueError(f'Carácter ilegal en movimiento: {texto[posicion]}')
+    # there are one of more characteres that have nothing to do with the move
+    raise ValueError(f'Illegal character in passed in text: {text[pos]}')

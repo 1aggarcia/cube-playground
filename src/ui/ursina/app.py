@@ -1,61 +1,61 @@
 from ursina import EditorCamera, Ursina, Vec3, Entity
-from models.cube3d import Cubo3d
-from models.move import Movimiento, invertir_movimiento
-from models.ursina_state import EstadoUrsina
-from util.scrambles import generar_scramble
-from util.printer import imprimir_cubo
+from models.cube3d import Cube3d
+from models.move import Move, invert_move
+from models.ursina_state import UrsinaState
+from util.scrambles import generate_scramble
+from util.printer import print_cube
 
-from constants.enums import Cara
-
-
-ESCALA_CAMARA = 3
+from constants.enums import Face
 
 
-def iniciar_app_ursina(dimension: int):
-    aplicacion = Ursina()
+CAMAERA_SCALE = 3
 
-    estado = EstadoUrsina(Cubo3d(dimension))
 
-    escala = dimension / ESCALA_CAMARA
+def init_ursina_app(dimension: int):
+    app = Ursina()
+
+    state = UrsinaState(Cube3d(dimension))
+
+    scale = dimension / CAMAERA_SCALE
     camera = EditorCamera(ui_size = 1000)
-    camera.scale_setter(Vec3(escala, escala, escala))
+    camera.scale_setter(Vec3(scale, scale, scale))
 
-    controlador = Entity()
-    controlador.input = lambda key: al_teclar(key, estado)
+    controller = Entity()
+    controller.input = lambda key: on_input(key, state)
 
-    aplicacion.run()
+    app.run()
 
 
-# TODO: limpiar la gestión del estado
-def al_teclar(key: str, estado: EstadoUrsina):
-    cubo_2d = estado.cubo.cubo_2d
+# TODO: clean up state management
+def on_input(key: str, state: UrsinaState):
+    cube2d = state.cube.cube2d
 
-    # realizar la tarea
+    # execute correct task
     if key == "space":
-        estado.cubo.cubo_2d.restaturar()
-        estado.historial.clear()
+        state.cube.cube2d.reset()
+        state.history.clear()
 
     elif key == "s":
-        scramble = generar_scramble(cubo_2d.dimension)
-        cubo_2d.ejecutar_algoritmo([str(mov) for mov in scramble])
-        estado.historial.extend(scramble)
+        scramble = generate_scramble(cube2d.dimension)
+        cube2d.exec_algorithm([str(mov) for mov in scramble])
+        state.history.extend(scramble)
 
     elif key == "i":
-        imprimir_cubo(cubo_2d)
+        print_cube(cube2d)
 
-    elif key == "backspace" and len(estado.historial) > 0:
-        mov = estado.historial.pop()
-        cubo_2d.mover(invertir_movimiento(mov))
+    elif key == "backspace" and len(state.history) > 0:
+        mov = state.history.pop()
+        cube2d.move(invert_move(mov))
 
-    elif key.upper() in Cara:
-        direccion = -1 if "shift" in estado.teclas else 1
-        mov = Movimiento(Cara[key.upper()], direccion, 1, False)
+    elif key.upper() in Face:
+        direction = -1 if "shift" in state.keys else 1
+        mov = Move(Face[key.upper()], direction, 1, False)
 
-        cubo_2d.mover(mov)
-        estado.historial.append(mov)
+        cube2d.move(mov)
+        state.history.append(mov)
 
-    # agregar tecla a la colección
+    # add key to set in state
     if " up" not in key:
-        estado.teclas.add(key)
-    elif key.strip(" up") in estado.teclas:
-        estado.teclas.remove(key.strip(" up"))
+        state.keys.add(key)
+    elif key.strip(" up") in state.keys:
+        state.keys.remove(key.strip(" up"))

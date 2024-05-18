@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Cara(Enum):
+class Face(Enum):
     U = 'U'
     D = 'D'
     F = 'F'
@@ -10,6 +10,6 @@ class Cara(Enum):
     R = 'R'
 
 
-class Ventana(Enum):
+class Window(Enum):
     CUBO = 'CUBO'
     URSINA = 'URSINA'

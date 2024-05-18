@@ -1,40 +1,40 @@
-from models.cube_piece import Cubito
-from models.cube import generar_cubo
-from constants.enums import Cara
-from constants.colors import COLORES_DE_CUBO
+from models.cube_piece import CubePiece
+from models.cube import generate_cube
+from constants.enums import Face
+from constants.colors import CUBE_COLORS
 
 
-class Cubo3d:
+class Cube3d:
     """
-    Modelo para representar un cubo de Rubik en 3D con Cubitos utilizando
-    la librería Ursina.
+    Model representing a Rubik's cube in 3D utilizing the CubePiece class
+    inherited from Ursina
 
-    Debe usarse después de haber iniciado una aplicación Ursina
+    Must be used only after initiating an Ursina app
     """
     def __init__(self, dimension: int):
         self._dimension = dimension
-        self._cubitos = _generar_cubitos(dimension)
-        self._cubo_2d = generar_cubo(dimension)
+        self._pieces = _generate_pieces(dimension)
+        self._cube2d = generate_cube(dimension)
 
-        self.cubo_2d.al_cambiar(lambda: _pintar_cubo(self))
+        self.cube2d.on_change(lambda: _paint_cube(self))
 
     @property
     def dimension(self):
         return self._dimension
 
     @property
-    def cubitos(self):
-        return self._cubitos
+    def pieces(self):
+        return self._pieces
 
     @property
-    def cubo_2d(self):
-        return self._cubo_2d
+    def cube2d(self):
+        return self._cube2d
 
 
-def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
+def _is_border(x: int, y: int, z: int, dimension: int) -> bool:
     """
-    Retorna `True` si las cordenadas `x`, `y`, `z` están al borde de un cubo
-    NxNxN con la dimensión `dimension`
+    Returns `True` if and only if the coordenates (x, y, z) are at a bordering
+    edge of an NxNxN cube with dimension `dimension`
     """
     return (
         x in (0, dimension - 1)
@@ -43,76 +43,77 @@ def _es_borde(x: int, y: int, z: int, dimension: int) -> bool:
     )
 
 
-def _generar_cubitos(dimension: int):
+def _generate_pieces(dimension: int):
     """
-    Crear una matriz 3d para un Cubo3d con entidades de Ursina
+    Create a 3d matrix for a Cube3d with Ursina entities
     """
     if dimension < 2:
         raise ValueError(f'Dimension must be at least 2: {dimension}')
 
-    desviacion = - (dimension - 1) / 2
+    offset = - (dimension - 1) / 2  # TODO: make positive
 
-    # crea matriz 3d lleno de `None`
-    # el espacio adentro no es usado, así que se hace `None` para ahorrar recursos
-    cubitos: list[list[list[Cubito | None]]] = [
+    # create 3d matrix filled with `None`
+    # the inner space is invisible but takes up the majority of the space,
+    # it would be wasteful to put anything there
+    pieces: list[list[list[CubePiece | None]]] = [
         [[None] * dimension for _ in range(dimension)] for _ in range(dimension)
     ]
 
-    # crear cubitos a los bordes del tensor
+    # fill cube edges with new cube pieces
     for x in range(dimension):
         for y in range(dimension):
             for z in range(dimension):
-                if not _es_borde(x, y, z, dimension):
+                if not _is_border(x, y, z, dimension):
                     continue
 
-                pos_x = desviacion + x
-                pos_y = desviacion + y
-                pos_z = desviacion + z
+                pos_x = offset + x
+                pos_y = offset + y
+                pos_z = offset + z
 
-                cubitos[x][y][z] = Cubito(pos_x, pos_y, pos_z)
+                pieces[x][y][z] = CubePiece(pos_x, pos_y, pos_z)
 
-    return cubitos
+    return pieces
 
 
-def _get_cubito(cubitos: list[list[list[Cubito | None]]], x: int, y: int, cara: Cara):
+def _get_piece(pieces: list[list[list[CubePiece | None]]], x: int, y: int, face: Face):
     """
-    Retorna una referencia al cubito indicado por las coordenadas en 2D,
-    y la cara especificada
+    Returns a reference to the cube piece indicated by the 2d coordinates and
+    origin face
 
-    `y` y `z` deben ser en el rango de 0 - len(cubitos)
+    * `x` and `y` must be within the range 0 - len(pieces)
     """
-    maximo = len(cubitos) - 1
-    cubito = None
+    limit = len(pieces) - 1
+    piece = None
 
-    if cara == Cara.D:
-        cubito = cubitos[x][0][y]
-    elif cara == Cara.U:
-        cubito = cubitos[x][maximo][maximo - y]
-    elif cara == Cara.F:
-        cubito = cubitos[x][maximo - y][0]
-    elif cara == Cara.B:
-        cubito = cubitos[maximo - x][maximo - y][maximo]
-    elif cara == Cara.L:
-        cubito = cubitos[0][maximo - y][maximo - x]
-    elif cara == Cara.R:
-        cubito = cubitos[maximo][maximo - y][x]
+    if face == Face.D:
+        piece = pieces[x][0][y]
+    elif face == Face.U:
+        piece = pieces[x][limit][limit - y]
+    elif face == Face.F:
+        piece = pieces[x][limit - y][0]
+    elif face == Face.B:
+        piece = pieces[limit - x][limit - y][limit]
+    elif face == Face.L:
+        piece = pieces[0][limit - y][limit - x]
+    elif face == Face.R:
+        piece = pieces[limit][limit - y][x]
 
-    if cubito is None:
-        raise ReferenceError('cubito no encontrado')
+    if piece is None:
+        raise ReferenceError('piece not found')
 
-    return cubito
+    return piece
 
 
-def _pintar_cubo(cubo: Cubo3d):
+def _paint_cube(cube: Cube3d):
     """
-    Pintar el cubo con el estado actual su cubo en 2d.
-    * Modifica los cubitos del cubo.
+    Paint the entities of the given cube with the state of `cube.cube2d`
+    * Modifies the color all cube pieces
     """
-    estado = cubo.cubo_2d.estado
+    state = cube.cube2d.state
 
-    for cara in Cara:
-        for y, fila in enumerate(estado[cara]):
-            for x, etiqueta in enumerate(fila):
-                color = COLORES_DE_CUBO[etiqueta]
-                cubito = _get_cubito(cubo.cubitos, x, y, cara)
-                cubito.colorar(cara, color)
+    for face in Face:
+        for y, row in enumerate(state[face]):
+            for x, sticker in enumerate(row):
+                color = CUBE_COLORS[sticker]
+                piece = _get_piece(cube.pieces, x, y, face)
+                piece.set_color(face, color)

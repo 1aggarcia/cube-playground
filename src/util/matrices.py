@@ -1,184 +1,178 @@
 import copy
 import numpy as np
 
-from constants.enums import Cara
+from constants.enums import Face
 
-# el ciclo que siguen las caras al hacer el movimiento U
-CARAS_HORIZONTALES = [Cara.F, Cara.L, Cara.B, Cara.R]
+# the cycle that the faces follow on a U move
+HORIZONTAL_CYCLE = [Face.F, Face.L, Face.B, Face.R]
 
-# el ciclo que siguen las caras al hacer el movimiento L
-CARAS_VERTICALES = [Cara.F, Cara.D, Cara.B, Cara. U]
+# the cycle that the faces follow on an L move
+VERTICAL_CYCLE = [Face.F, Face.D, Face.B, Face. U]
 
-# el ciclo que siguen las caras al hacer el movimiento F
-# cada tuple representa (Cara, rotaciones necesarias antes de copiar)
-CARAS_FRONTERIZAS = [(Cara.D, 0), (Cara. L, -1), (Cara.U, 2), (Cara.R, 1)]
+# the cycle that the faces follow on an F move
+# each tuple represents (Face, needed rotation before copying)
+BORDER_CYCLE = [(Face.D, 0), (Face. L, -1), (Face.U, 2), (Face.R, 1)]
 
 
-def girar_matriz(matriz: np.ndarray, orientacion: int):
+def rotate_matrix(matrix: np.ndarray, repetitions: int):
     """
-    Girar la matriz dada en sentido horario el número de veces dado como
-    orientación
+    Rotate and return the given matrix clockwise `repetitions` times
     """
-    match orientacion % 4:
+    match repetitions % 4:
         case 0:
-            # sin rotación
-            return copy.deepcopy(matriz)
+            # no rotation
+            return copy.deepcopy(matrix)
         case 1:
-            # 90 degrados en sentido horario
-            return np.rot90(matriz, axes=(1, 0))
+            # 90 degrees clockwise
+            return np.rot90(matrix, axes=(1, 0))
         case 2:
-            # 180 degrados
-            return np.rot90(matriz, 2)
+            # 180 degrees
+            return np.rot90(matrix, 2)
         case 3:
-            # 90 degrados en sentio antihorario
-            return np.rot90(matriz, axes=(0, 1))
+            # 90 degrees counterclockwise
+            return np.rot90(matrix, axes=(0, 1))
         case _:
-            raise RuntimeError('caso imposible')
+            raise RuntimeError('impossible case')
 
 
-def girar_matriz_horario(matriz: np.ndarray):
-    return girar_matriz(matriz, 1)
+def rotate_matrix_clockwise(matriz: np.ndarray):
+    return rotate_matrix(matriz, 1)
 
 
-def girar_matriz_antihorario(matriz: np.ndarray):
-    return girar_matriz(matriz, -1)
+def rotate_matrix_ccw(matriz: np.ndarray):
+    return rotate_matrix(matriz, -1)
 
 
-def cotar_horizontalmente(
-        estado_de_cubo: dict[Cara, np.ndarray], fila: int, direccion: int
-    ) -> dict[Cara, np.ndarray]:
+def horizontal_slice(
+        cube_state: dict[Face, np.ndarray], row: int, direction: int
+    ) -> dict[Face, np.ndarray]:
     """
-    rotar la capa en la fila espesificada horizontalmente, dado la dirección en
-    rotaciones en sentido horario
-    * requiere 0 <= fila < dimensión de cubo
-    * requiere que direccion sea -1, 1 o 2
-    * returns nuevo estado de cubo con la fila rotada
+    rotate the layer in the specified row horizontally, given the direction in
+    clockwise rotations
+    * requires 0 <= row <= cube dimension
+    * requires that the direction be -1, 1 or 2
+    * returns new state with the rotated row
     """
-    if 0 > fila or fila >= len(estado_de_cubo[Cara.U]):
-        raise ValueError('fila debe ser entre 0 - dimensión de cubo')
-    if direccion not in [-1, 1, 2]:
-        raise ValueError('direccion no es ni -1, ni 1, ni 2')
+    if 0 > row or row >= len(cube_state[Face.U]):
+        raise ValueError('row must be between 0 - cube dimension')
+    # TODO: fix with literal typing
+    if direction not in [-1, 1, 2]:
+        raise ValueError('direction is not -1, 1, 2')
 
-    # la orden en la cual copiaremnos las caras horariamente
-    orden = CARAS_HORIZONTALES.copy()
-    if direccion == 1:
-        # ponerla al revés para copiar antihorariamente
-        orden = CARAS_HORIZONTALES[::-1]
+    # the order the faces will be copied in
+    order = HORIZONTAL_CYCLE.copy()
+    if direction == 1:
+        # just reverse it to rotate counterclockwise
+        order = HORIZONTAL_CYCLE[::-1]
 
-    estado_nuevo = copy.deepcopy(estado_de_cubo)
-    primera_fila = copy.deepcopy(estado_de_cubo[orden[0]][fila])
+    new_state = copy.deepcopy(cube_state)
+    first_row = copy.deepcopy(cube_state[order[0]][row])
 
-    # copiar filas en la orden dado para hacer una rotación
-    for destino, fuente in zip(orden, orden[1:]):
-        copia_de_fila = copy.deepcopy(estado_nuevo[fuente][fila])
-        estado_nuevo[destino][fila] = copia_de_fila
+    # copy the rows cyclicly in the given order to rotate
+    for dst, src in zip(order, order[1:]):
+        row_copy = copy.deepcopy(new_state[src][row])
+        new_state[dst][row] = row_copy
 
-    estado_nuevo[orden[-1]][fila] = primera_fila
+    new_state[order[-1]][row] = first_row
 
-    if direccion == 2:
-        # para un doble movimiento, haz dos movimientos primos
-        return cotar_horizontalmente(estado_nuevo, fila, -1)
+    if direction == 2:
+        # for a double turn, do two prime turns
+        return horizontal_slice(new_state, row, -1)
 
-    return estado_nuevo
+    return new_state
 
 
-def cotar_verticalmente(
-        estado_de_cubo: dict[Cara, np.ndarray], columna: int, direccion: int
-    ) -> dict[Cara, np.ndarray]:
+def vertical_slice(
+        cube_state: dict[Face, np.ndarray], col: int, direction: int
+    ) -> dict[Face, np.ndarray]:
     """
-    rotar la capa en la columna espesificada verticalmente.
-    * Si horario = True, la rotación será horaria, Si no, será antihoraria
-    * requiere 0 <= columna < dimensión de cubo
-    * requiere que direccion sea -1, 1 o 2
-    * returns nuevo estado de cubo con la fila rotada
+    rotates the layer in the specified column vertically.
+    * Requires 0 <= col < cube dimension
+    * Requires that the direction be -1, 1 or 2
+    * Returns new cube state with the column rotated
     """
-    if 0 > columna or columna >= len(estado_de_cubo[Cara.U]):
-        raise ValueError('columna debe ser entre 0 - dimensión de cubo')
-    if direccion not in [-1, 1, 2]:
-        raise ValueError('direccion no es ni -1, ni 1, ni 2')
+    if 0 > col or col >= len(cube_state[Face.U]):
+        raise ValueError('col must be between 0 - cube dimension')
+    # TODO
+    if direction not in [-1, 1, 2]:
+        raise ValueError('direction is not -1, 1, 2')
 
-    dimension = len(estado_de_cubo[Cara.U])
-    # la orden en la cual copiaremnos las caras horariamente
-    orden = CARAS_VERTICALES.copy()
-    if direccion == 1:
-        # ponerla al revés para copiar antihorariamente
-        orden = CARAS_VERTICALES[::-1]
+    dimension = len(cube_state[Face.U])
+    # the order the faces will be copied in
+    order = VERTICAL_CYCLE.copy()
+    if direction == 1:
+        order = VERTICAL_CYCLE[::-1]
 
-    estado_nuevo = copy.deepcopy(estado_de_cubo)
-    primera_columna = copy.deepcopy(estado_de_cubo[orden[0]][0:, columna])
+    new_state = copy.deepcopy(cube_state)
+    first_col = copy.deepcopy(cube_state[order[0]][0:, col])
 
-    # copiar filas en la orden dado para hacer una rotación
-    for destino, fuente in zip(orden, orden[1:]):
-        # copiar
-        cara_fuente = estado_nuevo[fuente]
-        if fuente == Cara.B:
-            # la cara B es invertida a 180 degrados, necesitamos invertir
-            # esta cara para compensar
-            cara_fuente = girar_matriz(cara_fuente, 2)
-        copia_de_columna = copy.deepcopy(cara_fuente[0:, columna])
+    # copy columns in the given order to do a rotation
+    for dst, src in zip(order, order[1:]):
+        # copy
+        src_face = new_state[src]
+        if src == Face.B:
+            # Face B is inverted by 180 degrees, must be inverted back
+            src_face = rotate_matrix(src_face, 2)
+        col_copy = copy.deepcopy(src_face[0:, col])
 
-        # pegar
-        columna_destino = columna
-        if destino == Cara.B:
-            # dado que la cara B es invertida, pegamos la columna al
-            # lado opuesto e invertida
-            columna_destino = dimension - columna - 1
-            copia_de_columna = np.flipud(copia_de_columna)
+        # paste
+        dst_col = col
+        if dst == Face.B:
+            # since B is inverted, the paste location also must be inverted
+            dst_col = dimension - col - 1
+            col_copy = np.flipud(col_copy)
 
-        estado_nuevo[destino][0:, columna_destino] = copia_de_columna
+        new_state[dst][0:, dst_col] = col_copy
 
-    estado_nuevo[orden[-1]][0:, columna] = primera_columna
+    new_state[order[-1]][0:, col] = first_col
 
-    if direccion == 2:
-        # para un doble movimiento, haz dos movimientos primos
-        return cotar_verticalmente(estado_nuevo, columna, -1)
+    if direction == 2:
+        # for a double turn, do two prime turns
+        return vertical_slice(new_state, col, -1)
 
-    return estado_nuevo
+    return new_state
 
 
-def cortar_frontera(
-        cubo_estado: dict[Cara, np.ndarray], linea: int, direccion: int
-    ) -> dict[Cara, np.ndarray]:
+def border_slice(
+        cube_state: dict[Face, np.ndarray], line: int, direction: int
+    ) -> dict[Face, np.ndarray]:
     """
-    rotar la capa por la frontera a la línea espesificada
-    * Si horario = True, la rotación será horaria, Si no, será antihoraria
-    * requiere 0 <= linea < dimensión de cubo
-    * requiere que direccion sea -1, 1 o 2
-    * returns nuevo estado de cubo con la frontera rotada
+    rotates the layer by the border at the specified "line"
+    * Requires 0 <= col < cube dimension
+    * Requires that the direction be -1, 1 or 2
+    * Returns new cube state with the border line rotated
     """
-    if 0 > linea or linea >= len(cubo_estado[Cara.U]):
-        raise ValueError('frontera debe ser entre 0 - dimensión de cubo')
-    if direccion not in [-1, 1, 2]:
-        raise ValueError('direccion no es ni -1, ni 1, ni 2')
+    if 0 > line or line >= len(cube_state[Face.U]):
+        raise ValueError('line must be between 0 - cube dimension')
+    if direction not in [-1, 1, 2]:
+        raise ValueError('direction is not -1, 1, 2')
 
-    # la orden en la cual copiaremnos las caras por la frontera
-    orden = CARAS_FRONTERIZAS.copy()
-    if direccion == 1:
-        # ponerla al revés para copiar antihorariamente
-        orden = CARAS_FRONTERIZAS[::-1]
+    # cycle to follow for copying
+    order = BORDER_CYCLE.copy() # TODO use ternary
+    if direction == 1:
+        order = BORDER_CYCLE[::-1]
 
-    # la primera cara en orden es ignorada, entonces la agregamos al fin
-    orden.append(orden[0])
+    # the first face in the cycle is ignored, so its put at the end
+    order.append(order[0])
 
-    estado_nuevo = copy.deepcopy(cubo_estado)
+    new_state = copy.deepcopy(cube_state)
 
-    # copiar filas en la orden dado para hacer una rotación
-    for destino, fuente in zip(orden, orden[1:]):
-        cara_d = destino[0]
-        orientacion_d = destino[1]
-        orientacion_f = fuente[1]
+    for dst, src in zip(order, order[1:]):
+        dst_face = dst[0]
+        dst_orientation = dst[1]
+        src_orientation = src[1]
 
-        cara_f = girar_matriz(cubo_estado[fuente[0]], orientacion_f)
-        copia_de_linea = copy.deepcopy(cara_f[linea])
+        src_face = rotate_matrix(cube_state[src[0]], src_orientation)
+        line_copy = copy.deepcopy(src_face[line])
 
-        # girar la cara, pegar la línea, y girarla para atrás para
-        # pegar la línea en la orientación que queremos
-        estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d)
-        estado_nuevo[cara_d][linea] = copia_de_linea
-        estado_nuevo[cara_d] = girar_matriz(estado_nuevo[cara_d], orientacion_d * -1)
+        # rotate the face, paste the line, rotate it back
+        # to paste the line in the correct orientation
+        new_state[dst_face] = rotate_matrix(new_state[dst_face], dst_orientation)
+        new_state[dst_face][line] = line_copy
+        new_state[dst_face] = rotate_matrix(new_state[dst_face], dst_orientation * -1)
 
-    if direccion == 2:
-        # para un doble movimiento, haz dos movimientos primos
-        return cortar_frontera(estado_nuevo, linea, -1)
+    if direction == 2:
+        # for double turns
+        return border_slice(new_state, line, -1)
 
-    return estado_nuevo
+    return new_state

@@ -1,112 +1,114 @@
 import tkinter as tk
 
-from models.cube import Cubo
+from models.cube import Cube
 from constants import colors
-from constants.enums import Cara
+from constants.enums import Face
 
-TAMANO_DE_CARA = 160 # ancho y altura de una cara
+FACE_SIZE = 160 # width and height of a face
 
 
-def crear_frame_cubo(raiz: tk.Misc, cubo: Cubo):
-    frame = tk.Frame(raiz, bg=colors.VERDE_2, padx=10)
+def create_cube_frame(root: tk.Misc, cube: Cube):
+    frame = tk.Frame(root, bg=colors.GREEN_2, padx=10)
 
-    # crear widgets para cada cara
-    cara_u = _crear_frame_de_cara(frame, cubo, Cara.U)
-    cara_l = _crear_frame_de_cara(frame, cubo, Cara.L)
-    cara_f = _crear_frame_de_cara(frame, cubo, Cara.F)
-    cara_r = _crear_frame_de_cara(frame, cubo, Cara.R)
-    cara_b = _crear_frame_de_cara(frame, cubo, Cara.B)
-    cara_d = _crear_frame_de_cara(frame, cubo, Cara.D)
+    # create widgets for each face
+    face_u = _create_face_frame(frame, cube, Face.U)
+    face_l = _create_face_frame(frame, cube, Face.L)
+    face_f = _create_face_frame(frame, cube, Face.F)
+    face_r = _create_face_frame(frame, cube, Face.R)
+    face_b = _create_face_frame(frame, cube, Face.B)
+    face_d = _create_face_frame(frame, cube, Face.D)
 
-    # posicionarlas para que se vean como un cubo plano
-    cara_u.grid(row=0, column=1)
-    cara_l.grid(row=1, column=0)
-    cara_f.grid(row=1, column=1)
-    cara_r.grid(row=1, column=2)
-    cara_b.grid(row=1, column=3)
-    cara_d.grid(row=2, column=1)
+    # position the frames so that they form a flat cube
+    face_u.grid(row=0, column=1)
+    face_l.grid(row=1, column=0)
+    face_f.grid(row=1, column=1)
+    face_r.grid(row=1, column=2)
+    face_b.grid(row=1, column=3)
+    face_d.grid(row=2, column=1)
 
-    cubo.al_cambiar(lambda: _colorar_cubo(frame, cubo))
+    cube.on_change(lambda: _color_cube(frame, cube))
 
     return frame
 
 
-def _colorar_cubo(frame: tk.Frame, cubo: Cubo) -> None:
+def _color_cube(frame: tk.Frame, cube: Cube) -> None:
     """
-    Colora el frame dado con el cubo dado
-    * requiere que el frame tenga 6 niños con los nombres 'u', 'd', 'l', 'r', 'f', 'b'
-    * requiere que cada nino del frame sea un Frame con nxn ninos Frame,
-        donde n = dimension del cubo
-    * modifica el frame dado, colora todos los cubitos
+    Color the given frame with the given cube
+    * requires that the frame have 6 children with names 'u', 'd', 'l', 'r', 'f', 'b'
+    * requires that each child of the frame is a frame with NxN children that
+        are frames, where N = cube.dimension
+    
+    *  modified the given frame, changes the color of each piece
     """
-    for cara in list(Cara):
-        # chequear requisito 1
+    for face in list(Face):
+        # check requirement 1
         try:
-            cuadro = frame.nametowidget(cara.value.lower())
-            # esta función chequea requisito 2
-            _colorar_cara(cuadro, cubo, cara)
+            square = frame.nametowidget(face.value.lower())
+            # helper function checks requirement 2
+            _color_face(square, cube, face)
         except KeyError as exc:
             raise ValueError(
-                'REQUISITO ROTO: los ninos de frame tiene nombres incorrectos'
+                'BROKEN REQUIREMENT: frame children have incorrect names'
             ) from exc
 
-    # se ve mejor cuando hay espacio de tiempo
-    # entre los movimientos de un algorithmo
+    # looks better when theres a short pause
+    # between each movement of an algorithm
     frame.update()
 
 
-def _crear_frame_de_cara(raiz: tk.Misc, cubo: Cubo, cara: Cara) -> tk.Frame:
+def _create_face_frame(root: tk.Misc, cube: Cube, face: Face) -> tk.Frame:
     """
-    Crea un frame representando la cara dada con una matriz de nxn cubitos,
-    donde n = len(cara) indicado. Lo colora basado en el cubo dado.
-    * returns frame con el nombre de la cara en minúscula con nxn niños colorados de tamaño igual
-    """
-    # calcular tamaño de cubitos para poder encajar todos en el frame
-    dimension = cubo.dimension
-    tamano_de_cubito = int(TAMANO_DE_CARA / dimension)
+    Creates a frame representing the given face with a matrix of NxN pieces,
+    where N = len(face) indicated. It is colored according to the given cube
 
-    # crear frame central
-    frame = tk.Frame(raiz, bg='black', name=cara.value.lower(),
-                    width=TAMANO_DE_CARA, height=TAMANO_DE_CARA,
+    * returns a new frame with the name of `face` in lowercase, with NxN
+        colored children of equal size
+    """
+    # calculate size of the pieces to fit all of them in a frame
+    dimension = cube.dimension
+    piece_size = int(FACE_SIZE / dimension)
+
+    # create central frame
+    frame = tk.Frame(root, bg='black', name=face.value.lower(),
+                    width=FACE_SIZE, height=FACE_SIZE,
                     borderwidth=2)
 
-    # llenar frame con los cubitos
+    # fill frame with pieces
     for i in range(dimension):
         for j in range(dimension):
-            frame_cubito = tk.Frame(
+            piece_frame = tk.Frame(
                 frame,
-                width=tamano_de_cubito,
-                height=tamano_de_cubito,
+                width=piece_size,
+                height=piece_size,
                 borderwidth=1,
                 relief=tk.RAISED,
             )
-            # meterlo a su posición determinada por la matriz de la que viene
-            frame_cubito.grid(row=i, column=j)
+            # position the frame accorting to the source matrtix
+            piece_frame.grid(row=i, column=j)
 
-    # colora el frame antes de devolverla
-    _colorar_cara(frame, cubo, cara)
+    # color the frame before returing
+    _color_face(frame, cube, face)
     return frame
 
 
-def _colorar_cara(frame: tk.Frame, cubo: Cubo, cara: Cara) -> None:
-    '''
-    Colora el frame dado con el cubo y la cara dada
-    * requiere que el frame tiene nxn ninos Frame, donde n = dimension del cubo
-    * modifica el frame dado, lo colora los cubitos
-    '''
-    dimension = cubo.dimension
-    ninos = frame.winfo_children()
-    if len(ninos) != dimension**2:
-        raise ValueError('REQUISITO ROTO: frame dado no tiene nxn ninos')
+def _color_face(frame: tk.Frame, cube: Cube, face: Face) -> None:
+    """
+    Color the frame given with the cube and face given
+    * requires that the frame have NxN children frames, where N = cube.dimension
+    * modifies the given frame, coloring its pieces
+    """
+    dimension = cube.dimension
+    children = frame.winfo_children()
+    if len(children) != dimension**2:
+        raise ValueError('BROKEN REQUIREMENT: frame does not have NxN children')
 
-    cuadro = cubo.get_cara(cara)
+    square = cube.get_face(face)
 
     for i in range(dimension):
         for j in range(dimension):
-            # ninos es 1D, las caras son 2D.
-            # El cubito [i][j] en 2D en una cara es lo mismo que
-            # el cubito [i*dimension + j] in 1D
-            cubito = ninos[i*dimension + j]
-            color = colors.COLORES_DE_CUBO[cuadro[i][j]]
-            # la modificación
-            cubito.configure(bg = color) # type: ignore
+            # flatten 2D faces to 1D children
+            # piece [i][j] in 2D is equivelant to [i * dimension + j] in 1D
+            piece = children[i*dimension + j]
+            color = colors.CUBE_COLORS[square[i][j]]
+            # the modification
+            piece.configure(bg = color) # type: ignore

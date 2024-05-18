@@ -2,141 +2,141 @@ import tkinter as tk
 from tkinter import messagebox
 
 import models.move as mv
-from models.cube import Cubo
-from util.scrambles import generar_scramble
-from util.printer import imprimir_cubo
+from models.cube import Cube
+from util.scrambles import generate_scramble
+from util.printer import print_cube
 from constants import colors
 
 PADDING = 10
 
 
-class OperadorDeCubo:
+class CubeController:
     """
-    Amarrar el estado del cubo y su historial de movimientos a los widgets
-    relevantes para que se pueda controlar el cubo y los widgets juntos
+    Bind cube state and its history to the TKinter widgets in the open window
+    so that they can be modified together
     """
     def __init__(self,
-        cubo: Cubo, text_entrada: tk.Entry, text_historial: tk.Text
+        cube: Cube, input_box: tk.Entry, history: tk.Text
     ):
-        self._cubo = cubo
-        self._entrada = text_entrada
-        self._text_historial = text_historial
-        self._historial = []
+        self._cube = cube
+        self._input_box = input_box
+        self._history_widget = history
+        self._history = []
 
-    def aplicar_alg(self):
-        texto = self._entrada.get()
-        alg = texto.split(' ')
+    def apply_alg(self):
+        text = self._input_box.get()
+        alg = text.split(' ')
         try:
-            self._cubo.ejecutar_algoritmo(alg)
+            self._cube.exec_algorithm(alg)
         except (ValueError, KeyError) as e:
             messagebox.showerror('Error', f'Error: {e}')
             return
 
-        self._entrada.delete(0, tk.END)
-        self._historial.extend(alg)
-        self._exhibir_historial()
+        self._input_box.delete(0, tk.END)
+        self._history.extend(alg)
+        self._update_history()
 
-    def deshacer(self):
-        if len(self._historial) == 0:
+    def undo(self):
+        if len(self._history) == 0:
             return
 
-        mov = mv.movimiento_de_texto(self._historial.pop())
-        self._exhibir_historial()
-        invertido = mv.invertir_movimiento(mov)
-        self._cubo.mover(invertido)
+        mov = mv.text_to_move(self._history.pop())
+        self._update_history()
+        inverted = mv.invert_move(mov)
+        self._cube.move(inverted)
 
-    def imprimir(self):
-        imprimir_cubo(self._cubo)
+    def print_cube(self):
+        print_cube(self._cube)
 
-    def invertir(self):
-        texto = self._entrada.get()
+    def invert(self):
+        text = self._input_box.get()
         try:
-            alg = [mv.movimiento_de_texto(mov) for mov in texto.split(' ')]
+            alg = [mv.text_to_move(mov) for mov in text.split(' ')]
         except (ValueError, KeyError) as e:
             messagebox.showerror('Error', f'Error: {e}')
             return
 
-        alg_invertido = [mv.invertir_movimiento(mov) for mov in alg]
-        alg_invertido.reverse()
+        inverted_alg = [mv.invert_move(mov) for mov in alg]
+        inverted_alg.reverse()
 
-        texto_invertido = [str(mov) for mov in alg_invertido]
+        inverted_text = [str(mov) for mov in inverted_alg]
 
-        self._entrada.delete(0, tk.END)
-        self._entrada.insert(0, ' '.join(texto_invertido))
+        self._input_box.delete(0, tk.END)
+        self._input_box.insert(0, ' '.join(inverted_text))
 
-    def mezclar(self):
-        scramble = generar_scramble(self._cubo.dimension)
+    def scramble_cube(self):
+        scramble = generate_scramble(self._cube.dimension)
         scramble_str = [str(mov) for mov in scramble]
 
-        self._historial.extend(scramble_str)
-        self._exhibir_historial()
-        self._cubo.ejecutar_algoritmo(scramble_str)
+        self._history.extend(scramble_str)
+        self._update_history()
+        self._cube.exec_algorithm(scramble_str)
 
-    def restatuar(self):
-        self._cubo.restaturar()
-        self._historial.clear()
-        self._exhibir_historial()
+    def reset_cube(self):
+        self._cube.reset()
+        self._history.clear()
+        self._update_history()
 
-    def _exhibir_historial(self):
-        self._text_historial.delete(1.0, tk.END)
-        self._text_historial.insert(tk.END, ' '.join(self._historial))
+    def _update_history(self):
+        self._history_widget.delete(1.0, tk.END)
+        self._history_widget.insert(tk.END, ' '.join(self._history))
 
 
-def crear_frame_control(raiz: tk.Misc, cubo: Cubo):
+def create_control_frame(raiz: tk.Misc, cubo: Cube):
     """
-    Crea y retorna el frame de control para la ventana del cubo.
+    Returns a new control frame for the TKinter cube window
     """
-    frame = tk.Frame(raiz, bg=colors.VERDE_2)
+    frame = tk.Frame(raiz, bg=colors.GREEN_2)
 
-    text_historial = tk.Text(frame, width=30, height=10)
-    entrada = tk.Entry(frame, width=30)
+    history = tk.Text(frame, width=30, height=10)
+    input_box = tk.Entry(frame, width=30)
 
-    text_historial.pack()
-    entrada.pack()
+    history.pack()
+    input_box.pack()
 
-    operador = OperadorDeCubo(cubo, entrada, text_historial)
+    controller = CubeController(cubo, input_box, history)
 
-    frame_buttons = _crear_frame_buttons(frame, operador)
-    frame_buttons.pack()
+    button_frame = _create_button_frame(frame, controller)
+    button_frame.pack()
 
     return frame
 
 
-def _crear_frame_buttons(raiz: tk.Misc, operador: OperadorDeCubo):
+def _create_button_frame(root: tk.Misc, controller: CubeController):
     """
-    Crea y retorna un frame de buttons para controlar el cubo
+    Return a new buttom frame to controll the window's cube
     """
-    frame = tk.Frame(raiz, padx=PADDING, pady=PADDING)
+    frame = tk.Frame(root, padx=PADDING, pady=PADDING)
 
-    # crear botones
-    button_aplicar = tk.Button(
-        frame, text='Apply Algorithm', command=operador.aplicar_alg
+    # create buttons
+    apply_btn = tk.Button(
+        frame, text='Apply Algorithm', command=controller.apply_alg
     )
-    button_deshacer = tk.Button(
-        frame, text='Undo last move', command=operador.deshacer
+    undo_btn = tk.Button(
+        frame, text='Undo last move', command=controller.undo
     )
-    button_invertir = tk.Button(
-        frame, text='Invert Algorithm', command=operador.invertir
+    invert_btn = tk.Button(
+        frame, text='Invert Algorithm', command=controller.invert
     )
-    button_mezclar = tk.Button(
-        frame, text='Scramble', command=operador.mezclar
+    scramble_btn = tk.Button(
+        frame, text='Scramble', command=controller.scramble_cube
     )
-    button_png = tk.Button(
-        frame, text='Export PNG', command=operador.imprimir
+    image_btn = tk.Button(
+        frame, text='Export PNG', command=controller.print_cube
     )
-    button_reset = tk.Button(
-        frame, text='Reset Cube State', command=operador.restatuar
+    reset_btn = tk.Button(
+        frame, text='Reset Cube State', command=controller.reset_cube
     )
 
-    # posicionarlos
-    button_aplicar.grid(row=0, column=0)
-    button_deshacer.grid(row=0, column=1)
+    # position them
+    apply_btn.grid(row=0, column=0)
+    undo_btn.grid(row=0, column=1)
 
-    button_invertir.grid(row=1, column=0)
-    button_mezclar.grid(row=1, column=1)
+    invert_btn.grid(row=1, column=0)
+    scramble_btn.grid(row=1, column=1)
 
 
-    button_png.grid(row=2, column=0)
-    button_reset.grid(row=2, column=1)
+    image_btn.grid(row=2, column=0)
+    reset_btn.grid(row=2, column=1)
 
     return frame

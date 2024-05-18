@@ -2,25 +2,25 @@ from typing import Callable
 import copy
 import numpy as np
 
-from constants.enums import Cara
-from models.move import Movimiento, movimiento_de_texto
+from constants.enums import Face
+from models.move import Move, text_to_move
 import util.matrices as ma
 
-class Cubo:
+class Cube:
     """
-    Modelo para un cubo de Rubik con 6 caras.
-    No se recomienda crear directamente con el constructor.
-    Use generar_cubo() o crear_cubo_de_texto().
+    Model representing a Rubik's cube with 6 faces.
+    Not recommended to construct directly, 
+    use `generate_cube` or `cube_from_str`
 
-    Las caras son:
-    * U (up) - de arriba
-    * D (down) - de abajo
-    * F (front) - el frente
-    * B (back) - el reverso
-    * L (left) - la izquerda
-    * R (right) - la derecha
+    The faces are:
+    * U (up)
+    * D (down)
+    * F (front)
+    * B (back)
+    * L (left)
+    * R (right)
     """
-    # constructor
+
     def __init__(self, *,
             u: np.ndarray,
             d: np.ndarray,
@@ -29,143 +29,144 @@ class Cubo:
             l: np.ndarray,
             r: np.ndarray
         ):
-        # validar_caras(u, d, f, b, l, r)
-        self._oyentes = []
+        # validate_faces(u, d, f, b, l, r)
+        self._listeners = []
 
         self._dimension = len(u)
         if self._dimension < 2:
             raise ValueError(
                 f'Dimension must be at least 2: (dimension = {self._dimension})')
 
-        self._estado = {
-            Cara.U: u,
-            Cara.D: d,
-            Cara.F: f,
-            Cara.B: b,
-            Cara.L: l,
-            Cara.R: r
+        self._state = {
+            Face.U: u,
+            Face.D: d,
+            Face.F: f,
+            Face.B: b,
+            Face.L: l,
+            Face.R: r
         }
-        # variable constante
-        self._estado_inicial = copy.deepcopy(self._estado)
+        # readonly variable
+        self._initial_state = copy.deepcopy(self._state)
 
     def __eq__(self, __value: object) -> bool:
-        if not isinstance(__value, Cubo):
+        if not isinstance(__value, Cube):
             return False
         if __value._dimension != self._dimension:
             return False
 
-        for cara in Cara:
-            nuestra_cara = self.get_cara(cara)
-            otra_cara = __value.get_cara(cara)
-            if not np.array_equal(nuestra_cara, otra_cara):
+        for face in Face:
+            this_face = self.get_face(face)
+            other_face = __value.get_face(face)
+            if not np.array_equal(this_face, other_face):
                 return False
 
         return True
 
     def __str__(self):
-        resultado = ""
-        for cuadrado in self._estado.values():
-            # vuelta nxn
-            for fila in cuadrado:
-                for columna in fila:
-                    resultado += f'[{columna.value}]'
-                resultado += '\n'
-            resultado += '\n'
+        result = ""
+        for square in self._state.values():
+            # nxn loop
+            for row in square:
+                for piece in row:
+                    result += f'[{piece.value}]'
+                result += '\n'
+            result += '\n'
 
-        return resultado
+        return result
 
 
-    # métodos públicos
+    # public methods
 
     @property
     def dimension(self):
         return self._dimension
 
     @property
-    def estado(self):
-        return copy.deepcopy(self._estado)
+    def state(self):
+        return copy.deepcopy(self._state)
 
-    def get_cara(self, cara: Cara):
-        """Retorna una copia de la cara espesificada en el cubo"""
-        return copy.deepcopy(self._estado[cara])
+    def get_face(self, cara: Face):
+        """Returns a copy of the specified face"""
+        return copy.deepcopy(self._state[cara])
 
-    def restaturar(self):
-        """Restatúa el cubo a su estado inicial"""
-        self._estado = copy.deepcopy(self._estado_inicial)
-        self._notificar_a_oyentes()
+    def reset(self):
+        """Reset the cube to its initial state"""
+        self._state = copy.deepcopy(self._initial_state)
+        self._notify_listeners()
 
-    def ejecutar_algoritmo(self, algoritmo: list[str]):
+    def exec_algorithm(self, alg: list[str]):
         """
-        Dado una lista de texto representando movimientos,
-        ejecuta cada movimiento en el cubo.
-        * requiere que cada elemento sea una representación válida de un movimiento
+        Given a list of string representations of movements,
+        executes every movement on the cube.
+
+        * requires that every element is a valid representation of a movement
         """
-        for mov in algoritmo:
-            self.mover(movimiento_de_texto(mov))
+        for mov in alg:
+            self.move(text_to_move(mov))
 
-    def mover(self, mov: Movimiento):
-        if mov.nivel == 1:
-            # solo giramos la cara si nivel = 1
-            cara_girado = ma.girar_matriz(self._estado[mov.cara], mov.direccion)
-            self._set_cara(mov.cara, cara_girado)
+    def move(self, mov: Move):
+        if mov.depth == 1:
+            # the face is only turned if level = 1
+            turned_face = ma.rotate_matrix(self._state[mov.face], mov.direction)
+            self._set_face(mov.face, turned_face)
 
-        horario = bool(mov.direccion == 1)
-        direccion = mov.direccion
-        linea = mov.nivel - 1
-        if mov.cara in [Cara.D, Cara.B, Cara.R]:
-            # estas caras giran con la orden de referencia
-            horario = not horario
-            linea = self._dimension - mov.nivel
-            # para evitar -2 como dirección
-            if direccion != 2:
-                direccion = mov.direccion * -1
+        clockwise = bool(mov.direction == 1)
+        direction = mov.direction
+        line = mov.depth - 1
+        if mov.face in [Face.D, Face.B, Face.R]:
+            # this faces turn opposite to their reference order
+            clockwise = not clockwise
+            line = self._dimension - mov.depth
+            # avoids -2 as a direction
+            if direction != 2:
+                direction = mov.direction * -1
 
-        if mov.cara in [Cara.U, Cara.D]:
-            # caras horizontales
-            self._estado = ma.cotar_horizontalmente(
-                self._estado, linea, direccion)
-        elif mov.cara in [Cara.L, Cara.R]:
-            # caras verticales
-            self._estado = ma.cotar_verticalmente(
-                self._estado, linea, direccion)
+        if mov.face in [Face.U, Face.D]:
+            # horizontal faces
+            self._state = ma.horizontal_slice(
+                self._state, line, direction)
+        elif mov.face in [Face.L, Face.R]:
+            # vertical faces
+            self._state = ma.vertical_slice(
+                self._state, line, direction)
         else:
-            # caras fronterizas
-            self._estado = ma.cortar_frontera(
-                self._estado, linea, direccion)
+            # border faces (F, B)
+            self._state = ma.border_slice(
+                self._state, line, direction)
 
-        self._notificar_a_oyentes()
+        self._notify_listeners()
 
-    def al_cambiar(self, callback: Callable):
-        self._oyentes.append(callback)
+    def on_change(self, callback: Callable):
+        self._listeners.append(callback)
 
 
-    # métodos privados
+    # private methods
 
-    def _set_cara(self, cara: Cara, matriz: np.ndarray):
-        self._estado[cara] = matriz
+    def _set_face(self, cara: Face, matriz: np.ndarray):
+        self._state[cara] = matriz
 
-    def _notificar_a_oyentes(self):
-        for callback in self._oyentes:
+    def _notify_listeners(self):
+        for callback in self._listeners:
             callback()
 
 
-# otras utilidades públicas
+# other public utilities
 
-def copiar_cubo(cubo: Cubo):
+def copy_cube(cubo: Cube):
     """
-    Genera una copia del cubo
+    Generate and return a deep copy of the passed in cube
     """
-    return Cubo(
-        u = cubo.get_cara(Cara.U),
-        d = cubo.get_cara(Cara.D),
-        f = cubo.get_cara(Cara.F),
-        b = cubo.get_cara(Cara.B),
-        l = cubo.get_cara(Cara.L),
-        r = cubo.get_cara(Cara.R),
+    return Cube(
+        u = cubo.get_face(Face.U),
+        d = cubo.get_face(Face.D),
+        f = cubo.get_face(Face.F),
+        b = cubo.get_face(Face.B),
+        l = cubo.get_face(Face.L),
+        r = cubo.get_face(Face.R),
     )
 
 
-def crear_cubo_de_texto(*,
+def cube_from_str(*,
             u: list[list[str]],
             d: list[list[str]],
             f: list[list[str]],
@@ -176,56 +177,59 @@ def crear_cubo_de_texto(*,
     """
     Crear un cubo dado matrices de tipo str
     * requiere que cada str sea una Etiqueta válida
+
+    Create a cube provided matricies for each face of type str
+    * Requires that every string is a face: "U", "B", "F", "D", "R", "L",
     """
-    return Cubo(
-        u = _convertir_a_caras(u),
-        d = _convertir_a_caras(d),
-        f = _convertir_a_caras(f),
-        b = _convertir_a_caras(b),
-        r = _convertir_a_caras(r),
-        l = _convertir_a_caras(l),
+    return Cube(
+        u = _str_to_face_matrix(u),
+        d = _str_to_face_matrix(d),
+        f = _str_to_face_matrix(f),
+        b = _str_to_face_matrix(b),
+        r = _str_to_face_matrix(r),
+        l = _str_to_face_matrix(l),
     )
 
 
-def generar_cubo(dimension: int):
+def generate_cube(dimension: int):
     """
-    Genera cubo nxnxn resuelto de la dimension dado
+    Returns an NxNxN solved cube of the given dimension
+    - dimension: Must be at least 2
     """
     if dimension < 2:
         raise ValueError(
             f'Dimension must be at least 2: (dimension = {dimension})')
 
-    caras = {}
+    faces = {}
 
-    for c in Cara:
-        caras[c] = np.full((dimension, dimension), c)
+    for f in Face:
+        faces[f] = np.full((dimension, dimension), f)
 
-    return Cubo(
-        u=caras[Cara.U],
-        d=caras[Cara.D],
-        f=caras[Cara.F],
-        b=caras[Cara.B],
-        l=caras[Cara.L],
-        r=caras[Cara.R],
+    return Cube(
+        u=faces[Face.U],
+        d=faces[Face.D],
+        f=faces[Face.F],
+        b=faces[Face.B],
+        l=faces[Face.L],
+        r=faces[Face.R],
     )
 
 
-# funciones privadas
+# private helpers
 
-def _convertir_a_caras(lista: list[list[str]]):
+def _str_to_face_matrix(matrix: list[list[str]]):
     """
-    Dado una matriz de cadenas de str,
-    devolver una matriz de tipo Cara
-    * requiere que cada str sea una Cara válida con dimensión nxn
+    Given a matrix of strings, return a matrix of type `Face`.
+    * Requires that every str entry maps to the `Face` enum type
     """
-    dimension = len(lista)
-    resultado = np.full((dimension, dimension), None)
+    dimension = len(matrix)
+    result = np.full((dimension, dimension), None)
 
-    # popular resultado con la traducción str -> Etiqueta
-    for x, fila in enumerate(lista):
-        if len(fila) != dimension:
-            raise ValueError('matriz no tiene dimensiones nxn')
-        for y, texto_cara in enumerate(fila):
-            resultado[x, y] = Cara[texto_cara]
+    # populate result with the mapping str -> Face
+    for x, row in enumerate(matrix):
+        if len(row) != dimension:
+            raise ValueError('matrix is not NxN')
+        for y, face_str in enumerate(row):
+            result[x, y] = Face[face_str]
 
-    return resultado
+    return result

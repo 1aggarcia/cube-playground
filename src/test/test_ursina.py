@@ -1,53 +1,53 @@
-# deshabilitar aviso de acceder a métodos privados
+# disable private method access warning
 # pylint: disable=W0212
 
 import unittest
 from ursina import Ursina
 
 from ui.ursina import app
-from models.cube import generar_cubo
-from models.cube3d import Cubo3d
-from models.move import movimiento_de_texto
-from models.ursina_state import EstadoUrsina
+from models.cube import generate_cube
+from models.cube3d import Cube3d
+from models.move import text_to_move
+from models.ursina_state import UrsinaState
 
-class ProbarUrsina(unittest.TestCase):
-    def test_al_teclar(self):
+class TestUrsina(unittest.TestCase):
+    def test_on_input(self):
         Ursina(window_type='none')
 
-        estado = EstadoUrsina(Cubo3d(3))
-        cubo_modelo = generar_cubo(3)
+        state = UrsinaState(Cube3d(3))
+        model_cube = generate_cube(3)
 
-        def _validar_igualdad():
-            self.assertEqual(cubo_modelo, estado.cubo.cubo_2d)
+        def _assert_state():
+            self.assertEqual(model_cube, state.cube.cube2d)
 
-        # movimientos básicos
-        app.al_teclar("u", estado)
-        cubo_modelo.mover(movimiento_de_texto("U"))
-        _validar_igualdad()
+        # basic moves
+        app.on_input("u", state)
+        model_cube.move(text_to_move("U"))
+        _assert_state()
 
-        app.al_teclar("d", estado)
-        app.al_teclar("b", estado)
-        app.al_teclar("d", estado)
-        app.al_teclar("f", estado)
-        cubo_modelo.mover(movimiento_de_texto("D"))
-        cubo_modelo.mover(movimiento_de_texto("B"))
-        cubo_modelo.mover(movimiento_de_texto("D"))
-        cubo_modelo.mover(movimiento_de_texto("F"))
-        _validar_igualdad()
+        app.on_input("d", state)
+        app.on_input("b", state)
+        app.on_input("d", state)
+        app.on_input("f", state)
+        model_cube.move(text_to_move("D"))
+        model_cube.move(text_to_move("B"))
+        model_cube.move(text_to_move("D"))
+        model_cube.move(text_to_move("F"))
+        _assert_state()
 
-        # teclas irrelevantes
-        app.al_teclar("d up", estado)
-        _validar_igualdad()
+        # irrelevant keys
+        app.on_input("d up", state)
+        _assert_state()
 
-        app.al_teclar("u hold", estado)
-        app.al_teclar("t", estado)
-        _validar_igualdad()
+        app.on_input("u hold", state)
+        app.on_input("t", state)
+        _assert_state()
 
-        # restatuar
-        app.al_teclar("space", estado)
-        cubo_modelo.restaturar()
-        _validar_igualdad()
+        # reset
+        app.on_input("space", state)
+        model_cube.reset()
+        _assert_state()
 
-        # mezclar
-        app.al_teclar("s", estado)
-        self.assertNotEqual(cubo_modelo, estado.cubo.cubo_2d)
+        # scamble
+        app.on_input("s", state)
+        self.assertNotEqual(model_cube, state.cube.cube2d)

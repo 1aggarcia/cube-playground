@@ -1,15 +1,15 @@
-from constants.enums import Cara
+from constants.enums import Face
 
-VERDE_1 = '#4fe3a5'
-VERDE_2 = '#189a64'
+GREEN_1 = '#4fe3a5'
+GREEN_2 = '#189a64'
 
-AMARILLO_1 = '#F1D766'
+YELLOW_1 = '#F1D766'
 
-COLORES_DE_CUBO = {
-    Cara.U: '#FFFFFF', # blanco
-    Cara.D: '#FFFF00', # amarillo
-    Cara.F: '#00FF00', # verde
-    Cara.B: '#0000FF', # azul
-    Cara.L: '#ff6f00', # naranja
-    Cara.R: '#FF0000', # rojo
+CUBE_COLORS = {
+    Face.U: '#FFFFFF', # blanco
+    Face.D: '#FFFF00', # amarillo
+    Face.F: '#00FF00', # verde
+    Face.B: '#0000FF', # azul
+    Face.L: '#ff6f00', # naranja
+    Face.R: '#FF0000', # rojo
 }

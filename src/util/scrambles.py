@@ -1,48 +1,48 @@
 from typing import Literal
 import random
 
-from constants.enums import Cara
-from models.move import Movimiento
+from constants.enums import Face
+from models.move import Move
 
-# LONGITUD_DE_SCRAMBLES[dimensión] = # de movimientos,
-# donde 2 <= dimensión <= 10
-LONGITUD_DE_SCRAMBLES = [0, 0, 9, 25, 40, 60, 80, 90, 100, 110, 120]
+# SCAMBLE_LENGTHS[dimension] = # of turns
+# where 2 <= dimension <= 10
+SCAMBLE_LENGTHS = [0, 0, 9, 25, 40, 60, 80, 90, 100, 110, 120]
 
 
-def generar_scramble(dimension: int) -> list[Movimiento]:
+def generate_scramble(dimension: int) -> list[Move]:
     scramble = []
 
-    for _ in range(_longitud_de_scramble(dimension)):
+    for _ in range(_scramble_len(dimension)):
         if len(scramble) == 0:
-            cara = random.choice(list(Cara))
+            face = random.choice(list(Face))
         else:
-            # hay que evitar a elegir la misma cara dos veces
-            ultima_cara = scramble[-1].cara
+            # avoid choosing the same face twice
+            last_face = scramble[-1].face
 
-            caras_disponibles = list(Cara)
-            caras_disponibles.remove(ultima_cara)
-            cara = random.choice(caras_disponibles)
+            avail_faces = list(Face)
+            avail_faces.remove(last_face)
+            face = random.choice(avail_faces)
 
-        nivel = random.randint(1, dimension // 2)
-        direccion: Literal[-1, 1, 2] = random.choice([-1, 1, 2])
+        depth = random.randint(1, dimension // 2)
+        direction: Literal[-1, 1, 2] = random.choice([-1, 1, 2])
 
-        scramble.append(Movimiento(cara, direccion, nivel, False))
+        scramble.append(Move(face, direction, depth, False))
 
     return scramble
 
 
-def _longitud_de_scramble(dimension: int):
+def _scramble_len(dimension: int):
     """
-    Devuelve la longitud para un scramble de un como con la dimensión dada
-    * requiere `dimension` >= 2
+    Return the length of a cube scramble for a cube with the passed in `dimension`
+    * requires `dimension` >= 2
     """
     if dimension < 2:
-        raise ValueError(f"La dimensión debe ser al menos 2: {dimension}")
+        raise ValueError(f"dimension must be at least 2: {dimension}")
 
-    if dimension < len(LONGITUD_DE_SCRAMBLES):
-        return LONGITUD_DE_SCRAMBLES[dimension]
+    if dimension < len(SCAMBLE_LENGTHS):
+        return SCAMBLE_LENGTHS[dimension]
 
-    escalar_de_dim = 10
-    compensacion = 20
+    dim_scale = 10
+    compensation = 20
 
-    return (dimension * escalar_de_dim) + compensacion
+    return (dimension * dim_scale) + compensation

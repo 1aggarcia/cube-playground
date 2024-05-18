@@ -1,34 +1,34 @@
 import tkinter as tk
 
 from constants import colors
-from models.cube import generar_cubo
-from ui.cube.draw_cube import crear_frame_cubo
-from ui.cube.control_cube import crear_frame_control
+from models.cube import generate_cube
+from ui.cube.draw_cube import create_cube_frame
+from ui.cube.control_cube import create_control_frame
 
 
-def ventana_de_cubo(dimension: int):
-    # configurar ventana
-    ventana = tk.Tk()
-    ventana.config(bg=colors.VERDE_1)
-    ventana.geometry('1100x600')
+def create_cube_window(dimension: int):
+    # configure window
+    window = tk.Tk()
+    window.config(bg=colors.GREEN_1)
+    window.geometry('1100x600')
 
-    # crear y posicionar widget
-    frame_central = _crear_frame_central(ventana, dimension)
-    frame_central.place(relx=.5, rely=.5,anchor=tk.CENTER)
+    # create and position widget
+    central_frame = _create_central_frame(window, dimension)
+    central_frame.place(relx=.5, rely=.5,anchor=tk.CENTER)
 
-    return ventana
+    return window
 
 
-def _crear_frame_central(raiz: tk.Misc, dimension: int):
-    cubo = generar_cubo(dimension)
+def _create_central_frame(root: tk.Misc, dimension: int):
+    cubo = generate_cube(dimension)
 
-    # crear widgets
-    frame = tk.Frame(raiz, padx=10, pady=10, bg=colors.VERDE_2)
-    frame_cubo = crear_frame_cubo(frame, cubo)
-    frame_control = crear_frame_control(frame, cubo)
+    # create widgets
+    frame = tk.Frame(root, padx=10, pady=10, bg=colors.GREEN_2)
+    cube_frame = create_cube_frame(frame, cubo)
+    control_frame = create_control_frame(frame, cubo)
 
-    # posicionar widgets
-    frame_cubo.grid(row=0, column=0)
-    frame_control.grid(row=0, column=1)
+    # positioning
+    cube_frame.grid(row=0, column=0)
+    control_frame.grid(row=0, column=1)
 
     return frame

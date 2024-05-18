@@ -1,19 +1,19 @@
 from ursina import Vec3
-from models.cube import crear_cubo_de_texto
-from constants.enums import Cara
+from models.cube import cube_from_str
+from constants.enums import Face
 
 
-VECTORES_DE_CARA = {
-    Cara.U: Vec3(0, 1, 0),
-    Cara.D: Vec3(0, -1, 0),
-    Cara.F: Vec3(0, 0, -1),
-    Cara.B: Vec3(0, 0, 1),
-    Cara.L: Vec3(-1, 0, 0),
-    Cara.R: Vec3(1, 0, 0)
+FACE_VECTORS = {
+    Face.U: Vec3(0, 1, 0),
+    Face.D: Vec3(0, -1, 0),
+    Face.F: Vec3(0, 0, -1),
+    Face.B: Vec3(0, 0, 1),
+    Face.L: Vec3(-1, 0, 0),
+    Face.R: Vec3(1, 0, 0)
 }
 
 
-MI_CUBO = crear_cubo_de_texto(
+MY_CUBE = cube_from_str(
      u= [['U', 'D'],
         ['U', 'U']],
 
@@ -34,7 +34,7 @@ MI_CUBO = crear_cubo_de_texto(
 )
 
 
-SUPERFLIP = crear_cubo_de_texto(
+SUPERFLIP = cube_from_str(
      u= [['U', 'B', 'U'],
          ['L', 'U', 'R'],
          ['U', 'F', 'U']],
@@ -61,7 +61,7 @@ SUPERFLIP = crear_cubo_de_texto(
 )
 
 
-ESQUINA_MALA = crear_cubo_de_texto(
+BAD_CORNER = cube_from_str(
      u= [['U', 'U', 'U'],
          ['U', 'U', 'U'],
          ['U', 'U', 'F']],

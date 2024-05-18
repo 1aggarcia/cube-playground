@@ -3,80 +3,80 @@
 import unittest
 import numpy as np
 
-from models.cube import crear_cubo_de_texto
-from constants.enums import Cara
+from models.cube import cube_from_str
+from constants.enums import Face
 import util.matrices as ma
 import util.scrambles as sc
 
 
-class ProbarOperaciones(unittest.TestCase):
-    def test_generar_scramble(self):
+class TestOperations(unittest.TestCase):
+    def test_generate_scramble(self):
         # 2x2
-        scramble = sc.generar_scramble(2)
+        scramble = sc.generate_scramble(2)
 
-        self.assertEqual(sc._longitud_de_scramble(2), len(scramble))
+        self.assertEqual(sc._scramble_len(2), len(scramble))
         for mov_a, mov_b in zip(scramble, scramble[1:]):
-            self.assertNotEqual(mov_a.cara, mov_b.cara)
+            self.assertNotEqual(mov_a.face, mov_b.face)
 
         # 4x4
-        scramble = sc.generar_scramble(4)
+        scramble = sc.generate_scramble(4)
 
-        self.assertEqual(sc._longitud_de_scramble(4), len(scramble))
+        self.assertEqual(sc._scramble_len(4), len(scramble))
         for mov_a, mov_b in zip(scramble, scramble[1:]):
-            self.assertNotEqual(mov_a.cara, mov_b.cara)
+            self.assertNotEqual(mov_a.face, mov_b.face)
 
-    def test_girar_matriz(self):
-        # 90 degrados (sentido horario)
-        lista_a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-        girada_a = np.array([
+    def test_rotate_matrix(self):
+        # 90 degrees (clockwise)
+        list_a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        expected_a = np.array([
             [7, 4, 1],
             [8, 5, 2],
             [9, 6, 3]
         ])
-        self.assertTrue(np.array_equal(girada_a, ma.girar_matriz(lista_a, 1)))
+        self.assertTrue(np.array_equal(expected_a, ma.rotate_matrix(list_a, 1)))
 
-        lista_b = np.array([
+        list_b = np.array([
             [1, 2, 3, 4],
             [5, 6, 7, 8],
             [9, 10, 11, 12],
             [13, 14, 15, 16]
         ])
-        girada_b = np.array([
+        expected_b = np.array([
             [13, 9, 5, 1],
             [14, 10, 6, 2],
             [15, 11, 7, 3],
             [16, 12, 8, 4]
         ])
-        self.assertTrue(np.array_equal(girada_b, ma.girar_matriz(lista_b, 1)))
+        self.assertTrue(np.array_equal(expected_b, ma.rotate_matrix(list_b, 1)))
 
-        # 270 degrados (sentido antihorario)
-        lista_c = np.array(
+        # 270 degrees (counter-clockwise)
+        list_c = np.array(
             [[234, 123],
              [65, 2],
              [1, 2]]
         )
-        girada_c = np.array([
+        expected_c = np.array([
             [123, 2, 2],
             [234, 65, 1]
         ])
-        self.assertTrue(np.array_equal(girada_c, ma.girar_matriz(lista_c, 3)))
+        self.assertTrue(np.array_equal(expected_c, ma.rotate_matrix(list_c, 3)))
 
-        lista_d = np.array([
+        list_d = np.array([
             [1, 2, 3, 4],
             [5, 6, 7, 8],
             [9, 10, 11, 12],
             [13, 14, 15, 16]
         ])
-        girada_d = np.array([
+        expected_d = np.array([
             [4, 8, 12, 16],
             [3, 7, 11, 15],
             [2, 6, 10, 14],
             [1, 5, 9, 13]
         ])
-        self.assertTrue(np.array_equal(girada_d, ma.girar_matriz(lista_d, 3)))
+        self.assertTrue(np.array_equal(expected_d, ma.rotate_matrix(list_d, 3)))
 
-    def test_cortar_horizontalmente(self):
-        cubo_a = crear_cubo_de_texto(
+    def test_horizontal_slice(self):
+        cube_a = cube_from_str(
             u = [['B', 'U'], ['U', 'D']],
             d = [['D', 'R'], ['U', 'D']],
             f = [['F', 'R'], ['F', 'B']],
@@ -84,50 +84,50 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = ma.cotar_horizontalmente(cubo_a.estado, 0, 1)
-        esperado_a = {
-            Cara.F: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
-            Cara.L: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
-            Cara.B: np.array([[Cara.U, Cara.L], [Cara.L, Cara.B]]),
-            Cara.R: np.array([[Cara.R, Cara.L], [Cara.D, Cara.B]]),
-            Cara.U: cubo_a.get_cara(Cara.U),
-            Cara.D: cubo_a.get_cara(Cara.D),
+        result_a = ma.horizontal_slice(cube_a.state, 0, 1)
+        expected_a = {
+            Face.F: np.array([[Face.F, Face.F], [Face.F, Face.B]]),
+            Face.L: np.array([[Face.F, Face.R], [Face.R, Face.L]]),
+            Face.B: np.array([[Face.U, Face.L], [Face.L, Face.B]]),
+            Face.R: np.array([[Face.R, Face.L], [Face.D, Face.B]]),
+            Face.U: cube_a.get_face(Face.U),
+            Face.D: cube_a.get_face(Face.D),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_a[cara],
-                                           esperado_a[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_a[face],
+                                           expected_a[face]))
 
-        resultado_b = ma.cotar_horizontalmente(cubo_a.estado, 1, -1)
-        esperado_b = {
-            Cara.R: np.array([[Cara.F, Cara.F], [Cara.F, Cara.B]]),
-            Cara.F: np.array([[Cara.F, Cara.R], [Cara.R, Cara.L]]),
-            Cara.L: np.array([[Cara.U, Cara.L], [Cara.L, Cara.B]]),
-            Cara.B: np.array([[Cara.R, Cara.L], [Cara.D, Cara.B]]),
-            Cara.U: cubo_a.get_cara(Cara.U),
-            Cara.D: cubo_a.get_cara(Cara.D),
+        result_b = ma.horizontal_slice(cube_a.state, 1, -1)
+        expected_b = {
+            Face.R: np.array([[Face.F, Face.F], [Face.F, Face.B]]),
+            Face.F: np.array([[Face.F, Face.R], [Face.R, Face.L]]),
+            Face.L: np.array([[Face.U, Face.L], [Face.L, Face.B]]),
+            Face.B: np.array([[Face.R, Face.L], [Face.D, Face.B]]),
+            Face.U: cube_a.get_face(Face.U),
+            Face.D: cube_a.get_face(Face.D),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_b[cara],
-                                           esperado_b[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_b[face],
+                                           expected_b[face]))
 
-        resultado_c = ma.cotar_horizontalmente(cubo_a.estado, 0, 2)
-        esperado_c = {
-            Cara.F: np.array([[Cara.R, Cara.L], [Cara.F, Cara.B]]),
-            Cara.B: np.array([[Cara.F, Cara.R], [Cara.L, Cara.B]]),
-            Cara.L: np.array([[Cara.F, Cara.F], [Cara.R, Cara.L]]),
-            Cara.R: np.array([[Cara.U, Cara.L], [Cara.D, Cara.B]]),
-            Cara.U: cubo_a.get_cara(Cara.U),
-            Cara.D: cubo_a.get_cara(Cara.D),
+        result_c = ma.horizontal_slice(cube_a.state, 0, 2)
+        expected_c = {
+            Face.F: np.array([[Face.R, Face.L], [Face.F, Face.B]]),
+            Face.B: np.array([[Face.F, Face.R], [Face.L, Face.B]]),
+            Face.L: np.array([[Face.F, Face.F], [Face.R, Face.L]]),
+            Face.R: np.array([[Face.U, Face.L], [Face.D, Face.B]]),
+            Face.U: cube_a.get_face(Face.U),
+            Face.D: cube_a.get_face(Face.D),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_c[cara],
-                                           esperado_c[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_c[face],
+                                           expected_c[face]))
 
-    def test_cortar_verticalmente(self):
-        cubo_a = crear_cubo_de_texto(
+    def test_vertical_slice(self):
+        cube_a = cube_from_str(
             u = [['B', 'U'], ['U', 'D']],
             d = [['D', 'R'], ['U', 'D']],
             f = [['F', 'R'], ['F', 'B']],
@@ -135,50 +135,50 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['U', 'L'], ['R', 'L']],
             r = [['F', 'F'], ['D', 'B']]
         )
-        resultado_a = ma.cotar_verticalmente(cubo_a.estado, 0, -1)
-        esperado_a = {
-            Cara.F: np.array([[Cara.D, Cara.R], [Cara.U, Cara.B]]),
-            Cara.U: np.array([[Cara.F, Cara.U], [Cara.F, Cara.D]]),
-            Cara.B: np.array([[Cara.R, Cara.U], [Cara.L, Cara.B]]),
-            Cara.D: np.array([[Cara.B, Cara.R], [Cara.L, Cara.D]]),
-            Cara.R: cubo_a.get_cara(Cara.R),
-            Cara.L: cubo_a.get_cara(Cara.L),
+        result_a = ma.vertical_slice(cube_a.state, 0, -1)
+        expected_a = {
+            Face.F: np.array([[Face.D, Face.R], [Face.U, Face.B]]),
+            Face.U: np.array([[Face.F, Face.U], [Face.F, Face.D]]),
+            Face.B: np.array([[Face.R, Face.U], [Face.L, Face.B]]),
+            Face.D: np.array([[Face.B, Face.R], [Face.L, Face.D]]),
+            Face.R: cube_a.get_face(Face.R),
+            Face.L: cube_a.get_face(Face.L),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_a[cara],
-                                           esperado_a[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_a[face],
+                                           expected_a[face]))
 
-        resultado_b = ma.cotar_verticalmente(cubo_a.estado, 1, 1)
-        esperado_b = {
-            Cara.U: np.array([[Cara.B, Cara.L], [Cara.U, Cara.R]]),
-            Cara.B: np.array([[Cara.D, Cara.L], [Cara.R, Cara.B]]),
-            Cara.D: np.array([[Cara.D, Cara.R], [Cara.U, Cara.B]]),
-            Cara.F: np.array([[Cara.F, Cara.U], [Cara.F, Cara.D]]),
-            Cara.R: cubo_a.get_cara(Cara.R),
-            Cara.L: cubo_a.get_cara(Cara.L),
+        result_b = ma.vertical_slice(cube_a.state, 1, 1)
+        expected_b = {
+            Face.U: np.array([[Face.B, Face.L], [Face.U, Face.R]]),
+            Face.B: np.array([[Face.D, Face.L], [Face.R, Face.B]]),
+            Face.D: np.array([[Face.D, Face.R], [Face.U, Face.B]]),
+            Face.F: np.array([[Face.F, Face.U], [Face.F, Face.D]]),
+            Face.R: cube_a.get_face(Face.R),
+            Face.L: cube_a.get_face(Face.L),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_b[cara],
-                                           esperado_b[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_b[face],
+                                           expected_b[face]))
 
-        resultado_c = ma.cotar_verticalmente(cubo_a.estado, 0, 2)
-        esperado_c = {
-            Cara.U: np.array([[Cara.D, Cara.U], [Cara.U, Cara.D]]),
-            Cara.D: np.array([[Cara.B, Cara.R], [Cara.U, Cara.D]]),
-            Cara.F: np.array([[Cara.B, Cara.R], [Cara.L, Cara.B]]),
-            Cara.B: np.array([[Cara.R, Cara.F], [Cara.L, Cara.F]]),
-            Cara.R: cubo_a.get_cara(Cara.R),
-            Cara.L: cubo_a.get_cara(Cara.L),
+        result_c = ma.vertical_slice(cube_a.state, 0, 2)
+        expected_c = {
+            Face.U: np.array([[Face.D, Face.U], [Face.U, Face.D]]),
+            Face.D: np.array([[Face.B, Face.R], [Face.U, Face.D]]),
+            Face.F: np.array([[Face.B, Face.R], [Face.L, Face.B]]),
+            Face.B: np.array([[Face.R, Face.F], [Face.L, Face.F]]),
+            Face.R: cube_a.get_face(Face.R),
+            Face.L: cube_a.get_face(Face.L),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_c[cara],
-                                           esperado_c[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_c[face],
+                                           expected_c[face]))
 
-    def test_cortar_frontera(self):
-        cubo_a = crear_cubo_de_texto(
+    def test_border_slize(self):
+        cube_a = cube_from_str(
             u = [['D', 'L'], ['U', 'U']],
             d = [['D', 'R'], ['U', 'D']],
             f = [['F', 'R'], ['L', 'D']],
@@ -186,54 +186,54 @@ class ProbarOperaciones(unittest.TestCase):
             l = [['R', 'L'], ['F', 'B']],
             r = [['B', 'U'], ['F', 'L']]
         )
-        resultado_a = ma.cortar_frontera(cubo_a.estado, 0, 1)
-        esperado_a = {
-            Cara.L: np.array([[Cara.R, Cara.D], [Cara.F, Cara.R]]),
-            Cara.U: np.array([[Cara.D, Cara.L], [Cara.B, Cara.L]]),
-            Cara.R: np.array([[Cara.U, Cara.U], [Cara.U, Cara.L]]),
-            Cara.D: np.array([[Cara.F, Cara.B], [Cara.U, Cara.D]]),
-            Cara.F: cubo_a.get_cara(Cara.F),
-            Cara.B: cubo_a.get_cara(Cara.B),
+        result_a = ma.border_slice(cube_a.state, 0, 1)
+        expected_a = {
+            Face.L: np.array([[Face.R, Face.D], [Face.F, Face.R]]),
+            Face.U: np.array([[Face.D, Face.L], [Face.B, Face.L]]),
+            Face.R: np.array([[Face.U, Face.U], [Face.U, Face.L]]),
+            Face.D: np.array([[Face.F, Face.B], [Face.U, Face.D]]),
+            Face.F: cube_a.get_face(Face.F),
+            Face.B: cube_a.get_face(Face.B),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_a[cara],
-                                           esperado_a[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_a[face],
+                                           expected_a[face]))
 
-        resultado_b = ma.cortar_frontera(cubo_a.estado, 1, -1)
-        esperado_b = {
-            Cara.D: np.array([[Cara.D, Cara.R], [Cara.R, Cara.F]]),
-            Cara.L: np.array([[Cara.L, Cara.L], [Cara.D, Cara.B]]),
-            Cara.U: np.array([[Cara.U, Cara.L], [Cara.U, Cara.U]]),
-            Cara.R: np.array([[Cara.B, Cara.D], [Cara.F, Cara.U]]),
-            Cara.F: cubo_a.get_cara(Cara.F),
-            Cara.B: cubo_a.get_cara(Cara.B),
+        result_b = ma.border_slice(cube_a.state, 1, -1)
+        expected_b = {
+            Face.D: np.array([[Face.D, Face.R], [Face.R, Face.F]]),
+            Face.L: np.array([[Face.L, Face.L], [Face.D, Face.B]]),
+            Face.U: np.array([[Face.U, Face.L], [Face.U, Face.U]]),
+            Face.R: np.array([[Face.B, Face.D], [Face.F, Face.U]]),
+            Face.F: cube_a.get_face(Face.F),
+            Face.B: cube_a.get_face(Face.B),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_b[cara],
-                                           esperado_b[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_b[face],
+                                           expected_b[face]))
 
-        resultado_c = ma.cortar_frontera(cubo_a.estado, 0, 2)
-        esperado_c = {
-            Cara.U: np.array([[Cara.D, Cara.L], [Cara.R, Cara.D]]),
-            Cara.D: np.array([[Cara.U, Cara.U], [Cara.U, Cara.D]]),
-            Cara.L: np.array([[Cara.R, Cara.F], [Cara.F, Cara.B]]),
-            Cara.R: np.array([[Cara.B, Cara.U], [Cara.L, Cara.L]]),
-            Cara.F: cubo_a.get_cara(Cara.F),
-            Cara.B: cubo_a.get_cara(Cara.B),
+        result_c = ma.border_slice(cube_a.state, 0, 2)
+        expected_c = {
+            Face.U: np.array([[Face.D, Face.L], [Face.R, Face.D]]),
+            Face.D: np.array([[Face.U, Face.U], [Face.U, Face.D]]),
+            Face.L: np.array([[Face.R, Face.F], [Face.F, Face.B]]),
+            Face.R: np.array([[Face.B, Face.U], [Face.L, Face.L]]),
+            Face.F: cube_a.get_face(Face.F),
+            Face.B: cube_a.get_face(Face.B),
         }
 
-        for cara in Cara:
-            self.assertTrue(np.array_equal(resultado_c[cara],
-                                           esperado_c[cara]))
+        for face in Face:
+            self.assertTrue(np.array_equal(result_c[face],
+                                           expected_c[face]))
 
-    def test_longitud_de_scramble(self):
-        for i, v in enumerate(sc.LONGITUD_DE_SCRAMBLES[2:], start=2):
-            self.assertEqual(v, sc._longitud_de_scramble(i))
+    def test_scramble_len(self):
+        for i, v in enumerate(sc.SCAMBLE_LENGTHS[2:], start=2):
+            self.assertEqual(v, sc._scramble_len(i))
 
-        self.assertEqual(130, sc._longitud_de_scramble(11))
-        self.assertEqual(510, sc._longitud_de_scramble(49))
+        self.assertEqual(130, sc._scramble_len(11))
+        self.assertEqual(510, sc._scramble_len(49))
 
 
 if __name__ == '__main__':

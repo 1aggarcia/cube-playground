@@ -1,59 +1,60 @@
 from copy import deepcopy
 from ursina import Entity, Vec3
 
-from constants.enums import Cara
-from constants.colors import COLORES_DE_CUBO
-from constants.cubes import VECTORES_DE_CARA
+from constants.enums import Face
+from constants.colors import CUBE_COLORS
+from constants.cubes import FACE_VECTORS
 
 
-class Cubito(Entity):
+class CubePiece(Entity):
     """
-    Modelo por un cubito de un cubo de Rubik en una aplicación Ursina.
-    Debe usarse después de crear una aplicación Ursina.
+    Model for a piece of Rubik's cube for an Ursina app.
+    Must be used after creation of an Ursina app.
 
-    Tiene seis lados con colores distintos que se pueden colorar, y una
-    posición mutable.
+    Has six sides with distinct colors that can be recolored,
+    and a mutable position
     """
     def __init__(self, x: float, y: float, z: float):
         super().__init__()
 
         self.position = Vec3(x, y, z)
-        self._planos = {
-            cara: _crear_plano(self, cara, COLORES_DE_CUBO[cara])
-            for cara in Cara
+        self._planes = {
+            cara: _create_plane(self, cara, CUBE_COLORS[cara])
+            for cara in Face
         }
 
     @property
-    def planos(self):
-        return deepcopy(self._planos)
+    def planes(self):
+        return deepcopy(self._planes)
 
-    def colorar(self, lado: Cara, color_hex: str):
+    def set_color(self, side: Face, hex_color: str):
         """
-        Cambiar el color del lado especificado.
+        Change the color of the side specified
 
-        - lado: El lado del cubito para cambiar el color
-        - color_hex: El color nuevo, en hex
+        - side: The side of the piece to recolor
+        - hex_color: The new color as a hex string
         """
-        plano = self._planos[lado]
-        plano.color_setter(color_hex)
+        plane = self._planes[side]
+        plane.color_setter(hex_color)
 
 
-def _crear_plano(raiz: Entity, cara: Cara, color: str):
+def _create_plane(root: Entity, face: Face, color: str):
     """
-    Pegar un plano a un lado de la Entity dada
+    Attach a new plane to the given entity
 
-    - cara: El lado donde se pegará el plano
-    - color: El color que tendrá el plano
+    - root: Entity to attach plane to
+    - face: The side of the piece to attach the plane
+    - color: The color of the plane
 
-    Retorna el plano nuevo
+    Returns the new plane
     """
-    plano = Entity(
-        parent = raiz,
+    plane = Entity(
+        parent = root,
         model = 'plane',
         texture = 'white_cube',
         color = color,
         origin_y = -0.5
     )
-    plano.look_at(VECTORES_DE_CARA[cara], 'up')
+    plane.look_at(FACE_VECTORS[face], 'up')
 
-    return plano
+    return plane

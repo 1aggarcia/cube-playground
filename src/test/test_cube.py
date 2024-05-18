@@ -1,39 +1,39 @@
-# deshabilitar aviso de acceder a métodos privados
+# disable private member access warning
 # pylint: disable=W0212
 
-# deshabilitar aviso de chequear x == x
+# disable warning for x == x
 # pylint: disable=R0124
 
 import unittest
 import numpy as np
 
 from models import cube
-from constants.enums import Cara
+from constants.enums import Face
 
-class ProbarCubo(unittest.TestCase):
-    def test_convertir_a_caras(self):
-        lista_a = [['U', 'L'], ['B', 'D']]
-        lista_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
-        lista_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
+class TestCube(unittest.TestCase):
+    def test_str_to_face_matrix(self):
+        list_a = [['U', 'L'], ['B', 'D']]
+        list_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
+        list_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
 
         self.assertTrue(
-            np.array_equal(cube._convertir_a_caras(lista_a),
-            np.array([[Cara.U, Cara.L],[Cara.B, Cara.D]]))
+            np.array_equal(cube._str_to_face_matrix(list_a),
+            np.array([[Face.U, Face.L],[Face.B, Face.D]]))
         )
 
-        self.assertRaises(ValueError, cube._convertir_a_caras, lista_b)
-        self.assertRaises(KeyError, cube._convertir_a_caras, lista_c)
+        self.assertRaises(ValueError, cube._str_to_face_matrix, list_b)
+        self.assertRaises(KeyError, cube._str_to_face_matrix, list_c)
 
-    # métodos de clase
+    # class methods
 
     def test_str(self):
-        cubo_a = cube.Cubo(
-            u = np.array([[Cara.U, Cara.R], [Cara.D, Cara.B]]),
-            d = np.array([[Cara.U, Cara.F], [Cara.U, Cara.U]]),
-            f = np.array([[Cara.B, Cara.R], [Cara.B, Cara.D]]),
-            b = np.array([[Cara.D, Cara.R], [Cara.F, Cara.F]]),
-            l = np.array([[Cara.B, Cara.L], [Cara.L, Cara.L]]),
-            r = np.array([[Cara.D, Cara.F], [Cara.L, Cara.R]]),
+        cubo_a = cube.Cube(
+            u = np.array([[Face.U, Face.R], [Face.D, Face.B]]),
+            d = np.array([[Face.U, Face.F], [Face.U, Face.U]]),
+            f = np.array([[Face.B, Face.R], [Face.B, Face.D]]),
+            b = np.array([[Face.D, Face.R], [Face.F, Face.F]]),
+            l = np.array([[Face.B, Face.L], [Face.L, Face.L]]),
+            r = np.array([[Face.D, Face.F], [Face.L, Face.R]]),
         )
 
         self.assertEqual(str(cubo_a),
@@ -48,37 +48,37 @@ class ProbarCubo(unittest.TestCase):
         )
 
     def test_eq(self):
-        x = cube.generar_cubo(2)
-        y = cube.generar_cubo(2)
-        z = cube.generar_cubo(2)
+        x = cube.generate_cube(2)
+        y = cube.generate_cube(2)
+        z = cube.generate_cube(2)
 
-        diferente_a = cube.generar_cubo(3)
-        diferente_b = cube.generar_cubo(2)
-        diferente_b.ejecutar_algoritmo(["U"])
+        different_a = cube.generate_cube(3)
+        different_b = cube.generate_cube(2)
+        different_b.exec_algorithm(["U"])
 
-        # Deben ser reflexivos
+        # Should be reflexive
         self.assertTrue(x == x)
         self.assertTrue(y == y)
 
-        # Deben ser simétricos
-        # Iguales
+        # Should be symmetric
+        # Same
         self.assertTrue(x == y)
         self.assertTrue(y == x)
-        # No iguales
-        self.assertFalse(x == diferente_a)
-        self.assertFalse(diferente_a == x)
-        self.assertFalse(x == diferente_b)
-        self.assertFalse(diferente_b == x)
+        # Different
+        self.assertFalse(x == different_a)
+        self.assertFalse(different_a == x)
+        self.assertFalse(x == different_b)
+        self.assertFalse(different_b == x)
 
-        # Deben ser transitivos
-        # Igual
+        # Should be transitive
+        # Same
         self.assertTrue(x == z)
-        # No igual
-        self.assertFalse(diferente_a == z)
-        self.assertFalse(diferente_b == z)
+        # Different
+        self.assertFalse(different_a == z)
+        self.assertFalse(different_b == z)
 
-    def test_get_cara(self):
-        cubo_a = cube.crear_cubo_de_texto(
+    def test_get_face(self):
+        cube_a = cube.cube_from_str(
             u = [['U', 'D'], ['U', 'U']],
             d = [['R', 'D'], ['D', 'L']],
             f = [['F', 'F'], ['B', 'R']],
@@ -87,33 +87,33 @@ class ProbarCubo(unittest.TestCase):
             r = [['R', 'R'], ['B', 'F']]
         )
 
-        self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.U),
-            np.array([[Cara.U, Cara.D], [Cara.U, Cara.U]])
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.U),
+            np.array([[Face.U, Face.D], [Face.U, Face.U]])
         ))
 
-        self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.R),
-            np.array([[Cara.R, Cara.R], [Cara.B, Cara.F]])
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.R),
+            np.array([[Face.R, Face.R], [Face.B, Face.F]])
         ))
 
-    def test_set_cara(self):
-        cubo_a = cube.generar_cubo(2)
+    def test_set_face(self):
+        cube_a = cube.generate_cube(2)
 
-        cara_l = np.array([[Cara.F, Cara.D], [Cara.U, Cara.U]])
-        cubo_a._set_cara(Cara.L, cara_l)
-        self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.L), cara_l))
+        l_face = np.array([[Face.F, Face.D], [Face.U, Face.U]])
+        cube_a._set_face(Face.L, l_face)
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), l_face))
 
-        cara_b = np.array([[Cara.U, Cara.U], [Cara.D, Cara.B]])
-        cubo_a._set_cara(Cara.L, cara_b)
-        self.assertTrue(np.array_equal(cubo_a.get_cara(Cara.L), cara_b))
+        b_face = np.array([[Face.U, Face.U], [Face.D, Face.B]])
+        cube_a._set_face(Face.L, b_face)
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), b_face))
 
-    # métodos públicos
+    # public methods
 
-    def test_copiar_cubo(self):
+    def test_copy_cube(self):
         pass
 
 
-    def test_crear_cubo_de_texto(self):
-        cubo_a = cube.crear_cubo_de_texto(
+    def test_cube_from_str(self):
+        cube_a = cube.cube_from_str(
             u = [['U', 'D'], ['U', 'U']],
             d = [['R', 'D'], ['D', 'L']],
             f = [['F', 'F'], ['B', 'R']],
@@ -122,7 +122,7 @@ class ProbarCubo(unittest.TestCase):
             r = [['R', 'R'], ['B', 'F']]
         )
 
-        self.assertEqual(str(cubo_a),
+        self.assertEqual(str(cube_a),
             '\n'.join([
                 '[U][D]', '[U][U]\n', # U
                 '[R][D]', '[D][L]\n', # D
@@ -134,11 +134,11 @@ class ProbarCubo(unittest.TestCase):
         )
 
 
-    def test_generar_cubo(self):
-        cubo_a = cube.generar_cubo(2)
-        cubo_b = cube.generar_cubo(3)
+    def test_generate_cube(self):
+        cube_a = cube.generate_cube(2)
+        cube_b = cube.generate_cube(3)
 
-        self.assertEqual(str(cubo_a),
+        self.assertEqual(str(cube_a),
             '\n'.join([
                 '[U][U]', '[U][U]\n', # U
                 '[D][D]', '[D][D]\n', # D
@@ -148,7 +148,7 @@ class ProbarCubo(unittest.TestCase):
                 '[R][R]', '[R][R]\n\n', # R    
             ])
         )
-        self.assertEqual(str(cubo_b),
+        self.assertEqual(str(cube_b),
             '\n'.join([
                 '[U][U][U]', '[U][U][U]', '[U][U][U]\n', # U
                 '[D][D][D]', '[D][D][D]', '[D][D][D]\n', # D
@@ -159,15 +159,15 @@ class ProbarCubo(unittest.TestCase):
             ])
         )
 
-    def test_restaturar(self):
-        cubo_a = cube.generar_cubo(2)
-        cubo_a_inicial = cube.copiar_cubo(cubo_a)
+    def test_reset(self):
+        cube_a = cube.generate_cube(2)
+        initial_cube_a = cube.copy_cube(cube_a)
 
-        cubo_a.ejecutar_algoritmo(["R", "U", "R'", "U'"])
-        self.assertNotEqual(cubo_a, cubo_a_inicial)
+        cube_a.exec_algorithm(["R", "U", "R'", "U'"])
+        self.assertNotEqual(cube_a, initial_cube_a)
 
-        cubo_a.restaturar()
-        self.assertEqual(cubo_a, cubo_a_inicial)
+        cube_a.reset()
+        self.assertEqual(cube_a, initial_cube_a)
 
 
 if __name__ == '__main__':
