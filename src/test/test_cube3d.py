@@ -2,10 +2,12 @@
 # pylint: disable=W0212
 
 import unittest
+from ursina import Ursina
 from models import cube3d
 
 class TestCube3d(unittest.TestCase):
     def test_generate_pieces(self):
+        Ursina(window_type='None')
         dim = 3
         offset = -1
 

@@ -66,5 +66,3 @@ if __name__=="__main__":
 # TODO: implement wide moves (w)
 # TODO: validate cubes / move construction to constructor
 # TODO: improve conservion of text -> algorithm
-# TODO: remove cube.py:121
-# TODO: test_cube3d.py - start Ursina app

@@ -1,5 +1,6 @@
-import copy
+from typing import Literal
 import numpy as np
+import copy
 
 from constants.enums import Face
 
@@ -44,36 +45,30 @@ def rotate_matrix_ccw(matriz: np.ndarray):
 
 
 def horizontal_slice(
-        cube_state: dict[Face, np.ndarray], row: int, direction: int
+        cube_state: dict[Face, np.ndarray],
+        row: int,
+        direction: Literal[-1, 1, 2]
     ) -> dict[Face, np.ndarray]:
     """
     rotate the layer in the specified row horizontally, given the direction in
     clockwise rotations
     * requires 0 <= row <= cube dimension
-    * requires that the direction be -1, 1 or 2
     * returns new state with the rotated row
     """
     if 0 > row or row >= len(cube_state[Face.U]):
         raise ValueError('row must be between 0 - cube dimension')
-    # TODO: fix with literal typing
-    if direction not in [-1, 1, 2]:
-        raise ValueError('direction is not -1, 1, 2')
 
-    # the order the faces will be copied in
-    order = HORIZONTAL_CYCLE.copy()
-    if direction == 1:
-        # just reverse it to rotate counterclockwise
-        order = HORIZONTAL_CYCLE[::-1]
+    # the order the faces will be copied in (reversed for inverted move)
+    order = HORIZONTAL_CYCLE[::-1] if direction == 1 else HORIZONTAL_CYCLE.copy()
+    # the first face in the cycle is ignored, so it's copied to the end
+    order.append(order[0])
 
     new_state = copy.deepcopy(cube_state)
-    first_row = copy.deepcopy(cube_state[order[0]][row])
 
     # copy the rows cyclicly in the given order to rotate
     for dst, src in zip(order, order[1:]):
-        row_copy = copy.deepcopy(new_state[src][row])
+        row_copy = copy.deepcopy(cube_state[src][row])
         new_state[dst][row] = row_copy
-
-    new_state[order[-1]][row] = first_row
 
     if direction == 2:
         # for a double turn, do two prime turns
@@ -83,33 +78,29 @@ def horizontal_slice(
 
 
 def vertical_slice(
-        cube_state: dict[Face, np.ndarray], col: int, direction: int
+        cube_state: dict[Face, np.ndarray],
+        col: int,
+        direction: Literal[-1, 1, 2]
     ) -> dict[Face, np.ndarray]:
     """
     rotates the layer in the specified column vertically.
     * Requires 0 <= col < cube dimension
-    * Requires that the direction be -1, 1 or 2
     * Returns new cube state with the column rotated
     """
     if 0 > col or col >= len(cube_state[Face.U]):
         raise ValueError('col must be between 0 - cube dimension')
-    # TODO
-    if direction not in [-1, 1, 2]:
-        raise ValueError('direction is not -1, 1, 2')
 
     dimension = len(cube_state[Face.U])
-    # the order the faces will be copied in
-    order = VERTICAL_CYCLE.copy()
-    if direction == 1:
-        order = VERTICAL_CYCLE[::-1]
+    order = VERTICAL_CYCLE[::-1] if direction == 1 else VERTICAL_CYCLE.copy()
+    # the first face in the cycle is ignored, so it's copied to the end
+    order.append(order[0])
 
     new_state = copy.deepcopy(cube_state)
-    first_col = copy.deepcopy(cube_state[order[0]][0:, col])
 
     # copy columns in the given order to do a rotation
     for dst, src in zip(order, order[1:]):
         # copy
-        src_face = new_state[src]
+        src_face = cube_state[src]
         if src == Face.B:
             # Face B is inverted by 180 degrees, must be inverted back
             src_face = rotate_matrix(src_face, 2)
@@ -124,8 +115,6 @@ def vertical_slice(
 
         new_state[dst][0:, dst_col] = col_copy
 
-    new_state[order[-1]][0:, col] = first_col
-
     if direction == 2:
         # for a double turn, do two prime turns
         return vertical_slice(new_state, col, -1)
@@ -134,35 +123,31 @@ def vertical_slice(
 
 
 def border_slice(
-        cube_state: dict[Face, np.ndarray], line: int, direction: int
+        cube_state: dict[Face, np.ndarray],
+        line: int,
+        direction: Literal[-1, 1, 2]
     ) -> dict[Face, np.ndarray]:
     """
     rotates the layer by the border at the specified "line"
     * Requires 0 <= col < cube dimension
-    * Requires that the direction be -1, 1 or 2
     * Returns new cube state with the border line rotated
     """
     if 0 > line or line >= len(cube_state[Face.U]):
         raise ValueError('line must be between 0 - cube dimension')
-    if direction not in [-1, 1, 2]:
-        raise ValueError('direction is not -1, 1, 2')
 
     # cycle to follow for copying
-    order = BORDER_CYCLE.copy() # TODO use ternary
-    if direction == 1:
-        order = BORDER_CYCLE[::-1]
-
-    # the first face in the cycle is ignored, so its put at the end
+    order = BORDER_CYCLE[::-1] if direction == 1 else BORDER_CYCLE.copy()
+    # the first face in the cycle is ignored, so it's copied to the end
     order.append(order[0])
 
     new_state = copy.deepcopy(cube_state)
 
     for dst, src in zip(order, order[1:]):
-        dst_face = dst[0]
-        dst_orientation = dst[1]
-        src_orientation = src[1]
+        (dst_face, dst_orientation) = dst
 
+        src_orientation = src[1]
         src_face = rotate_matrix(cube_state[src[0]], src_orientation)
+
         line_copy = copy.deepcopy(src_face[line])
 
         # rotate the face, paste the line, rotate it back

@@ -50,7 +50,7 @@ def _generate_pieces(dimension: int):
     if dimension < 2:
         raise ValueError(f'Dimension must be at least 2: {dimension}')
 
-    offset = - (dimension - 1) / 2  # TODO: make positive
+    offset = (dimension - 1) / 2
 
     # create 3d matrix filled with `None`
     # the inner space is invisible but takes up the majority of the space,
@@ -66,9 +66,9 @@ def _generate_pieces(dimension: int):
                 if not _is_border(x, y, z, dimension):
                     continue
 
-                pos_x = offset + x
-                pos_y = offset + y
-                pos_z = offset + z
+                pos_x = x - offset
+                pos_y = y - offset
+                pos_z = z - offset
 
                 pieces[x][y][z] = CubePiece(pos_x, pos_y, pos_z)
 
