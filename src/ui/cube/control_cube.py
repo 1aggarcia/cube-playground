@@ -27,7 +27,7 @@ class CubeController:
         text = self._input_box.get()
         alg = text.split(' ')
         try:
-            self._cube.exec_algorithm(alg)
+            self._cube.exec_str_alg(alg)
         except (ValueError, KeyError) as e:
             messagebox.showerror('Error', f'Error: {e}')
             return
@@ -66,11 +66,10 @@ class CubeController:
 
     def scramble_cube(self):
         scramble = generate_scramble(self._cube.dimension)
-        scramble_str = [str(mov) for mov in scramble]
 
-        self._history.extend(scramble_str)
+        self._history.extend([str(mov) for mov in scramble])
         self._update_history()
-        self._cube.exec_algorithm(scramble_str)
+        self._cube.exec_alg(scramble)
 
     def reset_cube(self):
         self._cube.reset()

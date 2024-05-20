@@ -37,7 +37,7 @@ def on_input(key: str, state: UrsinaState):
 
     elif key == "s":
         scramble = generate_scramble(cube2d.dimension)
-        cube2d.exec_algorithm([str(mov) for mov in scramble])
+        cube2d.exec_alg(scramble)
         state.history.extend(scramble)
 
     elif key == "i":

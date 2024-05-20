@@ -58,6 +58,7 @@ class Cube:
             this_face = self.get_face(face)
             other_face = __value.get_face(face)
             if not np.array_equal(this_face, other_face):
+                print(f"Failed eq at {face}")
                 return False
 
         return True
@@ -94,15 +95,24 @@ class Cube:
         self._state = copy.deepcopy(self._initial_state)
         self._notify_listeners()
 
-    def exec_algorithm(self, alg: list[str]):
+    def exec_alg(self, alg: list[Move]):
+        """
+        Given a list of moves, performs every move on the cube
+        """
+        for move in alg:
+            self.move(move)
+
+    def exec_str_alg(self, alg: list[str]):
         """
         Given a list of string representations of movements,
         executes every movement on the cube.
 
-        * requires that every element is a valid representation of a movement
+        * requires that every element be a valid representation of a movement
         """
-        for mov in alg:
-            self.move(text_to_move(mov))
+
+        # catch any encoding errors before execution
+        parsed_alg = [text_to_move(move) for move in alg]
+        self.exec_alg(parsed_alg)
 
     def move(self, mov: Move):
         if mov.depth == 1:

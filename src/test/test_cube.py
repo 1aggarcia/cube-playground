@@ -8,6 +8,7 @@ import unittest
 import numpy as np
 
 from models import cube
+from models.move import text_to_move
 from constants.enums import Face
 
 class TestCube(unittest.TestCase):
@@ -54,7 +55,7 @@ class TestCube(unittest.TestCase):
 
         different_a = cube.generate_cube(3)
         different_b = cube.generate_cube(2)
-        different_b.exec_algorithm(["U"])
+        different_b.exec_str_alg(["U"])
 
         # Should be reflexive
         self.assertTrue(x == x)
@@ -106,7 +107,115 @@ class TestCube(unittest.TestCase):
         cube_a._set_face(Face.L, b_face)
         self.assertTrue(np.array_equal(cube_a.get_face(Face.L), b_face))
 
-    # public methods
+    def test_exec_alg(self):
+        cube2x2 = cube.generate_cube(2)
+        some_moves = [text_to_move(m) for m in ['R', 'U', "R'", "U'"]]
+
+        cube2x2.exec_alg(some_moves)
+        self.assertEqual(cube2x2,
+            cube.cube_from_str(
+                u = [['U', 'L'], ['U', 'F']],
+                d = [['D', 'R'], ['D', 'D']],
+                f = [['F', 'D'], ['F', 'F']],
+                b = [['B', 'R'], ['B', 'B']],
+                l = [['B', 'L'], ['L', 'L']],
+                r = [['R', 'U'], ['U', 'R']]
+            )
+        )
+
+        cube4x4 = cube.generate_cube(4)
+        more_moves = [
+            text_to_move(m) for m in ['D', "L'", 'D' ,"U'", '2B2', 'F2', '2D2']
+        ]
+
+        cube4x4.exec_alg(more_moves)
+        self.assertEqual(cube4x4,
+            cube.cube_from_str(
+                u = [['U', 'U', 'U', 'U'],
+                     ['D', 'D', 'D', 'D'],
+                     ['U', 'U', 'U', 'U'],
+                     ['R', 'B', 'B', 'B']],
+
+                d = [['L', 'F', 'F', 'F'],
+                     ['D', 'D', 'D', 'D'],
+                     ['U', 'U', 'U', 'U'],
+                     ['D', 'D', 'D', 'D']],
+
+                f = [['B', 'L', 'L', 'L'],
+                     ['F', 'F', 'F', 'D'],
+                     ['B', 'B', 'B', 'U'],
+                     ['B', 'L', 'L', 'L']],
+
+                b = [['R', 'R', 'R', 'R'],
+                     ['B', 'B', 'B', 'U'],
+                     ['F', 'F', 'F', 'D'],
+                     ['F', 'F', 'F', 'F']],
+
+                l = [['B', 'L', 'B', 'D'],
+                     ['L', 'R', 'L', 'R'],
+                     ['B', 'R', 'L', 'R'],
+                     ['R', 'F', 'R', 'D']],
+
+                r = [['U', 'F', 'R', 'F'],
+                     ['B', 'R', 'L', 'R'],
+                     ['L', 'R', 'L', 'R'],
+                     ['U', 'L', 'B', 'L']],
+            )
+        )
+
+    def test_exec_str_alg(self):
+        cube2x2 = cube.generate_cube(2)
+
+        cube2x2.exec_str_alg(['R', 'U', "R'", "U'"])
+        self.assertEqual(cube2x2,
+            cube.cube_from_str(
+                u = [['U', 'L'], ['U', 'F']],
+                d = [['D', 'R'], ['D', 'D']],
+                f = [['F', 'D'], ['F', 'F']],
+                b = [['B', 'R'], ['B', 'B']],
+                l = [['B', 'L'], ['L', 'L']],
+                r = [['R', 'U'], ['U', 'R']]
+            )
+        )
+
+        cube4x4 = cube.generate_cube(4)
+
+        cube4x4.exec_str_alg(['D', "L'", 'D' ,"U'", '2B2', 'F2', '2D2'])
+        self.assertEqual(cube4x4,
+            cube.cube_from_str(
+                u = [['U', 'U', 'U', 'U'],
+                     ['D', 'D', 'D', 'D'],
+                     ['U', 'U', 'U', 'U'],
+                     ['R', 'B', 'B', 'B']],
+
+                d = [['L', 'F', 'F', 'F'],
+                     ['D', 'D', 'D', 'D'],
+                     ['U', 'U', 'U', 'U'],
+                     ['D', 'D', 'D', 'D']],
+
+                f = [['B', 'L', 'L', 'L'],
+                     ['F', 'F', 'F', 'D'],
+                     ['B', 'B', 'B', 'U'],
+                     ['B', 'L', 'L', 'L']],
+
+                b = [['R', 'R', 'R', 'R'],
+                     ['B', 'B', 'B', 'U'],
+                     ['F', 'F', 'F', 'D'],
+                     ['F', 'F', 'F', 'F']],
+
+                l = [['B', 'L', 'B', 'D'],
+                     ['L', 'R', 'L', 'R'],
+                     ['B', 'R', 'L', 'R'],
+                     ['R', 'F', 'R', 'D']],
+
+                r = [['U', 'F', 'R', 'F'],
+                     ['B', 'R', 'L', 'R'],
+                     ['L', 'R', 'L', 'R'],
+                     ['U', 'L', 'B', 'L']],
+            )
+        )
+
+    # public functions
 
     def test_copy_cube(self):
         pass
@@ -163,7 +272,7 @@ class TestCube(unittest.TestCase):
         cube_a = cube.generate_cube(2)
         initial_cube_a = cube.copy_cube(cube_a)
 
-        cube_a.exec_algorithm(["R", "U", "R'", "U'"])
+        cube_a.exec_str_alg(["R", "U", "R'", "U'"])
         self.assertNotEqual(cube_a, initial_cube_a)
 
         cube_a.reset()
@@ -174,10 +283,10 @@ class TestCube(unittest.TestCase):
         cube5x5 = cube.generate_cube(5)
         self.assertTrue(cube.is_solved(cube5x5))
 
-        cube5x5.exec_algorithm(['U'])
+        cube5x5.exec_str_alg(['U'])
         self.assertFalse(cube.is_solved(cube5x5))
 
-        cube5x5.exec_algorithm(["U'", 'D', 'F2', 'B', "L'"])
+        cube5x5.exec_str_alg(["U'", 'D', 'F2', 'B', "L'"])
         self.assertFalse(cube.is_solved(cube5x5))
 
         cube5x5.reset()
