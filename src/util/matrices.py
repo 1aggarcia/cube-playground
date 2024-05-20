@@ -1,6 +1,6 @@
+import copy
 from typing import Literal
 import numpy as np
-import copy
 
 from constants.enums import Face
 

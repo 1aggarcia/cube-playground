@@ -124,15 +124,15 @@ class Cube:
         if mov.face in [Face.U, Face.D]:
             # horizontal faces
             self._state = ma.horizontal_slice(
-                self._state, line, direction)
+                self._state, line, direction) # type: ignore
         elif mov.face in [Face.L, Face.R]:
             # vertical faces
             self._state = ma.vertical_slice(
-                self._state, line, direction)
+                self._state, line, direction) # type: ignore
         else:
             # border faces (F, B)
             self._state = ma.border_slice(
-                self._state, line, direction)
+                self._state, line, direction) # type: ignore
 
         self._notify_listeners()
 
@@ -233,3 +233,21 @@ def _str_to_face_matrix(matrix: list[list[str]]):
             result[x, y] = Face[face_str]
 
     return result
+
+
+# TODO
+def is_solved(cube: Cube) -> bool:
+    """Returns `True` if `cube` is solved, `False` otherwise"""
+    raise ReferenceError("Unimplemented: is_solved")
+
+
+# TODO
+def find_optimal_solution(cube: Cube) -> list[Move]:
+    """
+    Find the shortest solution possible for the given cube,
+    using breadth first search. This is quite slow (exponential time), consider
+    running this in a seperate thread
+
+    * Returns algorithm that solves the cube
+    """
+    raise ReferenceError("Unimplemented: find_optimal_solution")

@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 import models.move as mv
-from models.cube import Cube
+from models.cube import Cube, find_optimal_solution
 from util.scrambles import generate_scramble
 from util.printer import print_cube
 from constants import colors
@@ -77,6 +77,12 @@ class CubeController:
         self._history.clear()
         self._update_history()
 
+    def solve_cube(self):
+        sol = find_optimal_solution(self._cube)
+        str_scramble = ' '.join([str(mov) for mov in sol])
+
+        messagebox.showinfo(message=str_scramble)
+
     def _update_history(self):
         self._history_widget.delete(1.0, tk.END)
         self._history_widget.insert(tk.END, ' '.join(self._history))
@@ -127,6 +133,10 @@ def _create_button_frame(root: tk.Misc, controller: CubeController):
     reset_btn = tk.Button(
         frame, text='Reset Cube State', command=controller.reset_cube
     )
+    solve_btn = tk.Button(
+        frame, text='Find Optimal Solution',
+        command=controller.solve_cube, state='disabled'
+    )
 
     # position them
     apply_btn.grid(row=0, column=0)
@@ -138,5 +148,7 @@ def _create_button_frame(root: tk.Misc, controller: CubeController):
 
     image_btn.grid(row=2, column=0)
     reset_btn.grid(row=2, column=1)
+
+    solve_btn.grid(row=3, column=0)
 
     return frame

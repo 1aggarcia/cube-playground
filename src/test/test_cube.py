@@ -170,5 +170,41 @@ class TestCube(unittest.TestCase):
         self.assertEqual(cube_a, initial_cube_a)
 
 
+    def test_is_solved(self):
+        self.skipTest("Unimplemented")
+
+        cube5x5 = cube.generate_cube(5)
+        self.assertTrue(cube.is_solved(cube5x5))
+
+        cube5x5.exec_algorithm(['U'])
+        self.assertFalse(cube.is_solved(cube5x5))
+
+        cube5x5.exec_algorithm(["U'", 'D', 'F2', 'B', "L'"])
+        self.assertFalse(cube.is_solved(cube5x5))
+
+        cube5x5.reset()
+        self.assertTrue(cube.is_solved(cube5x5))
+
+        # verify off-center cubes can be considered "solved"
+        off_center = cube.cube_from_str(
+            u = [['L', 'L'], ['L', 'L']],
+            d = [['R', 'R'], ['R', 'R']],
+            f = [['F', 'F'], ['F', 'F']],
+            b = [['B', 'B'], ['B', 'B']],
+            r = [['U', 'U'], ['U', 'U']],
+            l = [['D', 'D'], ['D', 'D']],
+        )
+        self.assertTrue(cube.is_solved(off_center))
+
+        unsolved = cube.cube_from_str(
+            u = [['U', 'D'], ['U', 'U']],
+            d = [['R', 'D'], ['D', 'L']],
+            f = [['F', 'F'], ['B', 'R']],
+            b = [['F', 'B'], ['D', 'B']],
+            l = [['L', 'L'], ['L', 'U']],
+            r = [['R', 'R'], ['B', 'F']]
+        )
+        self.assertFalse(cube.is_solved(unsolved))
+
 if __name__ == '__main__':
     unittest.main()
