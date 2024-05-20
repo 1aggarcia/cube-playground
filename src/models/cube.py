@@ -235,10 +235,24 @@ def _str_to_face_matrix(matrix: list[list[str]]):
     return result
 
 
-# TODO
 def is_solved(cube: Cube) -> bool:
     """Returns `True` if `cube` is solved, `False` otherwise"""
-    raise ReferenceError("Unimplemented: is_solved")
+    faces_seen = set()
+
+    for side in cube.state.values():
+        sample = side[0, 0]
+        # each side should have a unique color
+        if sample in faces_seen:
+            return False
+
+        faces_seen.add(sample)
+
+        # check that every element is the same color
+        if not np.all(side == sample):
+            return False
+
+    # all 6 sides should have been seen
+    return len(faces_seen) == len(Face)
 
 
 # TODO

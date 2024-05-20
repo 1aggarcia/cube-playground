@@ -171,8 +171,6 @@ class TestCube(unittest.TestCase):
 
 
     def test_is_solved(self):
-        self.skipTest("Unimplemented")
-
         cube5x5 = cube.generate_cube(5)
         self.assertTrue(cube.is_solved(cube5x5))
 
@@ -205,6 +203,17 @@ class TestCube(unittest.TestCase):
             r = [['R', 'R'], ['B', 'F']]
         )
         self.assertFalse(cube.is_solved(unsolved))
+
+        # appears solved but there are two "U" faces
+        duplicate_faces = cube.cube_from_str(
+            u = [['U', 'U'], ['U', 'U']],
+            d = [['U', 'U'], ['U', 'U']],
+            f = [['F', 'F'], ['F', 'F']],
+            b = [['B', 'B'], ['B', 'B']],
+            l = [['L', 'L'], ['L', 'L']],
+            r = [['R', 'R'], ['R', 'R']]
+        )
+        self.assertFalse(cube.is_solved(duplicate_faces))
 
 if __name__ == '__main__':
     unittest.main()
