@@ -324,5 +324,38 @@ class TestCube(unittest.TestCase):
         )
         self.assertFalse(cube.is_solved(duplicate_faces))
 
+    def test_find_optimal_solution(self):
+        self.skipTest("Unimplemented")
+
+        # two heuristics for correctness:
+        # 1. algorithm must solve the cube
+        # 2. algorithm must be the shortest possible
+
+        # test cases formed as (scramble, optimal solution length)
+        tests3x3 = [
+            (["U'"], 1),
+            (['L', 'B2'], 2)
+        ]
+        tests2x2 = [
+            (['D2'],  1),
+            (["U'", 'B'], 2)
+        ]
+
+        def test(test_cube: cube.Cube, cases: list[tuple[list[str], int]]):
+            for (scramble, exp_len) in cases:
+                test_cube.reset()
+                test_cube.exec_str_alg(scramble)
+
+                sol = cube.find_optimal_solution(test_cube)
+                self.assertEqual(len(sol), exp_len)
+
+                test_cube.exec_alg(sol)
+                self.assertTrue(cube.is_solved(test_cube))
+
+                print("!pass@\n")
+
+        test(cube.generate_cube(3), tests3x3)
+        test(cube.generate_cube(2), tests2x2)
+
 if __name__ == '__main__':
     unittest.main()
