@@ -1,4 +1,5 @@
-from typing import Callable
+from typing import Callable, Literal
+from itertools import product
 import copy
 import numpy as np
 
@@ -255,11 +256,11 @@ def is_solved(cube: Cube) -> bool:
         if sample in faces_seen:
             return False
 
-        faces_seen.add(sample)
-
         # check that every element is the same color
         if not np.all(side == sample):
             return False
+
+        faces_seen.add(sample)
 
     # all 6 sides should have been seen
     return len(faces_seen) == len(Face)
@@ -274,4 +275,34 @@ def find_optimal_solution(cube: Cube) -> list[Move]:
 
     * Returns algorithm that solves the cube
     """
+    # moveset = _generate_moveset(cube.dimension)
+    # queue = []
+
+    # while not optimal():
+    #     current = queue.pop(0)
+
+    #     for move in legal_moves():
+    #         current.append(move)
+    #         cube.exec_alg(current)
+    #         if is_solved(cube):
+    #             return current
+    #         cube.reset()
+
     raise ReferenceError("Unimplemented: find_optimal_solution")
+
+
+def _generate_moveset(dimension: int) -> set[Move]:
+    """
+    Returns a set of all possible moves for a cube of the given dimension
+    """
+    # typing needed to satisfy the type checker
+    directions: list[Literal[-1, 1, 2]] = [-1, 1, 2]
+    depth_range = range(1, (dimension // 2) + 1)
+    widths = [True, False] if dimension > 2 else [False]
+
+    combinations = product(Face, directions, depth_range, widths)
+
+    return {
+        Move(face, direction, depth, is_wide)
+        for face, direction, depth, is_wide in combinations
+    }

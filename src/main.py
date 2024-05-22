@@ -20,7 +20,7 @@ def welcome_window():
 
     def local_open(destination: Window):
         dimension = dim_entry.get()
-        if dimension.isdigit() is False:
+        if not dimension.isdigit():
             messagebox.showerror('Error', 'Dimension is not a number')
             return
 

@@ -11,43 +11,7 @@ from models import cube
 from models.move import text_to_move
 from constants.enums import Face
 
-class TestCube(unittest.TestCase):
-    def test_str_to_face_matrix(self):
-        list_a = [['U', 'L'], ['B', 'D']]
-        list_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
-        list_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
-
-        self.assertTrue(
-            np.array_equal(cube._str_to_face_matrix(list_a),
-            np.array([[Face.U, Face.L],[Face.B, Face.D]]))
-        )
-
-        self.assertRaises(ValueError, cube._str_to_face_matrix, list_b)
-        self.assertRaises(KeyError, cube._str_to_face_matrix, list_c)
-
-    # class methods
-
-    def test_str(self):
-        cubo_a = cube.Cube(
-            u = np.array([[Face.U, Face.R], [Face.D, Face.B]]),
-            d = np.array([[Face.U, Face.F], [Face.U, Face.U]]),
-            f = np.array([[Face.B, Face.R], [Face.B, Face.D]]),
-            b = np.array([[Face.D, Face.R], [Face.F, Face.F]]),
-            l = np.array([[Face.B, Face.L], [Face.L, Face.L]]),
-            r = np.array([[Face.D, Face.F], [Face.L, Face.R]]),
-        )
-
-        self.assertEqual(str(cubo_a),
-            '\n'.join([
-                '[U][R]', '[D][B]\n', # U
-                '[U][F]', '[U][U]\n', # D
-                '[B][R]', '[B][D]\n', # F
-                '[D][R]', '[F][F]\n', # B
-                '[B][L]', '[L][L]\n', # L
-                '[D][F]', '[L][R]\n\n', # R    
-            ])
-        )
-
+class TestCubeClass(unittest.TestCase):
     def test_eq(self):
         x = cube.generate_cube(2)
         y = cube.generate_cube(2)
@@ -78,6 +42,27 @@ class TestCube(unittest.TestCase):
         self.assertFalse(different_a == z)
         self.assertFalse(different_b == z)
 
+    def test_str(self):
+        cubo_a = cube.Cube(
+            u = np.array([[Face.U, Face.R], [Face.D, Face.B]]),
+            d = np.array([[Face.U, Face.F], [Face.U, Face.U]]),
+            f = np.array([[Face.B, Face.R], [Face.B, Face.D]]),
+            b = np.array([[Face.D, Face.R], [Face.F, Face.F]]),
+            l = np.array([[Face.B, Face.L], [Face.L, Face.L]]),
+            r = np.array([[Face.D, Face.F], [Face.L, Face.R]]),
+        )
+
+        self.assertEqual(str(cubo_a),
+            '\n'.join([
+                '[U][R]', '[D][B]\n', # U
+                '[U][F]', '[U][U]\n', # D
+                '[B][R]', '[B][D]\n', # F
+                '[D][R]', '[F][F]\n', # B
+                '[B][L]', '[L][L]\n', # L
+                '[D][F]', '[L][R]\n\n', # R    
+            ])
+        )
+
     def test_get_face(self):
         cube_a = cube.cube_from_str(
             u = [['U', 'D'], ['U', 'U']],
@@ -96,16 +81,15 @@ class TestCube(unittest.TestCase):
             np.array([[Face.R, Face.R], [Face.B, Face.F]])
         ))
 
-    def test_set_face(self):
+    def test_reset(self):
         cube_a = cube.generate_cube(2)
+        initial_cube_a = cube.copy_cube(cube_a)
 
-        l_face = np.array([[Face.F, Face.D], [Face.U, Face.U]])
-        cube_a._set_face(Face.L, l_face)
-        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), l_face))
+        cube_a.exec_str_alg(["R", "U", "R'", "U'"])
+        self.assertNotEqual(cube_a, initial_cube_a)
 
-        b_face = np.array([[Face.U, Face.U], [Face.D, Face.B]])
-        cube_a._set_face(Face.L, b_face)
-        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), b_face))
+        cube_a.reset()
+        self.assertEqual(cube_a, initial_cube_a)
 
     def test_exec_alg(self):
         cube2x2 = cube.generate_cube(2)
@@ -215,11 +199,22 @@ class TestCube(unittest.TestCase):
             )
         )
 
-    # public functions
+    def test_set_face(self):
+        cube_a = cube.generate_cube(2)
 
+        l_face = np.array([[Face.F, Face.D], [Face.U, Face.U]])
+        cube_a._set_face(Face.L, l_face)
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), l_face))
+
+        b_face = np.array([[Face.U, Face.U], [Face.D, Face.B]])
+        cube_a._set_face(Face.L, b_face)
+        self.assertTrue(np.array_equal(cube_a.get_face(Face.L), b_face))
+
+
+class TestCubeUtils(unittest.TestCase):
     def test_copy_cube(self):
+        # TODO
         pass
-
 
     def test_cube_from_str(self):
         cube_a = cube.cube_from_str(
@@ -268,15 +263,18 @@ class TestCube(unittest.TestCase):
             ])
         )
 
-    def test_reset(self):
-        cube_a = cube.generate_cube(2)
-        initial_cube_a = cube.copy_cube(cube_a)
+    def test_str_to_face_matrix(self):
+        list_a = [['U', 'L'], ['B', 'D']]
+        list_b = [['U', 'L'], ['32', '23'], ['D', 'R']]
+        list_c = [['U', 'L', 'D'], ['D', 'F', 'R'], ['B', 'L', 2]]
 
-        cube_a.exec_str_alg(["R", "U", "R'", "U'"])
-        self.assertNotEqual(cube_a, initial_cube_a)
+        self.assertTrue(
+            np.array_equal(cube._str_to_face_matrix(list_a),
+            np.array([[Face.U, Face.L],[Face.B, Face.D]]))
+        )
 
-        cube_a.reset()
-        self.assertEqual(cube_a, initial_cube_a)
+        self.assertRaises(ValueError, cube._str_to_face_matrix, list_b)
+        self.assertRaises(KeyError, cube._str_to_face_matrix, list_c)
 
 
     def test_is_solved(self):
@@ -356,6 +354,39 @@ class TestCube(unittest.TestCase):
 
         test(cube.generate_cube(3), tests3x3)
         test(cube.generate_cube(2), tests2x2)
+
+    def test_generate_moveset(self):
+        expected2x2 = {
+            'U', 'U2', "U'",
+            'D', 'D2', "D'",
+            'F', 'F2', "F'",
+            'B', 'B2', "B'",
+            'R', 'R2', "R'",
+            'L', 'L2', "L'",
+        }
+
+        result2x2 = cube._generate_moveset(2)
+        # convert to str since Moves don't hash correctly
+        self.assertEqual(expected2x2, {str(m) for m in result2x2})
+
+        expected3x3 = {
+            'U', 'U2', "U'", 'Uw', 'Uw2', "Uw'",
+            'D', 'D2', "D'", 'Dw', 'Dw2', "Dw'",
+            'F', 'F2', "F'", 'Fw', 'Fw2', "Fw'",
+            'B', 'B2', "B'", 'Bw', 'Bw2', "Bw'",
+            'R', 'R2', "R'", 'Rw', 'Rw2', "Rw'",
+            'L', 'L2', "L'", 'Lw', 'Lw2', "Lw'",
+        }
+        result3x3 = cube._generate_moveset(3)
+        self.assertEqual(expected3x3, {str(m) for m in result3x3})
+
+        expected6x6 = set(expected3x3)
+        for move in expected3x3:
+            expected6x6.add("2" + move)
+            expected6x6.add("3" + move)
+
+        result6x6 = cube._generate_moveset(6)
+        self.assertEqual(expected6x6, {str(m) for m in result6x6})
 
 if __name__ == '__main__':
     unittest.main()
