@@ -1,5 +1,6 @@
 from typing import Callable, Literal
 from itertools import product
+
 import copy
 import numpy as np
 
@@ -265,7 +266,6 @@ def is_solved(cube: Cube) -> bool:
     return len(faces_seen) == len(Face)
 
 
-# TODO
 def find_optimal_solution(cube: Cube) -> list[Move]:
     """
     Find the shortest solution possible for the given cube,
@@ -274,34 +274,45 @@ def find_optimal_solution(cube: Cube) -> list[Move]:
 
     * Returns algorithm that solves the cube
     """
-    # moveset = _generate_moveset(cube.dimension)
-    # queue = []
+    test_cube = copy_cube(cube)
+    moveset = _generate_moveset(cube.dimension)
+    queue: list[list[Move]] = [[]]
 
-    # while not optimal():
-    #     current = queue.pop(0)
+    while not is_solved(cube):
+        current = queue.pop(0)
 
-    #     for move in legal_moves():
-    #         current.append(move)
-    #         cube.exec_alg(current)
-    #         if is_solved(cube):
-    #             return current
-    #         cube.reset()
+        for move in moveset:
+            if len(current) > 0 and move.face == current[-1].face:
+                continue
 
-    raise ReferenceError("Unimplemented: find_optimal_solution")
+            new_alg = current + [move]
+            # TODO:
+            # THIS WASTES LOTS OF MEMORY AND CPU CYCLES BY COPYING
+            # should be optimized much further with trees
+            queue.append(new_alg)
+
+            test_cube.reset()
+            test_cube.exec_alg(new_alg)
+            if is_solved(test_cube):
+                print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
+                return new_alg
+
+    print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
+    return queue[-1]
 
 
 def _generate_moveset(dimension: int) -> set[Move]:
     """
-    Returns a set of all possible moves for a cube of the given dimension
+    Returns a set of all possible moves for a cube of the given dimension.
+    No support for wide moves yet.
     """
     # typing needed to satisfy the type checker
     directions: list[Literal[-1, 1, 2]] = [-1, 1, 2]
     depth_range = range(1, (dimension // 2) + 1)
-    widths = [True, False] if dimension > 2 else [False]
 
-    combinations = product(Face, directions, depth_range, widths)
+    combinations = product(Face, directions, depth_range)
 
     return {
-        Move(face, direction, depth, is_wide)
-        for face, direction, depth, is_wide in combinations
+        Move(face, direction, depth, False)
+        for face, direction, depth in combinations
     }

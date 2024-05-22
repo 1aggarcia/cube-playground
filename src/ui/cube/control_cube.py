@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import time
 
 import models.move as mv
 from models.cube import Cube, find_optimal_solution
@@ -77,7 +78,10 @@ class CubeController:
         self._update_history()
 
     def solve_cube(self):
+        start = time.perf_counter()
         sol = find_optimal_solution(self._cube)
+        end = time.perf_counter()
+        print(f"* exec time: {end - start}")
         str_scramble = ' '.join([str(mov) for mov in sol])
 
         messagebox.showinfo(message=str_scramble)
@@ -133,8 +137,7 @@ def _create_button_frame(root: tk.Misc, controller: CubeController):
         frame, text='Reset Cube State', command=controller.reset_cube
     )
     solve_btn = tk.Button(
-        frame, text='Find Optimal Solution',
-        command=controller.solve_cube, state='disabled'
+        frame, text='Find Optimal Solution', command=controller.solve_cube
     )
 
     # position them
