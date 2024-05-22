@@ -1,5 +1,6 @@
 # disable private member access warning
 # pylint: disable=W0212
+# pylint: disable=W0718
 
 import unittest
 from ursina import Ursina
@@ -7,7 +8,12 @@ from models import cube3d
 
 class TestCube3d(unittest.TestCase):
     def test_generate_pieces(self):
-        Ursina(window_type='None')
+        try:
+            Ursina(window_type='None')
+        except Exception as e:
+            # instance already running
+            print(e)
+
         dim = 3
         offset = -1
 
@@ -31,10 +37,6 @@ class TestCube3d(unittest.TestCase):
                         continue
 
                     pos = piece.position_getter() # type: ignore
-
-                    print("\n----------------")
-                    print(f'idx = ({x}, {y}, {z})')
-                    print(f'pos = ({pos.X}, {pos.Y}, {pos.Z})')
 
                     # verify that the position is the same as its indicies
                     self.assertEqual(pos.X, x + offset)

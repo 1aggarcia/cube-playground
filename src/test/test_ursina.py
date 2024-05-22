@@ -1,5 +1,6 @@
 # disable private method access warning
 # pylint: disable=W0212
+# pylint: disable=W0718
 
 import unittest
 from ursina import Ursina
@@ -12,7 +13,11 @@ from models.ursina_state import UrsinaState
 
 class TestUrsina(unittest.TestCase):
     def test_on_input(self):
-        Ursina(window_type='none')
+        try:
+            Ursina(window_type='None')
+        except Exception as e:
+            # instance already running
+            print(e)
 
         state = UrsinaState(Cube3d(3))
         model_cube = generate_cube(3)

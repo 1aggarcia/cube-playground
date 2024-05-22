@@ -59,7 +59,6 @@ class Cube:
             this_face = self.get_face(face)
             other_face = __value.get_face(face)
             if not np.array_equal(this_face, other_face):
-                print(f"Failed eq at {face}")
                 return False
 
         return True
