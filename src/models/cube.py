@@ -1,5 +1,4 @@
-from typing import Callable, Literal
-from itertools import product
+from typing import Callable
 
 import copy
 import numpy as np
@@ -264,55 +263,3 @@ def is_solved(cube: Cube) -> bool:
 
     # all 6 sides should have been seen
     return len(faces_seen) == len(Face)
-
-
-def find_optimal_solution(cube: Cube) -> list[Move]:
-    """
-    Find the shortest solution possible for the given cube,
-    using breadth first search. This is quite slow (exponential time), consider
-    running this in a seperate thread
-
-    * Returns algorithm that solves the cube
-    """
-    test_cube = copy_cube(cube)
-    moveset = _generate_moveset(cube.dimension)
-    queue: list[list[Move]] = [[]]
-
-    while not is_solved(cube):
-        current = queue.pop(0)
-
-        for move in moveset:
-            if len(current) > 0 and move.face == current[-1].face:
-                continue
-
-            new_alg = current + [move]
-            # TODO:
-            # THIS WASTES LOTS OF MEMORY AND CPU CYCLES BY COPYING
-            # should be optimized much further with trees
-            queue.append(new_alg)
-
-            test_cube.reset()
-            test_cube.exec_alg(new_alg)
-            if is_solved(test_cube):
-                print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
-                return new_alg
-
-    print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
-    return queue[-1]
-
-
-def _generate_moveset(dimension: int) -> set[Move]:
-    """
-    Returns a set of all possible moves for a cube of the given dimension.
-    No support for wide moves yet.
-    """
-    # typing needed to satisfy the type checker
-    directions: list[Literal[-1, 1, 2]] = [-1, 1, 2]
-    depth_range = range(1, (dimension // 2) + 1)
-
-    combinations = product(Face, directions, depth_range)
-
-    return {
-        Move(face, direction, depth, False)
-        for face, direction, depth in combinations
-    }

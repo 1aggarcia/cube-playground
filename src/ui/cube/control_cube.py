@@ -3,7 +3,8 @@ from tkinter import messagebox
 import time
 
 import models.move as mv
-from models.cube import Cube, find_optimal_solution
+from models.cube import Cube
+from util.solver import find_optimal_solution
 from util.scrambles import generate_scramble
 from util.printer import print_cube
 from constants import colors
