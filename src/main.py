@@ -65,4 +65,3 @@ if __name__=="__main__":
 # TODO: improve scrambling algorithm
 # TODO: implement wide moves (w)
 # TODO: validate cubes / move construction to constructor
-# TODO: improve conservion of text -> algorithm

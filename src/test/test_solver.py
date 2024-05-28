@@ -1,3 +1,5 @@
+# pylint: disable=W0212
+
 import unittest
 from models import cube
 from util import solver
@@ -5,8 +7,6 @@ from util import solver
 
 class TestSolver(unittest.TestCase):
     def test_find_optimal_solution(self):
-        #self.skipTest("Unimplemented")
-
         # two heuristics for correctness:
         # 1. algorithm must solve the cube
         # 2. algorithm must be the shortest possible

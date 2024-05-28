@@ -1,5 +1,8 @@
+import random
+
 from typing import Literal
 from dataclasses import dataclass
+from queue import Queue
 from itertools import product
 
 from constants.enums import Face
@@ -21,19 +24,52 @@ def find_optimal_solution(cube: Cube) -> list[Move]:
 
     * Returns algorithm that solves the cube
     """
-    return _list_impl(cube)
+    return _queue_impl(cube)
+
+
+def _queue_impl(cube: Cube):
+    # uses a true queue, O(1) enqueue & dequeue rather than O(n)
+    test_cube = copy_cube(cube)
+    moveset = list(_generate_moveset(cube.dimension))
+    # prevent searching time from favoring some moves over others by
+    # randomizing the move order.
+    # this matters a lot since the loop below is exponential time
+    random.shuffle(moveset)
+
+    queue: Queue[list[Move]] = Queue()
+    queue.put([])
+
+    while not is_solved(cube):
+        current = queue.get()
+
+        for move in moveset:
+            if len(current) > 0 and move.face == current[-1].face:
+                continue
+
+            new_alg = current + [move]
+            queue.put(new_alg)
+
+            test_cube.reset()
+            test_cube.exec_alg(new_alg)
+            if is_solved(test_cube):
+                # print(f"Moves: {len(new_alg)}; Search space: {queue.qsize():,}")
+                return new_alg
+
+    return []
 
 
 def _list_impl(cube: Cube):
     # stores a list of possible algorithms
     test_cube = copy_cube(cube)
-    moveset = _generate_moveset(cube.dimension)
+    moveset = list(_generate_moveset(cube.dimension))
+    random.shuffle(moveset)
+
     queue: list[list[Move]] = [[]]
 
     while not is_solved(cube):
         current = queue.pop(0)
 
-        for move in moveset:
+        for move in list(moveset):
             if len(current) > 0 and move.face == current[-1].face:
                 continue
 
@@ -43,24 +79,25 @@ def _list_impl(cube: Cube):
             test_cube.reset()
             test_cube.exec_alg(new_alg)
             if is_solved(test_cube):
-                print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
+                # print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
                 return new_alg
 
-    print(f"Moves: {len(new_alg)}; Search space: {len(queue):,}")
-    return queue[-1]
+    return []
 
 
 def _tree_impl(cube: Cube):
     # creates a tree of all moves to reduce memory usage
     # somehow 3x slower?
     test_cube = copy_cube(cube)
-    moveset = _generate_moveset(cube.dimension)
+    moveset = list(_generate_moveset(cube.dimension))
+    random.shuffle(moveset)
+
     queue: list[MoveNode | None] = [None]
 
     while not is_solved(cube):
         current = queue.pop(0)
 
-        for move in moveset:
+        for move in list(moveset):
             if isinstance(current, MoveNode) and move.face == current.move.face:
                 continue
 
@@ -73,7 +110,7 @@ def _tree_impl(cube: Cube):
 
             if is_solved(test_cube):
                 solution = _assemble_alg(new_node)
-                print(f"Moves: {len(solution)}; Search space: {len(queue):,}")
+                # print(f"Moves: {len(solution)}; Search space: {len(queue):,}")
                 return solution
 
     print("Loop skipped")
