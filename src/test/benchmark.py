@@ -11,7 +11,7 @@ from models.cube import Cube, generate_cube, is_solved
 from models.move import Move
 
 
-TEST_REPITITIONS = 5
+TEST_REPITITIONS = 10
 
 
 def main():
@@ -19,10 +19,9 @@ def main():
 
     for i in range(TEST_REPITITIONS):
         run_tests(results)
-        print(f'completed iteration {i}')
+        print(f'completed iteration {i + 1}')
 
-    ordered_results = list(results.items())
-    # TODO: compile results to averges & sort them
+    ordered_results = compile_results(results)
     print(json.dumps(ordered_results, indent=2))
 
 
@@ -40,13 +39,50 @@ def run_tests(results: dict):
                 raise ValueError(f'BAD SOLUTION FROM SOLVER {alg.__name__}')
 
             cube.reset()
-            print(f'{len(scramble)}: {exec_time}')
+            # print(f'{len(scramble)}: {exec_time}')
             alg_entry = results.get(alg.__name__, {})
             times = alg_entry.get(len(scramble), [])
 
             times.append(exec_time)
             alg_entry[len(scramble)] = times
             results[alg.__name__] = alg_entry
+
+
+def compile_results(results: dict[str, dict[str, list]]):
+    """
+    Given a dictionary of algorithm benchark times,
+    finds the average of each length of each algorithm,
+    sorts the algorithms by longest average time
+
+    Returns list of tuples of algorithms sorted by the
+    longest average time
+    """
+    averaged = {}
+
+    # Create a new dictionary out of the old one with
+    # avergaged times
+    for alg, scores in results.items():
+        for length, seconds in scores.items():
+            avg = sum(seconds) / len(seconds)
+
+            alg_entry = averaged.get(alg, {})
+            alg_entry[length] = avg
+
+            averaged[alg] = alg_entry
+
+    # key function for sorting
+    def find_max_time(pair: tuple[str, dict[str, float]]):
+        max_time = 0
+        for _, seconds in pair[1].items():
+            max_time = max(seconds, max_time)
+
+        return max_time
+
+    # Sort the averaged results
+    ordered = list(averaged.items())
+    ordered.sort(key=find_max_time)
+
+    return ordered
 
 
 def time_alg(func: Callable) -> tuple[float, list]:
