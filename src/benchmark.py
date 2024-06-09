@@ -1,4 +1,5 @@
 # pylint: disable=W0212
+# pylint: disable=W0640
 
 """Speed test for the solver module"""
 
@@ -114,4 +115,5 @@ def is_good_solution(cube: Cube, scramble: list, sol: list[Move]):
     return len(sol) <= len(scramble)
 
 
-main()
+if __name__ == "__main__":
+    main()

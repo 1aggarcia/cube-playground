@@ -1,3 +1,5 @@
+"""Entry point for the main program"""
+
 import tkinter as tk
 from tkinter import messagebox
 
